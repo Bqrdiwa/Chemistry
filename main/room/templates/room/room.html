@@ -1,0 +1,98 @@
+<style>
+    body {
+        margin: 0;
+
+        padding: 0;
+    }
+
+    .leftwatermark{
+        display: none !important;
+    }
+</style>
+<div id="meet">
+   
+</div>
+
+
+<script src='https://8x8.vc/external_api.js'></script>
+<script>
+    let domain = 'meet.jit.si'
+    var perm = false
+    if('{{perm}}'=='True'){
+        perm = true
+    }
+
+    if (!perm){
+        var options = {
+        roomName : '{{roomname}}',
+        userInfo: {
+            displayName: '{{user.get_name}}'
+        },
+        lang:'en',
+        configOverwrite: {
+        toolbarButtons: [
+            'fullscreen',
+            'raisehand',
+            'videoquality', 
+            'noisesuppression',
+            
+        ],
+        // Set to true if you want to remove the share link from the chat
+        startWithAudioMuted: true,
+        startWithVideoMuted: true,
+        prejoinPageEnabled : false,
+    },
+    config: {
+            disableInviteFunctions: true,
+            hideParticipantsSearch: true
+        },
+    }
+    }else{
+        var options = {
+        roomName : '{{roomname}}',
+        userInfo: {
+        displayName: '{{user.get_name}}'
+            },
+        lang:'en',
+        configOverwrite: {
+            
+            toolbarButtons: [
+            'camera',
+            'chat',
+            'closedcaptions',
+            'desktop',
+            'download',
+            'etherpad',
+            'filmstrip',
+            'fullscreen',
+            'highlight',
+            'linktosalesforce',
+            'livestreaming',
+            'microphone',
+            'participants-pane',
+            'raisehand',
+            'recording',
+            'security',
+            'select-background',
+            'settings',
+            'shareaudio',
+            'sharedvideo',
+            'shortcuts',
+            'stats',
+            'tileview',
+            'toggle-camera',
+            'videoquality',
+            'whiteboard',
+    ],
+            // Set to true if you want to remove the share link from the chat
+            startWithAudioMuted: true,
+            startWithVideoMuted: true,
+            prejoinPageEnabled : false,
+        }
+    }
+    }
+    
+
+    const api = new JitsiMeetExternalAPI(domain, options);
+    api.executeCommand('join', null);
+</script>

@@ -1,0 +1,211 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/questionbank-Q.css/'%}">
+<main>
+    <div class="question-cont">
+        <div class="question-desc">
+            <div class="desc-upper">
+                <h2>{{question.Desc|safe}}</h2>
+                <h2 style="font-family: monospace;">#{{question.pk}}</h2>
+            </div>
+            <img src="{{question.Question.url}}" style="width: 100%;height: auto;border-radius: 5px;">
+            <div class="desc-lower">
+                <button id="show-answer">مشاهده جواب</button>
+                <script>
+                    const btn = document.getElementById('show-answer')
+                    
+                    btn.onclick = function(){
+                        btn.innerHTML = '{{question.Answer}}'
+                        btn.classList.add('showed')
+                    }
+
+                </script>
+            </div>  
+
+        </div>
+        <div class="main-lower">
+            <div class="solution-of-question">
+                {% if question.solution %}
+                    <div class="solution">
+                        <h3 class="title-diff" style="margin-bottom: 15px;">-راه حل</h3>
+                        {% if question.solution.get_file_type == 'image' %}
+                            <img src="{{question.solution.solution.url}}" class="img-video">
+                        {% elif question.solution.get_file_type == 'video' %}
+                            <video src="{{question.solution.solution.url}}" class="img-video" controls></video>
+                        {% endif %}
+                        <div class="line"></div>
+                            <div class="solution-content">
+                                {{question.solution.content}}
+                            </div>
+                    </div>
+                {%else%}
+                    <div class="no-solution">
+                        جوابی برای این سوال پیدا نشد
+                    </div>
+                {%endif%}
+            </div>
+            <div class="right-bar">
+                <div class="difficulty-container">
+                    <h3 class="title-diff">-سختی سوال</h3>
+                    <div class="difficulty-bar" id="diff-bar">
+                            <div id="cursor" {%if question.voted%}style='display:none;'{%endif%}></div>
+                            <div id="others-cursor" {%if question.voted%}style='display:flex;'{%endif%}></div>
+                        </div>
+                    <button class="diff-vote" id="vote-btn" {%if question.voted%}style='display:none;'{%endif%}>VOTE</button>
+                    <div id="helper" {%if question.voted%}style='display:flex;'{%endif%}>
+                        میانگین دانش اموزان 
+                        <div class="box-help"></div>
+
+
+                    </div>
+                    {%if question.voted%}
+                        <script>
+                            document.getElementById('others-cursor').style.marginLeft = '{{question.diff_percent}}'+'%'
+                            document.getElementById('diff-bar').classList.add('voted')
+                        </script>
+                    {%endif%}
+
+                </div>
+
+                <div class="detail-cont">
+                    <h3 class="title-diff" style="margin-bottom: 25px;">-جزئیات</h3>
+                    <div class="camper">
+                        <h4 style="font-family: IRSans;">{{question.unit}}</h4>
+                        <h4>فصل</h4>
+                    </div>
+
+                    <div class="camper">
+                        <h4 style="font-family: IRSans;">{{question.grade}}</h4>
+                        <h4>پایه</h4>
+                    </div>
+                    <div class="camper">
+                        <h4 style="font-family: monospace;">{{question.time}}</h4>
+                        <h4>تاریخ ثبت 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-event" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                            <path d="M16 3l0 4"></path>
+                            <path d="M8 3l0 4"></path>
+                            <path d="M4 11l16 0"></path>
+                            <path d="M8 15h2v2h-2z"></path>
+                         </svg></h4>
+                    </div>
+
+                    <div class="camper">
+                        <h4 style="gap: 4px;">
+                            {%for diff in question.diffs%}
+                                {%if diff%}
+                                    <div class="diff-box" style="background-color: black;"></div>
+                                {%else%}
+                                    <div class="diff-box"></div>
+                            {%endif%}
+                        {%endfor%}
+                        </h4>
+                        <h4>سختی
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M6 18l0 -3"></path>
+                                <path d="M10 18l0 -6"></path>
+                                <path d="M14 18l0 -9"></path>
+                                <path d="M18 18l0 .01"></path>
+                             </svg></h4>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<script>
+    const cursor = document.getElementById('cursor');
+    const difficultyBar = document.querySelector('.difficulty-bar');
+    var othersdiff = '{{diff_percent}}'
+    var percent = 0;
+    let isDragging = false;
+
+    // Event listeners for mouse events
+    cursor.addEventListener('mousedown', startDragging);
+    window.addEventListener('mousemove', dragCursor);
+    window.addEventListener('mouseup', stopDragging);
+
+    // Event listeners for touch events (for mobile support)
+    cursor.addEventListener('touchstart', startDragging);
+    window.addEventListener('touchmove', dragCursor);
+    window.addEventListener('touchend', stopDragging);
+
+    function startDragging(event) {
+    isDragging = true;
+    }
+
+    function dragCursor(event) {
+    if (!isDragging) return;
+
+    const barWidth = difficultyBar.offsetWidth;
+    const cursorWidth = cursor.offsetWidth;
+    const newX = event.clientX || event.touches[0].clientX;
+    let newLeft = newX - difficultyBar.getBoundingClientRect().left - cursorWidth / 2;
+    
+    let pLeft = newLeft
+    // Restricting the cursor movement within the bar
+    if (newLeft < 0) {
+        newLeft = 0;
+        pLeft = 0 
+    } else if (newLeft > barWidth - cursorWidth) {
+        newLeft = barWidth - cursorWidth;
+        pLeft = barWidth
+    }
+
+    const progressPercent = 100 - ((pLeft) / barWidth * 100)
+    let newRGB = 255 * progressPercent / 100
+    if (newRGB > 190){
+        newRGB = 190
+    }
+    else if(newRGB < 80){
+        newRGB = 80
+    }
+    cursor.style.backgroundColor = `rgb(${newRGB}, ${newRGB} ,${newRGB})`
+    percent = 100 - parseInt(progressPercent)
+    cursor.style.left = newLeft + 'px';
+    }
+
+    function stopDragging() {
+    isDragging = false;
+    }
+
+    $('#vote-btn').click(function(){
+        $.ajax({
+            url: '/questionbank/{{question.pk}}/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'action':'vote',
+                'diff':percent
+            },
+            success : function(response){
+                othersdiff = response.othersdiff
+                initiateVoted()
+            }
+
+        })
+    })
+
+    function initiateVoted(){
+        const voteBTN  = document.getElementById('vote-btn')
+        const diffBar = document.getElementById('diff-bar')
+
+        const othersCurs = document.getElementById('others-cursor')
+
+        othersCurs.style.marginLeft = othersdiff + '%'
+        othersCurs.style.display='flex'
+
+        voteBTN.style.display = 'none'
+        cursor.style.display ='none'
+        diffBar.classList.add('voted')
+        document.getElementById('helper').style.display ='flex'
+    }
+
+</script>
+{%endblock content%}

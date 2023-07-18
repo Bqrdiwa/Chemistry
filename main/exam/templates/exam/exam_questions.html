@@ -1,0 +1,70 @@
+{%extends 'home/base.html'%}
+{%block content%}
+<style>
+    .questions-container{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+    }
+
+    .question {
+        width: 100%;
+        border: 1px solid #e2e2e2;
+    }
+
+    .exam-details {
+        border: 1px solid #e2e2e2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 1em;
+        direction: rtl;
+        margin: 30px 0 ;    
+    }
+
+    .exam-details > p {
+        font-family: IRSansB;
+        font-size: .8rem;
+    }
+
+    .paginator{
+        display: flex;  
+        margin-top: 20px;
+        margin-bottom: 50px;
+        font-size: .8rem;
+        font-weight: bold;
+        font-family: Poppins;
+        gap: 5px;
+    }
+
+    .paginator > a {
+        font-size: .8rem;
+        font-weight: bold;
+        font-family: Poppins;
+    }
+</style>
+<main>
+    <div class="exam-details">
+        <p>{{Exam.name}}</p>
+        <p>تعداد سوالات: {{Exam.get_q_l}}</p>
+        <p>{{Exam.grade}} فصل {{Exam.unit}}</p>
+        <p>زمان آزمون: {{Exam.time}}min</p>
+    </div>
+    <div class="questions-container">
+        
+        {%for question in questions%}
+            <div class="question">
+                <img src="{{question.Question.url}}" style="width: 100%;">
+            </div>
+        {%endfor%}
+        
+        <div class="paginator">
+            Pages: 
+            {% for page_num in questions.paginator.page_range %}
+                <a href="?page={{ page_num }}">{{ page_num }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{%endblock content%}

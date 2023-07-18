@@ -1,0 +1,149 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/room-lobby.css'%}">
+<script  src="{%static 'js/room-lobby.js'%}"></script>
+<script>
+    var Schej = {};
+</script>
+<main>
+    <div class="container">
+        <div class="class-card">
+            <h2>کلاس بعدی</h2>
+            <div class="class-detail">
+                <h3>{{room.Room_title}}</h3>
+                <div class="column-maker">
+                    <p style="font-size: .875rem;font-family: IRSansB;">- پلن ها -</p>
+                    <p style="font-size: .825rem;font-family: IRSans;color: #444;text-align: end;">
+                        
+                        {%for plan in room.plan.all%}
+                        -{{plan.name}}
+                        {%endfor%}
+                        -
+                    </p>
+                </div>
+                <div class="column-maker">
+                    <p style="font-size: .875rem;font-family: IRSansB;">- تاریخ برگزاری -</p>
+                    <div class="column-breaker" style="width: 100%;">
+                        <p>{{room.ScheduleRelated.day}}</p>
+                        <p>{{room.ScheduleRelated.date}}</p>
+                    </div>
+                </div>
+                <div class="column-maker" style="gap:8px;"> 
+                    {%if room.enable%}
+                    <button onclick="window.location.href =`/class/{{room.Room_title}}`">ورود به کلاس</button>
+                    <p class="class-status">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-circle-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 2c5.523 0 10 4.477 10 10a10 10 0 0 1 -19.995 .324l-.005 -.324l.004 -.28c.148 -5.393 4.566 -9.72 9.996 -9.72zm0 9h-1l-.117 .007a1 1 0 0 0 0 1.986l.117 .007v3l.007 .117a1 1 0 0 0 .876 .876l.117 .007h1l.117 -.007a1 1 0 0 0 .876 -.876l.007 -.117l-.007 -.117a1 1 0 0 0 -.764 -.857l-.112 -.02l-.117 -.006v-3l-.007 -.117a1 1 0 0 0 -.876 -.876l-.117 -.007zm.01 -3l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" stroke-width="0" fill="currentColor"></path>
+                     </svg>کلاس در حال برگزاری است
+                    </p>
+                    {%else%}
+                    <button style="background-color: #444;border: none;color: black;">ورود به کلاس</button>
+                    <p class="class-status">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-circle-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 2c5.523 0 10 4.477 10 10a10 10 0 0 1 -19.995 .324l-.005 -.324l.004 -.28c.148 -5.393 4.566 -9.72 9.996 -9.72zm0 9h-1l-.117 .007a1 1 0 0 0 0 1.986l.117 .007v3l.007 .117a1 1 0 0 0 .876 .876l.117 .007h1l.117 -.007a1 1 0 0 0 .876 -.876l.007 -.117l-.007 -.117a1 1 0 0 0 -.764 -.857l-.112 -.02l-.117 -.006v-3l-.007 -.117a1 1 0 0 0 -.876 -.876l-.117 -.007zm.01 -3l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" stroke-width="0" fill="currentColor"></path>
+                    </svg>کلاس در تاریخ ذکر شده برگزار میشود
+                    </p>
+                    {%endif%}
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="schedule-container">
+            <h2> 
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-24-hours" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                    <path d="M4 13a8.094 8.094 0 0 0 3 5.24"></path>
+                    <path d="M11 15h2a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-1a1 1 0 0 0 -1 1v1a1 1 0 0 0 1 1h2"></path>
+                    <path d="M17 15v2a1 1 0 0 0 1 1h1"></path>
+                    <path d="M20 15v6"></path>
+                </svg>زمانبندی کلاس های انلاین 
+            </h2>
+            <div id="schedule-items-cont">
+                {%for item in schedule%}
+                    <div class="schedule-item" id="item-{{item.pk}}">
+                        <div class="schedule-item-upper">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-pause" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v6"></path>
+                                <path d="M16 3v4"></path>
+                                <path d="M8 3v4"></path>
+                                <path d="M4 11h16"></path>
+                                <path d="M17 17v5"></path>
+                                <path d="M21 17v5"></path>
+                            </svg>
+                            <p style="    font-family:  IRSansB ;">{{item.day}}</p>
+
+                        </div>
+
+                        <div class="schedule-item-lower">
+                            <p>#{{item.pk}}</p>
+                            <p>{{item.date}}</p>
+                        </div>
+                    </div>
+                    <script>
+                        document.getElementById('item-{{item.pk}}').addEventListener('click',function(){
+                            openDetail('{{item.pk}}')
+                        })
+                        
+                        Schej['{{item.pk}}']= []
+                    </script>
+                    {%for schejItem in item.items%}
+                    <script>Schej['{{item.pk}}'].push({
+                        grade:'{{schejItem.grade}}',
+                        time:'{{schejItem.time}}',
+                        toDo:'{{schejItem.toDo}}'
+                    })</script>
+                    {%endfor%}
+                {%endfor%}
+            </div>
+            <div id="Schej-detail" class="hide">
+
+            </div>
+            <button id="return-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M15 6l-6 6l6 6"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</main>
+<script>
+    let SchejItemsCont = document.getElementById('schedule-items-cont')
+    let SchejDetail = document.getElementById('Schej-detail')
+    let returnBTN = document.getElementById('return-btn')
+
+    returnBTN.addEventListener('click',function(){
+        SchejDetail.classList.add('hide')
+        SchejItemsCont.classList.remove('hide')
+        returnBTN.style.display ='none'
+            })
+
+    returnBTN.style.display ='none'
+    function openDetail(pk){
+        const items = Schej[pk]
+
+        SchejDetail.classList.remove('hide')
+        SchejDetail.innerHTML = ''
+        SchejItemsCont.classList.add('hide')
+
+        returnBTN.style.display ='block'
+        items.forEach((item)=>{
+            SchejDetail.innerHTML += 
+            `
+                <div class="schej-item">
+                   <p style="font-family:IRSansB;">${item.grade}</p>
+                   <p>${item.toDo}</p>
+                   <p style="font-family:monospace;">${item.time}</p>
+                </div>
+            `
+        })
+    }
+</script>
+{%endblock content%}

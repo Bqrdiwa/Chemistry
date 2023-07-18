@@ -1,0 +1,405 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/solution.css'%}">
+<script>
+    var sortList= {
+        دهم:[],
+        یازدهم:[],
+        دوازدهم:[],
+        اول:[],
+        دوم:[],
+        سوم:[],
+        چهارم:[]
+        
+    };
+
+    var allitems = {}
+</script>
+<main>
+    <div class="loading-container" id="like-loading">
+        <div class="loading-pulse">
+            </div>
+        </div>
+    <div class="box-container-1">
+        <div class="my-questions-box">
+            <div class="title">
+                <h2 class="text">سوالات شما</h2>
+            </div>
+            {% if myQs%}
+            {% for question in myQs%}
+                <div class="my-item" id="my-item-{{question.pk}}">
+                    {%if question.pos == 'باز'%}
+                    <div class="position" >
+                        باز
+                    </div>
+                    {%else%}
+                    <div class="position" style="background-color: black;color: white;">
+                        بسته
+                    </div>
+                    {%endif%}
+                    <div style="display: grid;width: 100%;gap: 3px;">
+                        <div class="question-title">{{question.title}}</div> 
+                        <div class="question-time">{{ question.time}}</div>
+                    </div>
+                </div>
+                <div class="question-detail" id="my-detail-{{question.pk}}">
+                    <p class="question-detail-title">{{question.title}}</p>
+                    <p class="question-detail-text">{{question.content}}</p>
+                    {%if question.MD%}
+                    <div class="question-detail-img">
+                        <img src="{{question.MD}}" style="width: 100%;">
+                    </div>
+                    {%endif%}
+                    <a href="{% url 'solution-question' question.pk%}">
+                        <button class="more-option">اطلاعات بیشتر</button>
+                    </a>
+                </div>  
+                <script>
+                    var MITEM = document.getElementById('my-item-{{question.pk}}')
+                    MITEM.addEventListener('click', function(){
+                        openMyDetail('{{question.pk}}')
+                    })
+                </script>
+            {%endfor%}
+            {%else%}
+            <div class='noq'>
+                شما هنوز سوالی را ثبت نکرده اید
+            </div>
+            {%endif%}
+        </div>
+        <div class="others-questions-box">
+            
+            <div class="others-title">
+                <h2 class="text">سوالات متداول</h2>
+                <button onclick="openSorter()">دسته بندی</button>
+                <div id="sorting-dropdown">
+                    <div class="sort-item" id="sort-دهم" onclick="updateSort('دهم')">
+                        <div class="cec">
+
+                        </div>
+                        دهم
+                    </div>
+                    <div class="sort-item" id="sort-یازدهم" onclick="updateSort('یازدهم')">
+                        <div class="cec">
+
+                        </div>
+                        یازدهم
+                    </div>
+                    <div class="sort-item" id="sort-دوازدهم" onclick="updateSort('دوازدهم')">
+                        <div class="cec">
+
+                        </div>
+                        دوازدهم
+                    </div>
+                    <div class="sort-item" id="sort-اول" onclick="updateSort('اول')">
+                        <div class="cec">
+
+                        </div>
+                        فصل اول
+                    </div>
+                    <div class="sort-item" id="sort-دوم" onclick="updateSort('دوم')">
+                        <div class="cec">
+
+                        </div>
+                        فصل دوم
+                    </div>
+                    <div class="sort-item" id="sort-سوم" onclick="updateSort('سوم')">
+                        <div class="cec">
+
+                        </div>
+                        فصل سوم
+                    </div>
+                    <div class="sort-item" id="sort-چهارم" onclick="updateSort('چهارم')">
+                        <div class="cec">
+
+                        </div>
+                        فصل چهارم
+                    </div>
+                </div>
+            </div>
+
+            {%for Q in otherQs%}
+                <div class="others-item" id="other-{{Q.pk}}">
+                    <div style="display:grid;width:100%;direction: rtl;">
+                        <a class="others-question-title" href="{%url 'solution-question' Q.pk%}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M15 6l-6 6l6 6"></path>
+                                </svg>
+                            {{Q.title}}
+                        </a>
+                        
+                        <div style="display: flex;direction: rtl;gap: 5px;">
+                            {%if Q.subject%}
+                            <p class="others-queston-subject">
+                                مبحث : {{Q.subject}}
+                            </p>
+                            {%endif%}
+                            <p class="others-queston-subject">
+                                پایه {{Q.grade}} فصل {{Q.unit}}
+                            </p>
+                        </div>
+                        <p class="others-question-creator">
+                            {{Q.username}}  ~ {{Q.time}}
+                        </p>
+                    </div>
+
+                </div>
+                
+                <script>
+                    sortList['{{Q.grade}}'].push('{{Q.pk}}')
+                    sortList['{{Q.unit}}'].push('{{Q.pk}}')
+                    allitems['{{Q.pk}}']= ['{{Q.grade}}','{{Q.unit}}']
+                </script>
+            {%endfor%}
+            <div class='noq' id="onoq" style="display: none;">
+                هنوز سوالی ثبت نشده است
+            </div>
+        </div>
+    </div>
+    <div class="add-question-container">
+        <div class="loading-container" id="loading-container">
+            <div class="loading-pulse">
+                </div>
+            </div>
+        <div class="upper-body">
+            <input id="add-title" placeholder="موضوع سوال خودتون رو وارد کنید">
+            <div>
+                <select id="grade">
+                    <option value="دهم">دهم</option>
+                    <option value="یازدهم">یازدهم</option>
+                    <option value="دوازدهم">دوازدهم</option>
+                </select>
+
+                <select id="unit">
+                    <option value="اول">فصل اول</option>    
+                    <option value="دوم">فصل دوم</option>
+                    <option value="سوم">فصل سوم</option>
+                    <option value="چهارم">فصل چهارم</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="lower-body">
+            <div class="lower-box-1">
+                <textarea id="add-content" maxlength="480" placeholder="سوال خود را بپرسید"></textarea>
+                <div id="remain-char">480/480</div>
+                </div>
+            <div class="add-question">
+                <img src="{%static 'assets/default.jpg'%}" id="img-file">
+                <div class="options-btns">
+                    <button class="add-img">
+                        اضافه کردن عکس
+                        <input type="file" id="add-img-input" accept="image/*">
+                    </button>
+                <button id="save-question">ثبت سوال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const addContent = document.getElementById('add-content')
+    const max_length = parseInt(addContent.getAttribute('maxlength'))
+    const remainChar = document.getElementById('remain-char')
+  
+    var loadingCont = document.getElementById('loading-container')
+    var unit = document.getElementById('unit')
+    var grade = document.getElementById('grade')
+    var myOpen;
+    var Sorter = document.getElementById('sorting-dropdown')
+    var onoq = document.getElementById('onoq')
+
+    if('{{otherQs}}' == 'False'){
+        onoq.style.display ='flex'
+    }
+
+    var Sort = {
+        دهم : false,
+        یازدهم : false,
+        دوازدهم : false,
+        اول : false,
+        دوم : false,
+        سوم : false,
+        چهارم : false,
+    }
+
+    addContent.addEventListener('input', ()=> {
+        let currentLength = parseInt(addContent.value.length)
+        console.log(max_length)
+        let remainLength = max_length - currentLength
+        remainChar.innerHTML = `${remainLength}/${max_length}`
+    })
+
+    var imageInput = document.getElementById('add-img-input')
+    var imgFile = document.getElementById('img-file')
+    imageInput.addEventListener('change', function(event){
+        let file = event.target.files[0]
+        let reader = new FileReader()
+        reader.readAsDataURL(file);
+        console.log(1321)
+        reader.addEventListener('load', function() {
+            console.log('change')
+            imgFile.setAttribute('src',reader.result )
+
+    })
+
+    })
+
+    const SAVEBTN = document.getElementById('save-question')
+    function ERRBTN (type){
+        if (type == true){
+            SAVEBTN.innerHTML = 'ثبت شد'
+        }else{
+            SAVEBTN.innerHTML = 'از اطلاعات وارد شده اطمینان حاصل کنید'
+        }
+
+        setTimeout(function(){
+            SAVEBTN.innerHTML = 'ثبت سوال'
+        },3000)
+    }
+
+    var title = document.getElementById('add-title')
+    var content = document.getElementById('add-content')
+
+    $(document).ready(function() {
+    $('#save-question').click(function() {
+        if(title.value != '' && content.value != ''){
+        var formImageData  = new FormData()
+        if (imageInput.value != ''){
+            const image = imageInput.files[0]
+            formImageData.append('image', image)
+        }
+        title.style.border = '1px solid #e2e2e2'
+        content.style.border = '1px solid #e2e2e2'
+        var titleV = title.value
+        var contentV= content.value
+        formImageData.append('content', contentV);
+        formImageData.append('title', titleV);
+        formImageData.append('grade', grade.value)
+        formImageData.append('unit',unit.value)
+        formImageData.append('action', 'add-Q')
+        formImageData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        loadingCont.style.display ='flex'
+        $.ajax({
+        url: '/solution/',
+        type: 'POST',
+        data: formImageData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            loadingCont.style.display ='none'
+            window.location.href = '/solution/question-'+response['Q-pk']+'/'
+        }
+
+        });
+    }else{
+        if (content.value ==''){
+            content.style.border = '1px solid red'
+        }else{
+            content.style.border = '1px solid #e2e2e2'
+        }
+        if (title.value == ''){
+            title.style.border = '1px solid red'
+        }else{
+            title.style.border = '1px solid #e2e2e2'
+        }
+    }});
+    });
+    function openMyDetail(pk){
+        const item = document.getElementById(`my-item-${pk}`)
+        const detail = document.getElementById(`my-detail-${pk}`)
+        if (myOpen && myOpen != pk){
+            document.getElementById(`my-item-${myOpen}`).style.border = '1px solid #e2e2e2'
+            document.getElementById(`my-detail-${myOpen}`).style.display ='none'
+        }
+        height = window.getComputedStyle(detail).height
+        if (detail.style.display == 'grid'){
+            detail.style.display ='none'
+            item.style.border = '1px solid #e2e2e2'
+            myOpen = false
+        }else{
+            detail.style.display = 'grid'
+            item.style.borderBottom  = '2px solid black'
+            myOpen = pk
+        }
+    }
+
+    function openSorter(){
+        if (Sorter.style.display == 'flex'){
+            Sorter.style.display ='none'
+        }else{
+            Sorter.style.display ='flex'
+        }
+    }
+
+    function updateSort(item){
+        const iT = document.getElementById('sort-'+item).children[0]
+        if (Sort[item]){
+            Sort[item] = false
+            iT.style.backgroundColor = 'white'
+        } else{
+            Sort[item] = true
+            iT.style.backgroundColor = 'black'
+        }
+        updateSorter()
+    }
+
+    function updateSorter(){
+        var keys = Object.keys(Sort)
+        var items = []
+        var superr = ['دهم','یازدهم','دوازدهم']
+        var unitSort = []
+        var gradeSort = false
+        var dellist = []
+        var unitlist = []
+
+        var anyFilter = false
+        keys.forEach((key)=>{
+            if(Sort[key]){
+                if(superr.includes(key)){
+                    items = items.concat(sortList[key])
+                    gradeSort = true
+                }else{
+                    unitSort.push(key)
+                    unitlist = unitlist.concat(sortList[key])
+                }
+                anyFilter = true
+            }
+        })
+
+        
+        if (!gradeSort){
+            items= items.concat(unitlist)
+        }
+        if (unitSort.length > 0 && gradeSort){
+            items.forEach((item)=>{
+                if(!unitSort.includes(allitems[item][1])){
+                    dellist.push(item)
+                }
+            })
+            
+        }
+        items = items.filter(item => !dellist.includes(item));
+        var itemKeys = Object.keys(allitems)
+        let showed = false
+        itemKeys.forEach((item)=>{
+            if(!items.includes(item) && anyFilter){
+                document.getElementById('other-'+item).style.display ='none'
+
+            }else{
+                document.getElementById('other-'+item).style.display ='block'
+                showed = true
+            }
+        })
+
+        if(!showed){
+            onoq.style.display ='flex'
+        }else{
+            onoq.style.display ='none'
+        }
+    }
+</script>
+{%endblock content%}

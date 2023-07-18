@@ -1,0 +1,420 @@
+{%extends 'home/base.html'%}
+
+
+{%block content%}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    @-webkit-keyframes pulse {
+        50% {
+        background: white;
+    }
+    }
+    @keyframes pulse {
+        50% {
+        background: white;
+    }
+    }
+    .base-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .videos-container {
+        margin-top: 40px;
+        width: 100%;
+        padding: 20px;
+        display: grid;
+        gap: 15px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .video-container {
+        width: 100%;
+        height: fit-content;
+        display: block;
+        position: relative;
+        flex-direction: column;
+        margin: auto;
+        overflow: hidden;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+    }
+
+    .btn-duration {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        color: #EAEAEA;
+        border: none;
+
+
+    }
+
+    .img-container {
+        width: 100%;
+        height: 60%;
+    }
+
+    .thumbnail-img {
+        width: 100%; 
+        height: 100%;
+        cursor: pointer;
+        filter: grayscale(100%);
+        transition: all 600ms ease;
+        margin: auto;
+        display: block;
+
+    }
+
+    .thumbnail-img:hover {
+        scale: 1.05;
+        filter: grayscale(0%);
+        
+        
+    }
+
+    .link {
+        text-align: center;
+        display: block;
+        font-size: .85rem;
+        margin: 10px;
+    }
+
+    .link:hover {
+        color: #000000e7;
+    }
+
+    .line {
+			position: relative;
+			height: 2px;
+			background-image: linear-gradient(to right, transparent, black 50%, transparent), linear-gradient(to left, transparent, black 50%, transparent);
+			background-position: center;
+			background-repeat: no-repeat;
+            margin: auto;
+            display: block;
+            width: 85%;
+
+		}
+    
+    .options-container {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        width: 100%;
+        height: fit-content;
+        border: 1px solid #EAEAEA;
+        border-radius: 5px;
+        position: relative;
+        flex-direction: row;
+        margin-top: 10px;
+    }
+
+    .sort {
+        right: 5px;
+        width: 100%;
+        display: grid;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid #dadada;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+        height: 40px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        
+        
+    }
+
+    .special-btn-option {
+        border: none;
+        font-size: .9rem;
+        cursor: pointer;
+        background-color: #000;
+        color: #fff;
+        height: 100%;
+        transition: all ease 400ms;
+        
+    }
+
+
+
+    .options-btn {
+        background-color: white;
+        border: none;
+        font-size: .9rem;
+        cursor: pointer;
+        transition: all 200ms ease;
+        border-left: 1px solid #fff;
+    }
+
+    .options-btn:hover {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .button-fill {
+        border-radius: 5px;
+        background-color: #fff;
+        font-size: .85rem;
+        transition: all ease 200ms;
+        color: #fff;
+        background-color: #000;
+        cursor: pointer;
+        width: 50%;
+        border: 1px solid #dadada;
+        width: 30%;
+        height: 40px;
+        border-bottom-left-radius: 0%;
+        border-top-left-radius: 0;
+    }
+
+    .button-fill:hover {
+        background-color: white;
+        color: #000;
+    }
+
+    .video-detail {
+        position: relative;
+        width: fit-content;
+        display: block;
+        height: 100%;
+    }
+
+    .error-filter {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        top: 50%;
+    }
+
+    .loading-pulse {
+        position: relative;
+        width: 6px;
+        height: 24px;
+        background: rgb(0, 0, 0);
+        -webkit-animation: pulse 750ms infinite;
+                animation: pulse 750ms infinite;
+        -webkit-animation-delay: 250ms;
+                animation-delay: 250ms;
+    }
+
+    .loading-pulse:before, .loading-pulse:after {
+        content: "";
+        position: absolute;
+        display: block;
+        height: 16px;
+        width: 6px;
+        background: rgb(0, 0, 0);
+        top: 50%;
+        transform: translateY(-50%);
+        -webkit-animation: pulse 750ms infinite;
+                animation: pulse 750ms infinite;
+    }
+
+    .loading-pulse:before {
+        left: -12px;
+    }
+
+    .loading-pulse:after {
+        left: 12px;
+        -webkit-animation-delay: 500ms;
+                animation-delay: 500ms;
+    }
+
+    .loading-container {
+        width: fit-content;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+    }
+    
+
+    @media screen and (max-width: 768px) {
+        .videos-container {
+            grid-template-columns: 1fr 1fr ;
+        }
+
+        .options-container {
+            flex-direction: column;
+        }
+
+        .sort{
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: auto auto auto auto auto;
+            height: fit-content;
+            gap: 3px;
+        }
+
+        .special-btn-option {
+            grid-area: 1  /  1  / span 2 / span 1;
+        }
+
+        .button-fill {
+            width: 100%;
+        }
+
+        .thumbnail-img {
+            width: 100%;
+            filter: grayscale(0);
+        }
+    }
+</style>
+
+
+
+<main>
+    <div class="base-container">
+        <div class="options-container">
+            <div class="sort">
+                <button class="special-btn-option">دسته بندی</button>
+                <button class="options-btn" onclick="filterAppend('دهم')" id ='دهم'>دهم</button>
+                <button class="options-btn" onclick="filterAppend('یازدهم')" id = 'یازدهم'>یازدهم</button>
+                <button class="options-btn" onclick="filterAppend('دوازدهم')" id ='دوازدهم'>دوازدهم</button>
+                <button class="options-btn" onclick="filterAppend('اول')" id="اول">فصل اول</button>
+                <button class="options-btn" onclick="filterAppend('دوم')" id="دوم">فصل دوم</button>
+                <button class="options-btn" onclick="filterAppend('سوم')" id="سوم">فصل سوم</button>
+                <button class="options-btn" onclick="filterAppend('چهارم')" id="چهارم">فصل چهارم</button>
+            </div>
+            <button class="button-fill" onclick="window.location.href = 'watchlist/{{user.username}}'">Watch List</button>
+        </div>
+        <div class="videos-container" id="videos-container">
+
+            {%for video in videos%}
+            
+
+            <div class="video-container">
+                <div class="video-detail">
+                    <img src="{{video.Thumbnail.url}}" class="thumbnail-img" onclick="window.location.href = '{{video.pk}}'">
+                </div>
+                <a class="link" href="{{video.pk}}">{{video.Title}}</a>
+
+
+            </div>
+            {%endfor%}
+    </div>
+    
+</main>
+
+<script>
+    
+    
+
+    $("li").click(function(){
+    $(this).find('.drop-down').slideDown(300);
+    $(this).find(".accent").addClass("animate");
+    $(this).find(".item").css("color","#FFF");
+    }).mouseleave(function(){
+    $(this).find(".drop-down").slideUp(300);
+    $(this).find(".accent").removeClass("animate");
+    $(this).find(".item").css("color","#000");
+    });
+
+
+
+    function postFilter(){
+        let elemet = document.getElementById('videos-container')
+        elemet.innerHTML = ''
+        let loading = document.createElement('div')
+        let loadingC = document.createElement('div')
+
+        loading.classList.add('loading-pulse')
+        loadingC.classList.add('loading-container')
+        loadingC.appendChild(loading)
+        elemet.appendChild(loadingC)
+        $.ajax({
+            type: 'POST',
+            url: '{% url "video-list"%}',
+            data: {
+                // Your data here
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                filters:JSON.stringify(filter)
+            },
+            success: function(response){
+                elemet.innerHTML = ''
+                if (response.videos !== 'None'){
+                    const durations = response.duration
+                    const Data = JSON.parse(response.videos)
+                    for (let i =0;i<Data.length;i++){
+                        let videoContainer = document.createElement('div')
+                        videoContainer.classList.add("video-container")
+                        let videoDetail = document.createElement('div')
+                        videoDetail.classList.add('video-detail')
+                        videoContainer.appendChild(videoDetail)
+                        let linkVideo = document.createElement('a')
+                        linkVideo.classList.add('link')
+                        linkVideo.href = Data[i].pk
+                        linkVideo.innerHTML = Data[i].fields.Title
+                        videoContainer.appendChild(linkVideo)
+                        let thumbnailImg = document.createElement('img')
+                        thumbnailImg.classList.add('thumbnail-img')
+                        videoDetail.appendChild(thumbnailImg)
+                        console.log(Data[i].fields.Thumbnail)
+                        thumbnailImg.src = '/assets/'+Data[i].fields.Thumbnail
+                        
+                        let videoDuration = document.createElement('p')
+                        videoDuration.innerHTML = durations[i]
+                        videoDuration.classList.add('btn-duration')
+                        videoDetail.appendChild(videoDuration)
+                        elemet.appendChild(videoContainer)
+                    }
+                    
+            }   else{
+
+                let errorFilter = document.createElement('p')
+                errorFilter.classList.add('error-filter')
+                errorFilter.innerHTML = 'با دسته بندی مورد نظر ویدیو پیدا نشد' 
+                elemet.appendChild(errorFilter)
+
+            }}
+        });
+    };
+
+    var filter = []
+
+    function filterAppend(mode){
+        let index  = filter.indexOf(mode);
+        const element = document.getElementById(mode)
+
+        if (index !== -1){
+            filter.splice(index,1)
+            
+
+            element.addEventListener('mouseover',function(){
+                this.style.backgroundColor = 'black'
+                this.style.color= 'white'
+            })
+
+            element.addEventListener('mouseleave',function(){
+                this.style.backgroundColor = 'white'
+                this.style.color= 'black'
+            })
+
+            element.style.backgroundColor = '#fff'
+            element.style.color = '#000'
+
+        }
+        else {
+            filter.push(mode)
+            element.style.backgroundColor = '#000'
+            element.style.color = '#fff'
+
+            element.addEventListener('mouseover',function(){
+                element.style.color = 'black'
+                element.style.backgroundColor = '#EAEAEA'
+            })
+            element.addEventListener('mouseleave',function(){
+                element.style.color = 'white'
+                element.style.backgroundColor = 'black'
+            })
+
+
+        }
+
+        postFilter();
+    }
+
+</script>
+    
+{%endblock%}

@@ -1,0 +1,171 @@
+{%extends 'home/base.html'%}
+{%block content%}
+
+<style>
+    .optionsBox {
+        display: flex;
+        width: 100%;
+        height: fit-content;
+        flex-direction: row;
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .backVideo {
+        display: flex;
+        border: 1px solid black;
+        font-size: .85rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all ease 200ms;
+        color: #f0f8ff;
+        background-color: #000;
+        flex-direction: row;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+
+    }
+
+    .backVideo:hover {
+        background-color: #f0f8ff;
+        color: #000;
+
+    }
+
+    .line {
+			position: relative;
+			height: 2px;
+			background-position: center;
+			background-repeat: no-repeat;
+            margin: auto;
+            display: block;
+            width: 100%;
+		}
+
+    .mainbox {
+        margin-top: 40px;
+        width: 100%;
+        padding: 20px;
+        display: grid;
+        gap: 15px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .video-container {
+        width: 100%;
+        height: fit-content;
+        display: block;
+        position: relative;
+        flex-direction: column;
+        margin: auto;
+        overflow: hidden;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+    }
+
+    .thumbnail-img {
+        width: 100%; 
+        height: 100%;
+        cursor: pointer;
+        filter: grayscale(100%);
+        transition: all 600ms ease;
+        margin: auto;
+        display: block;
+
+    }
+
+    .thumbnail-img:hover {
+        scale: 1.05;
+        filter: grayscale(0%);
+        
+        
+    }
+
+    .btn-duration {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        color: #EAEAEA;
+        border: none;
+
+
+    }
+
+    .link {
+        text-align: center;
+        display: block;
+        font-size: .85rem;
+        margin: 10px;
+    }
+
+    .link:hover {
+        color: #000000e7;
+    }
+
+    .btn-duration {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        color: #EAEAEA;
+        border: none;
+    }
+
+    .video-detail {
+        position: relative;
+        width: fit-content;
+        display: block;
+        height: 100%;
+    }
+
+    @media screen and (max-width: 768px) {
+        .mainbox {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .thumbnail-img {
+            filter: grayscale(0);
+        }
+    }
+</style>
+
+<main>
+    <div class="optionsBox">
+        <a class="backVideo" href="{%url 'video-list'%}">
+            <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                >
+                <path
+                    d="M20.3284 11.0001V13.0001L7.50011 13.0001L10.7426 16.2426L9.32842 17.6568L3.67157 12L9.32842 6.34314L10.7426 7.75735L7.49988 11.0001L20.3284 11.0001Z"
+                    fill="currentColor"
+                /></svg>
+                 <p style="margin-left: 5px;">Videos</p>
+        </a>
+        <p style="position:absolute;right: 5px;margin: 10px 0;">{{count}} :تعداد کل </p>
+    </div>
+    
+    <div class="mainbox">
+        {%for video in videos%}
+            <div class="video-container">
+                <div class="video-detail">
+                    <img src="{{video.Thumbnail.url}}" class="thumbnail-img" onclick="window.location.href = '/video/{{video.pk}}'">
+                    <p class="btn-duration" id="dur-{{video.pk}}">{{video.get_video_duration}}</p>
+                </div>
+                <a class="link" href="/video/{{video.pk}}">{{video.Title}}</a>
+
+
+            </div>
+        {%endfor%}
+    </div>
+</main>
+
+{%endblock content%}

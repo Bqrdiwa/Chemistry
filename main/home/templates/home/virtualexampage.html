@@ -1,0 +1,194 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/virtualexampage.css'%}">
+<script>
+    var q_counter = 0
+
+    let examKey = localStorage.getItem('virtualExam-'+'{{exam.pk}}')
+    var examAir;
+    if(examKey){
+        examAir = JSON.parse(examKey)
+    }else{
+        let questionsCount = parseInt('{{exam.questions_count}}')
+        let KeWithSemi =  '0,'.repeat(questionsCount)
+        KeWithSemi = KeWithSemi.substring(0, KeWithSemi.length-1)
+        nowTime = new Date().getTime()
+        const obj = {
+            Key: KeWithSemi,
+            'time': nowTime,
+        }
+        localStorage.setItem('virtualExam-'+'{{exam.pk}}', JSON.stringify(obj))
+        examAir = obj
+    }
+
+    console.log(examAir)
+</script>
+<main>
+    <div class="exam-detail">
+        <div class="questions-lister">
+            {%for q in exam.questions.all%}
+            <div class="question-list">
+                <p class="question-num" id="question-num-{{q.pk}}"></p>
+                <div class="choices-cont">
+                    <div class="choice"></div>
+                    <div class="choice"></div>
+                    <div class="choice"></div>
+                    <div class="choice"></div>
+                </div>
+            </div>
+            <script>
+                q_counter ++
+                document.getElementById('question-num-{{q.pk}}').innerHTML = q_counter
+            </script>
+            {%endfor%}
+            <script>
+                q_counter = 0
+            </script>
+
+        </div>
+        <div class="detail">
+            <button class="end-exam-btn" onclick="END()">اتمام آزمون</button>
+            <div class="column-maker" style="justify-content: center;">
+                <h4>- زمان باقیمانده -</h4>
+            </div>
+            <div class="column-maker" style="justify-content: center;"> 
+                <h4 style="font-family: monospace;" id="time-remainin"></h4>
+            </div>
+        </div>
+
+        <div class="detail">
+            <h3 class="exam-name">{{exam.get_date}}</h3>
+            <div class="column-maker">
+                <h4 style="font-family: monospace;">{{exam.time}}min</h4>
+                <h4>:زمان</h4>
+            </div>
+            <div class="column-maker">
+                <h4 style="font-family: monospace;">{{exam.questions_count}}</h4>
+                <h4>:تعداد سوالات</h4>
+            </div>
+        </div>
+
+    </div>  
+
+    <div class="questions-container">
+        {%for question in exam.questions.all%}
+            <div class="question" id="q-{{question.pk}}">
+                <img src="http://127.0.0.1:8000/assets/questions_pics/81_nmTjf9E.gif" class="question-img">
+                <div class="chooseZ">
+                    <button class="chz" onclick="updateKey('{{question.pk}}',1)" id="q-1-{{question.pk}}">1</button>
+                    <button class="chz" onclick="updateKey('{{question.pk}}',2)" id="q-2-{{question.pk}}">2</button>
+                    <button class="chz" onclick="updateKey('{{question.pk}}',3)" id="q-3-{{question.pk}}">3</button>
+                    <button class="chz" onclick="updateKey('{{question.pk}}',4)" id="q-4-{{question.pk}}">4</button>
+                </div>
+            </div>
+            <script>
+                q_counter ++
+                document.getElementById('q-{{question.pk}}').setAttribute('id' ,'question-'+q_counter)
+            </script>
+        {%endfor%}
+
+    </div>
+
+</main>
+
+<script>
+    var timeRemain = document.getElementById('time-remainin')
+    var startTime = parseInt(examAir.time)
+    var ExamTime = parseInt('{{exam.time}}')*60000
+    var reqEnd = false
+
+    function clockInterval(){
+        const nowTime = new Date().getTime()
+        const diffTime = nowTime  - startTime
+
+        const diffTime2 = (ExamTime - diffTime)/1000
+
+        const mins = Math.floor(diffTime2 / 60)
+        const secs = Math.floor( diffTime2 - mins*60)
+
+        timeRemain.innerHTML = `${mins}:${secs}`
+
+        if(mins < 0){
+            timeRemain.innerHTML = '00:00'
+            if(!reqEnd){
+                END()
+            }
+        }
+    }
+    clockInterval()
+    setInterval(clockInterval, 1000)
+
+    function keyConvertToString(listKey){
+        let stringKey = ''
+        for (let key of listKey){
+            stringKey += key+','
+        }
+        return stringKey = stringKey.substring(0, stringKey.length-1)
+    }
+
+    function updateKey(question, choice){
+        const btn = document.getElementById(`q-${choice}-${question}`)
+        let questionID = btn.parentElement.parentElement.getAttribute('id')
+        questionID = parseInt(questionID.split('-')[1]) 
+        
+        nowKey = examAir.Key.split(',')
+        
+        if(nowKey[questionID-1] == choice){
+            nowKey[questionID-1] ='0'
+        }else{
+            nowKey[questionID-1] = choice
+        }
+
+        examAir.Key = keyConvertToString(nowKey)
+        setNewAir()
+        updateSelectedButtonsColors(questionID)
+    }
+
+    function setNewAir(){
+        localStorage.setItem('virtualExam-'+'{{exam.pk}}', JSON.stringify(examAir))
+    }
+
+
+    function updateSelectedButtonsColors(changedId){
+        // Choices
+        const keys = examAir.Key.split(',')
+        const changedKey = parseInt(keys[changedId-1])
+        const questionElement = document.getElementById('question-' + changedId)
+        const buttons = questionElement.children[1].children
+
+        for (let i=1;i<=buttons.length;i++){
+            if (i==changedKey){
+                buttons[i-1].classList.add('selected')
+            }else{
+                buttons[i-1].classList.remove('selected')
+            }
+        }
+    }
+
+    for(let i=1;i<=q_counter;i++){
+        updateSelectedButtonsColors(i)
+    }
+
+    function END(){
+        reqEnd = true
+        
+        $.ajax({
+            url:'/questionbank/virtualexam/{{exam.pk}}/',
+            type:'POST',
+            data:{
+                'csrfmiddlewaretoken':'{{csrf_token}}',
+                'key':examAir.Key
+                
+            },
+            success:function(response){
+                if (response['ended'] == 'true'){
+                    window.location.href = '/questionbank/virtualexam/'
+                    localStorage.removeItem('virtualExam-'+'{{exam.pk}}')
+                }
+            }
+        })
+    }
+
+</script>
+{%endblock%}

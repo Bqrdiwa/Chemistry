@@ -1,0 +1,227 @@
+{%load static%}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'home/auth.css'%}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Register • Chemistry</title>
+
+</head>
+
+<body>
+    <main>
+
+        <a href="{%url 'home'%}" style="position: absolute; top: 0em; left: 0em; padding: 1em; z-index: 99;">
+            <svg style="margin: auto 0; transform: rotate(90deg); color: rgb(51, 51, 51);" data-testid="geist-icon"
+                fill="none" height="20" shape-rendering="geometricPrecision" stroke="currentColor"
+                stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="20"
+                style="color: currentcolor;">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </a>
+
+        <div id="registerPanel">
+            <heading>
+                <h2 style="font-family: monospace">Register</h2>
+                <p style="font-size: 0.85rem; color: #111; margin-top: 1em;">اگر حساب کاربری ندارید از اینجا اقدام کنید
+                </p>
+                <div id="err_wrapper">
+                </div>
+            </heading>
+
+            <div style="all: unset; display: flex; flex-direction: column; gap: 2em; padding: 0 1.5em;">
+                <div class="input-wrapper" style="height: 160px;">
+                    <div class="input-wrapper form-fade" style="position: absolute;" id="detail-Cont">
+                        <div class="form-group">
+                            <span class="indicator-span">نام کاربری</span>
+                            {{rform.username}}
+                        </div>
+                        <div class="form-group">
+                            <span class="indicator-span">رمز عبور</span>
+                            {{rform.password1}}
+                        </div>
+                        <div class="form-group">
+                            <span class="indicator-span">تکرار رمز</span>
+                            {{rform.password2}}
+                        </div>
+                        <div class="form-group">
+                            <span class="indicator-span">شماره تلفن</span>
+                            {{rform.phone_number}}
+                        </div>
+                    </div>
+
+                    <div class="form-group faded-form" id="vc_cont">
+                        <span class="indicator-span">کد تایید</span>
+                        <input type="text" maxlength="4" id="vertification_code"  class="form-field" placeholder="کد ارسال شده">
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column;margin-top: 2em;gap: 1em;">
+                    <p style="font-family: monospace;font-size: .9rem;align-self: center;" id="remainTime"></p>
+                    <button class="btn_fill" id="submitRegister">انجام</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toggle-radio">
+            <div id="switch">
+                <label>ثبت نام</label>
+                <svg style="display: flex; margin: auto 0; color: #111;" data-testid="geist-icon" fill="none"
+                    height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" width="32"
+                    style="color: var(--accents-2);">
+                    <path d="M16.88 3.549L7.12 20.451"></path>
+                </svg>
+                <a href="{%url 'login'%}">ورود</a>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+
+<script>
+    validate = (evt) => {
+        var theEvent = evt || window.event;
+
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+
+    let submitBtn = document.getElementById('submitRegister')
+    let errWrapper = document.getElementById('err_wrapper')
+    let vcCont = document.getElementById('vc_cont')
+    let detailCont = document.getElementById('detail-Cont')
+    let remainT = document.getElementById('remainTime')
+
+    submitBtn.onclick = function(){
+        submitRegister()
+    }
+    function toggleMenu(){
+        if(detailCont.classList.contains('form-fade')){
+            detailCont.classList.remove('form-fade')
+            detailCont.classList.add('faded-form')
+
+            vcCont.classList.add('form-fade')
+            vcCont.classList.remove('faded-form')
+            submitBtn.onclick = function(){
+                submitVC()
+            }
+        }else{
+            errWrapper.innerHTML = `
+                        <p class="notif_message">اکانت شما با موفقیت ساخته شد</p>`
+            setTimeout(function(){
+                window.location.href = '/profile/'
+            },1500)
+            
+
+            submitBtn.onclick = function(){
+                }
+        }
+    }
+    
+    function submitVC(){
+        remainT.innerHTML = ''
+        const phone_number = document.getElementById('reg_phone').value
+        const vc = document.getElementById('vertification_code').value
+        const username = document.getElementById('reg_username').value
+        const password = document.getElementById('reg_pass').value
+
+
+        $.ajax({
+            url: '/register/',
+            type: 'POST',
+            data : {
+                'phone_number':phone_number,
+                'username':username,
+                'password':password,
+                'csrfmiddlewaretoken':'{{csrf_token}}',
+                'code':vc,
+                'action':'vc_verify'
+            },
+            success: function(response){
+                const err = response['ERR']
+                if (err != 'None'){
+                   errWrapper.innerHTML = `   <p class="err_message">کد وارد شده <span style='font-family:monospace;'>(${vc})</span> مطابقت ندارد</p>`
+                }else{
+                    toggleMenu()
+                }
+            }
+
+        })
+
+    }
+
+    function submitRegister(){
+        errWrapper.innerHTML =''
+        const username = document.getElementById('reg_username').value
+        const password1 = document.getElementById('reg_pass').value
+        const password2 = document.getElementById('reg_pass_confirm').value
+        const phone_number = document.getElementById('reg_phone').value
+
+        var intervaling = false;
+
+        $.ajax({
+            url: '/register/',
+            type: 'POST',
+            data : {
+                'username':username,
+                'password1':password1,
+                'password2':password2,
+                'phone_number':phone_number,
+                'csrfmiddlewaretoken':'{{csrf_token}}',
+                'sTime':new Date().getTime(),
+                'action':'create_account'
+            },
+            success: function(response){
+                let errors = JSON.parse(response['ERR'])
+                if(errors['HAS'] == 'Y'){
+                    let Keys = Object.keys(errors)
+                    Keys = Keys.filter(e => e !== 'HAS');
+
+                    for (let i=0;i<Keys.length;i++){
+                        document.getElementById(Keys[i]).value =''
+                        errWrapper.innerHTML += `
+                        <p class="err_message">${errors[Keys[i]]}</p>`
+                    }
+                }else{
+                    if(response['codeGenned'] == 'True'){
+                        toggleMenu()
+                    }else{
+                        
+                        if(!intervaling){
+                            let remaininTimeInSec = parseInt(response['ERRT'])
+
+                            let Gloc = setInterval(function(){
+                                    remain = (120-remaininTimeInSec)
+                                    if(remain <= 0){
+                                        clearInterval(Gloc)
+                                        remain = 0
+                                    }
+                                    remainT.innerHTML =  remain+'s'
+                                    remaininTimeInSec ++
+                                },1000)
+                        }
+                        
+                        intervaling  = true
+
+                    }
+                }
+            }
+
+        })
+    }
+</script>

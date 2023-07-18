@@ -1,0 +1,1142 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+    
+<script>
+    const ExamName = '{{Exam.pk}}'
+    var socket = new WebSocket(`ws://${window.location.host}/ws/exam/${ExamName}/`)
+    
+
+</script>
+    
+
+    {%if admin%}
+    <script>
+    function openResultAbility(pk, resultPk){
+        const userP = document.getElementById('user-result-'+pk)
+        userP.classList.add('HoverAbility')
+        userP.addEventListener('click', function(){
+            window.open(`/exam/result/${resultPk}/`, '_black')
+        })
+    }
+    </script>
+    <style>
+        .admin-view {
+            margin-top: 30px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .admin-panel {
+            width: 60%;
+            max-height: 400px;
+            border:1px solid #e2e2e2;
+            box-shadow: 0 0 5px 3px #e2e2e2;
+            display: flex;
+            border-radius: 5px;
+            flex-direction: column;
+            padding: 1em;
+            gap: 10px;
+        }
+
+        .panel-column-breaker {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            padding: .5em;
+        }
+
+        .panel-column-breaker > h2 {
+            font-family: Poppins;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .panel-column-breaker> h3 {
+            font-size: .875rem;
+            font-family: Poppins;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .panel-column-breaker > h3p {
+            font-family: IRsansB;
+            font-size: .875rem;
+            font-weight: 500;
+        }
+
+
+        .lower-body-admin-panel {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 10px;
+
+        }
+
+        .exam-options {
+            flex-grow: 1;
+            flex-basis: 0;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            padding: 0.7em;
+            gap: 4px;
+            justify-content: space-between;
+        }
+
+        .start-end{
+            width: 100%;
+            display: flex;
+            gap: 2px;
+            border-radius: 5px;
+            transition: all 300ms ease;
+            overflow: hidden;
+        }
+
+        .start-end > button {
+            background-color: black;
+            color: white;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            padding: .3em;
+            border: 1px solid black;
+            font-family: Poppins;
+            transition: all 300ms ease;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: .9rem;
+            flex: 1;
+        }
+
+        .start-end > button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        #exam-status {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            padding: 0 .5em;
+            align-items: center;
+            color: black;
+            font-family: Poppins;
+            width: 20%;
+            font-weight: 500;
+            font-size: .9rem;
+            transition: all 300ms ease;
+        }
+        
+        .users-in-exam {
+            flex-grow: 1;
+            flex-basis: 0;
+            border: 1px solid #e2e2e2;
+            padding: .7em;
+            display: flex;
+            flex-direction: column;
+            max-height: 300px;
+            gap: 5px;
+            border-radius: 5px;
+        }
+
+        #users-container {
+            border-radius: 5px;
+            border: 1px solid #e2e2e2;
+            overflow-y: auto;
+            padding: .5em;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            height: 100%;
+        }
+
+        #users-container::-webkit-scrollbar{
+            width: 3px; 
+            background-color: #222;
+        }
+
+        #users-container::-webkit-scrollbar-thumb{
+            background-color: white;
+        }
+
+        #users-container .user {
+            border: 1px solid #e2e2e2;
+            height: fit-content;
+            padding: .5em;
+            display: flex;
+            flex-grow: 1;
+            flex-basis: 0;
+            width: fit-content;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+
+        }
+        
+
+        .user > p {
+            font-family: IRSansB;
+            font-size: .8rem;
+            white-space: nowrap;
+        }
+
+        .user-progress {
+            height: 3px;
+            width: 100%;
+            background-color: #999;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 4px;
+        }
+
+        .user-progress-bar {
+            height: 100%;
+            width: 22%;
+            transition: all 300ms ease;
+            background-color: black;
+        }
+
+        .admin-panel-2 {
+            width: 40%;
+            border: 1px solid #e2e2e2;
+            box-shadow: 0 0 5px 3px #e2e2e2;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            gap: 10px;
+            padding: 1em;
+        }
+
+        .admin-panel-2 >a> button {
+            background-color: black;
+            color: white;
+            width: 100%;
+            transition: all 300ms ease;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: .5em;
+            font-family: IRSansB;
+            cursor: pointer;
+        }
+
+        .admin-panel-2 >a> button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .exam-key {
+            width: 100%;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 5px;
+            overflow-y: auto;
+            height: 300px;
+            padding: .5em;
+        }
+
+        .exam-key::-webkit-scrollbar{
+            width: 3px; 
+            background-color: #222;
+        }
+
+        .exam-key::-webkit-scrollbar-thumb{
+            background-color: white;
+        }
+
+        .key-cont {
+            width: 100%;
+            height: fit-content;
+
+            display: flex;
+            gap: 7px;
+            padding: .3em;
+            font-weight: bold;
+        }
+
+        .key-q-num {
+            font-family: Poppins;
+            font-size: .8rem;
+        }
+
+        .key-choices {
+            flex: 1;
+            gap: 3px;
+            display: flex;
+            align-items: center;
+        }
+
+        .key-choices > .choice {
+            height: 2px;
+            flex-grow: 1;
+            flex-basis: 0;
+            background-color: #000;
+        }
+
+        .HoverAbility {
+            font-size: 825rem;
+            cursor: pointer;
+        }   
+
+        .HoverAbility:hover {
+            text-decoration: underline;
+            color: #444;
+        }
+    @media screen and (max-width: 768px) {
+        .admin-view {
+            flex-direction: column;
+        }
+        
+        .admin-panel {
+            width: 100%;
+            height: fit-content;
+            max-height: 100%;
+        }
+
+        .lower-body-admin-panel {
+            flex-direction: column-reverse;
+        }
+
+        .admin-panel-2{
+            width: 100%;
+        }
+    }
+
+
+    </style>
+        <main>
+            <div class="admin-view">
+                <div class="admin-panel">
+
+                    <div class="panel-column-breaker">
+                        <h2>Admin Panel</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hexagons" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 18v-5l4 -2l4 2v5l-4 2z"></path>
+                            <path d="M8 11v-5l4 -2l4 2v5"></path>
+                            <path d="M12 13l4 -2l4 2v5l-4 2l-4 -2"></path>
+                         </svg>
+                    </div>
+
+                    <div class="lower-body-admin-panel">
+                        <div class="users-in-exam">
+                            <div class="panel-column-breaker" style="height: 42px;">
+                                <h3>Students</h3>
+                                <h3>{{students_count}}</h3>
+                            </div>
+                            
+                            <div id="users-container">
+                                {%for student in studens_progress%}
+                                    {%if student.progress == 'ended'%}
+                                        <div class="user">
+                                            <p id="user-result-{{student.pk}}">{{student.name}}</p>
+                                            <div class="user-progress">
+                                                <div class="user-progress-bar" style="background-color: green;width: 100%;">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            openResultAbility('{{student.pk}}','{{student.resultPk}}')
+                                        </script>
+                                    {%else%}
+                                        <div class="user">
+                                            <p id="user-result-{{student.pk}}">{{student.name}}</p>
+                                            <div class="user-progress">
+                                                <div class="user-progress-bar" id="user-progress-bar-{{student.pk}}">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            document.getElementById('user-progress-bar-{{student.pk}}').style.width = '{{student.progress}}'+'%'
+                                        </script>
+                                    {%endif%}
+                                {%endfor%}
+                            </div>
+                        </div>
+
+                        <div class="exam-options">
+                            <div class="panel-column-breaker">
+                                <h3>Time: </h3>
+                                <h3>{{Exam.time}}min</h3>
+                            </div>
+
+                            <div class="panel-column-breaker">
+                                <h3>Start-End: </h3>
+                                <h3>{{Exam.startTime|time:'H:i'}} ~ {{Exam.endTime|time:'H:i'}}</h3>
+                            </div>
+
+                            <div class="panel-column-breaker">
+                                <h3>Grade: </h3>
+                                <h3p>{{Exam.grade}}</h3p>
+                            </div>
+
+                            <div class="panel-column-breaker">
+                                <h3>Unit: </h3>
+                                <h3p> فصل {{Exam.unit}}  </h3p>
+                            </div>
+                            
+                            <div class="panel-column-breaker">
+                                <h3>Tests: </h3>
+                                <h3>{{Exam.get_q_l}}</h3>
+                            </div>
+
+                            <div class="start-end">
+                                {%if Exam.status == 'Started'%}
+                                    <button onclick="endAllExams()" id="startEndBtn">End</button>
+                                    <div id="exam-status">
+                                        
+                                    </div>
+
+                                {%elif Exam.status == 'None'%}
+                                    <button onclick="startExam()"  id="startEndBtn">Start</button>
+                                    <div id="exam-status">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M7 4v16l13 -8z"></path>
+                                         </svg>
+                                    </div>
+                                {%else%}
+                                    <button  id="startEndBtn">Ended</button>
+                                {%endif%}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel-2">
+                    <div class="exam-key">
+                        {%for question in Questions%}
+                            <div class="key-cont">
+                                <div class="key-q-num">
+                                    {{question.pk}}
+                                </div>
+
+                                <div class="key-choices">
+                                    {%for choice in question.choices%}
+                                    
+                                        {%if choice%}
+                                            <div class="choice" style="background-color: green;height: 4px;">
+
+                                            </div>
+                                        {%else%}
+                                            <div class="choice">
+
+                                            </div>
+                                        {%endif%}
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        {%endfor%}
+
+                    </div>
+                    <a href="{%url 'exam-questions' Exam.name%}">
+                        <button>مشاهده سوالات</button>
+                    </a>
+                </div>
+            </div>
+
+        </main>
+        <script>
+            var startEndBtn = document.getElementById('startEndBtn')
+            var examStatus = document.getElementById('exam-status')
+            var startedTime = parseInt('{{Exam.Stime}}')
+            var Status = '{{Exam.status}}'
+            function statusClock(){
+                let newDate = new Date().getTime()/1000;    
+
+                let difference = newDate - startedTime
+
+                let mins = Math.floor(difference / 60)
+                let secs = Math.floor(difference - (mins *60));
+
+
+                examStatus.innerHTML = `
+                ${mins}:${secs}
+                `
+            }
+
+            if(Status == 'Started'){
+                var statusInterval  = setInterval(statusClock, 1000)
+            }
+            function endAllExams(){
+                let newDate = new Date().getTime()/1000;
+
+                self.socket.send(JSON.stringify({
+                    'action':'endAllExams',
+                    'timeNow':newDate
+                }))
+
+                clearInterval(statusInterval)
+                examStatus.style.display ='none'
+                startEndBtn.innerHTML = 'Ended'
+                startEndBtn.onclick = function(){
+                    
+                }
+            }
+            function startExam(){
+                sTime = new Date().getTime()/1000;
+                socket.send(JSON.stringify({
+                    'action':'startExam',
+                    'sTime': sTime
+                }))
+                startedTime = sTime
+                var statusInterval  = setInterval(statusClock, 1000)
+                startEndBtn.innerHTML = 'End'
+                startEndBtn.onclick = function(){
+                    endAllExams()
+                }
+
+            }
+            socket.onmessage = function(e){
+                DATA = JSON.parse(e.data)
+
+                const action = DATA['action']
+
+                if (action == 'endExam'){
+                    const userProgress = document.getElementById(`user-progress-bar-${DATA['userPk']}`)
+                    userProgress.style.width  = '100%'
+                    userProgress.style.backgroundColor = 'green'
+
+                    openResultAbility(DATA['userPk'],DATA['resultPk'])
+                }else if (action == 'updateProgress'){
+                    const userProgress = document.getElementById(`user-progress-bar-${DATA['userPk']}`)
+                    userProgress.style.width = DATA['progressPercent']+'%'
+                }else if (action == 'userJoin'){
+                    const userProgress = document.getElementById(`user-progress-bar-${DATA['userPk']}`)
+                    if (userProgress == undefined){
+                        document.getElementById('users-container').innerHTML += 
+                        `
+                        <div class="user">
+                            <p id="user-result-${DATA['userPk']}">${DATA['username']}</p>
+                            <div class="user-progress">
+                                <div class="user-progress-bar" id="user-progress-bar-${DATA['userPk']}" style="width:0%;">
+                                    
+                                </div>
+                            </div>
+                        </div>`
+                    }
+
+                }else if (action == 'ended_data'){
+                    const endedData = DATA['ended_data']
+                    endedData.forEach((data)=>{
+                        const progressBar = document.getElementById(`user-progress-bar-${data['userPk']}`)
+                        progressBar.style.width = '100%'
+                        progressBar.style.backgroundColor = 'green'
+
+                        openResultAbility(data['userPk'],data['resultPk'])
+                    })
+                }
+            }
+        </script>
+    {%else%}
+        <style>
+            .exam-header-cont {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 30px;
+            }
+
+            .exam-title {
+                width: 100%;
+                padding: .7em;
+                border: 1px solid #e2e2e2;
+                text-align: center;
+                font-family: IRSansB;
+                border-radius: 5px;
+                border-bottom: 2px solid black;
+            }
+
+            .exam-header-lower {
+                width: 100%;
+                display: flex;
+                gap: 10px;
+            }
+
+            .exam-desc {
+                flex-grow: 1;
+                flex-basis: 0;
+                border: 1px solid #e2e2e2;
+                border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: .7em;
+            }
+
+            .exam-desc > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+
+            .column-breaker {
+                width: 90%;
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .column-breaker > h3 {
+                font-family: IRSansB;
+                font-size: .875rem;
+            }
+
+            button {
+                background-color: black;
+                color: white;
+                border-radius: 5px;
+                font-family: IRSansB;
+                font-size: .875rem;
+                transition: all 300ms ease;
+                border: 1px solid black;
+                width: 100%;
+                cursor: pointer;
+            }
+
+            button:hover{
+                background-color: white;
+                color: black;
+            }
+
+            .head-column-breakder {
+                display: flex;
+                padding: .3em;
+                justify-content: space-between;
+                border: 1px solid #e2e2e2;
+                width: 100%;
+                border-radius: 3px;
+            }
+
+            .head-column-breakder > h2 {
+                font-family: IRSansB;
+                font-size: 1rem;
+                margin: 0;
+            }
+
+            .clock-cont {
+                display: flex;
+                flex-grow: 1;
+                border: 1px solid #e2e2e2;
+                border-radius: 5px;
+                padding: .7em;
+                flex-basis: 0;
+
+                flex-direction: column;
+            }
+
+            .clock {
+                width: 90%;
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                
+            }
+
+            .clock > h4 {
+                font-family: Poppins;
+                letter-spacing: 4px;
+                font-weight: 500;
+                font-size: 2rem;
+                height: fit-content;
+                margin: 0;
+                padding: .5em;
+                border: 1px solid black;
+                width: 90%;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .questions-cont {
+                flex-grow: 2;
+                flex-basis: 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                overflow-y: auto;
+                border-radius: 5px;
+                padding: 1em;
+                gap: 8px;
+                height: 300px;
+                flex-wrap: wrap;
+                border: 1px solid #e2e2e2;
+            }
+
+            .question-obj{
+                display: flex;
+                gap: 5px;
+                width: 100%;
+                height: fit-content;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .choices{
+                display: flex;
+                flex: 1;
+                gap: 3px;
+            }
+
+            .choice {
+                background-color: black;
+                height: 2px;
+                width: 10px;
+                flex-grow: 1;
+                flex-basis: 0;
+            }
+
+            h5 {
+                margin: 0;
+                font-family: Poppins;
+                font-size: .9rem;
+            }
+
+            .questions-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+                margin-top: 50px;
+                position: relative;
+            }
+
+            .question{
+                width: 100%;
+                border: 1px solid #e2e2e2;
+                position: relative;
+            }
+
+            .question > img {
+                width: 100%;
+            }
+
+            .question-settings {
+                display: flex;
+                padding: .7em;
+                gap: 20px;
+                align-items: center;
+            }
+            .question-options {
+                display: flex;
+                gap: 10px;
+                justify-content: space-between;
+                width: 10%;
+                border: 1px solid black;
+                border-radius: 5px;
+                width: 10%;
+                display: flex;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 300ms ease;
+            }
+
+            .question-options:hover {
+                color: white;
+                background-color: black;
+            }
+
+
+            .question-choices {
+                display: flex;
+                justify-content: space-between;
+                gap: 5px;
+                width: 50%;
+                
+            }
+
+            .q-c {
+                flex-grow: 1;
+                flex-basis: 0;
+                height: fit-content;
+                border: 1px solid black;
+                background-color: white;
+                color: black;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                font-family: Farnaz;
+                border-radius: 5px;
+                font-size: 1rem;
+                transition: all 300ms ease;
+                cursor: pointer;
+            }
+
+            .q-c:hover {
+                color: white;
+                background-color: black;
+            }
+
+            .question-number {
+                top: 0;
+                right: 2%;
+
+                background-color: white;
+                border-radius: 5px;
+                position: absolute;
+                top: 3%;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 3%;
+                font-family: Farnaz;
+                font-size: 1rem;
+            }
+
+            .answered {
+                background-color: black;
+                color: white;
+            }
+            @media screen and (max-width: 768px) {
+                .exam-header-lower{
+                    flex-direction: column;
+                }
+                .questions-cont {
+                    grid-template-columns: 1fr 1fr 1fr 1fr;
+                    flex-basis: unset;
+                    max-height: 300px;
+                    height: fit-content;
+                }
+
+                .q-c {
+                    font-size: .8rem;
+                    height: 15px;
+                }
+
+                .question-number {
+                    font-size: .6rem;
+                    top: -4;
+                }
+                .question-options > svg {
+                width: 15px;
+                height: 15px;
+
+            }
+            }
+        </style>
+            <main>
+                <div class="exam-header-cont">
+                    <div class="exam-title">
+                        {{Exam.name}}
+                    </div>
+
+                    <div class="exam-header-lower">
+                        <div class="questions-cont">
+                            {%for question in Questions%}
+                                <div class="question-obj">
+                                    <h5>{{question.pk}}</h5>
+                                    <div class="choices">
+                                        <div class="choice">
+
+                                        </div>
+                                        <div class="choice">
+
+                                        </div>
+                                        <div class="choice">
+
+                                        </div>
+                                        <div class="choice">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {%endfor%}
+                        </div>
+
+                        <div class="clock-cont">
+                            <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
+                            <div class="head-column-breakder">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alarm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 13m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+                                    <path d="M12 10l0 3l2 0"></path>
+                                    <path d="M7 4l-2.75 2"></path>
+                                    <path d="M17 4l2.75 2"></path>
+                                 </svg>
+                                <h2>تایم باقیمانده</h2>
+                            </div>
+
+                            <div class="clock">
+                                <h4 id="clock">00:00</h4>
+                            </div>
+                            </div>
+
+                            <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
+                                    <div class="head-column-breakder">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M3 16v-5.5a2.5 2.5 0 0 1 5 0v5.5m0 -4h-5"></path>
+                                            <path d="M12 6l0 12"></path>
+                                            <path d="M16 16v-8h3a2 2 0 0 1 0 4h-3m3 0a2 2 0 0 1 0 4h-3"></path>
+                                         </svg>
+                                        <h2>سوالات</h2>
+                                    </div>
+                                    
+                                    <div class="column-breaker">
+                                        <h3 id="answered">12 /34</h3>
+                                        <h3>جواب داده شده</h3>
+                                    </div>
+
+                                    <div class="column-breaker">
+                                        <h3>2</h3>
+                                        <h3>زمانگیر</h3>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="exam-desc">
+                            <div>
+                                <div class="head-column-breakder">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                                        <path d="M9 17h6"></path>
+                                        <path d="M9 13h6"></path>
+                                    </svg>
+                                    <h2>جزئیات آزمون</h2>
+                                </div>
+                                <div class="column-breaker">
+                                    <h3>{{Exam.time}}min</h3>
+                                    <h3>زمان آزمون</h3>
+                                </div>
+                                <div class="column-breaker">
+                                    <h3>{{Exam.get_q_l}}</h3>
+                                    <h3>تعداد سوالات</h3>
+                                </div>
+                                <div class="column-breaker">
+                                    <h3>{{Exam.grade}} ~ فصل {{Exam.unit}}</h3>
+                                    <h3>پایه - فصل</h3>
+                                </div>
+                            </div>
+                            <button onclick="endExam()">اتمام آزمون</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    <h2 style="position: absolute;top: -25px;right: 20px;margin:0;font-family: Farnaz;border-bottom: 2px solid black;font-size: 1rem;">سوالات</h2>
+                    <h2 style="position: absolute;top: -25px;left: 20px;margin:0;font-family: Farnaz;border-bottom: 2px solid black;font-size: 1rem;">Questions</h2>
+                    {%for question in Questions%}
+                    <div class="question">
+                        <img src="{{question.Question.url}}">
+                        <h3 class="question-number">{{question.pk}}</h3>
+                        <div class="question-settings">
+                            <div class="question-choices">
+                                <div class="q-c" id="{{question.pk}}-1">
+                                    1
+                                </div>
+                                <div class="q-c" id="{{question.pk}}-2">
+                                    2
+                                </div>
+                                <div class="q-c" id="{{question.pk}}-3">
+                                    3
+                                </div>
+                                <div class="q-c" id="{{question.pk}}-4">
+                                    4
+                                </div>
+                            </div>
+
+                            <div class="question-options">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-empty" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+                                    <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+                                 </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        document.getElementById('{{question.pk}}-1').addEventListener('click', function(){
+                            updateKey('{{question.pk}}', 1)
+                        })
+
+                        document.getElementById('{{question.pk}}-2').addEventListener('click', function(){
+                            updateKey('{{question.pk}}', 2)
+                        })
+
+                        document.getElementById('{{question.pk}}-3').addEventListener('click', function(){
+                            updateKey('{{question.pk}}', 3)
+                        })
+
+                        document.getElementById('{{question.pk}}-4').addEventListener('click', function(){
+                            updateKey('{{question.pk}}', 4)
+                        })
+                    </script>
+                    {%endfor%}
+                </div>
+            </main>
+            <script>
+
+                
+                var key = '{{AIR.key}}';
+                var startTime = '{{AIR.start}}';
+                var questionsCount = parseInt('{{Exam.get_q_l}}');
+                var clock = document.getElementById('clock');
+                var answered = document.getElementById('answered')
+                var examTime = parseInt('{{Exam.time}}')*60000;
+        
+                if(key == ''){
+                    let keyArr = ''
+                    for(let i =0;i<questionsCount;i++){
+                        keyArr += '0,'
+                    };
+                    let newStartTime = new Date().getTime();
+                    let generatedKey = keyArr.substring(0,keyArr.length-1);
+                    key = generatedKey;
+                    key= key.split(',');
+                    startTime = newStartTime;
+
+                    socket.onopen = function(){
+                        socket.send(JSON.stringify({
+                        action: 'initiate',
+                        key: generatedKey,
+                        startTime: newStartTime
+                    }))
+
+                    }
+
+                }else{
+                    key= key.split(',');
+                };
+                
+                for (let i =0;i<questionsCount;i++){
+                    if(key[i] != '0'){
+                        document.getElementById((i+1)+'-'+key[i]).classList.add('answered')
+                    }
+                };
+                function updateKey(question, choice){
+                    let questionIndex = parseInt(question)-1;
+                    
+                    let alreadyAnswered = key[questionIndex];
+        
+                    if(alreadyAnswered != '0' | alreadyAnswered == choice){
+                        document.getElementById(`${question}-${alreadyAnswered}`).classList.remove('answered');
+                        key[questionIndex] = '0';
+                    };
+                    if(alreadyAnswered != choice){
+                        key[questionIndex] = choice;
+                        document.getElementById(`${question}-${choice}`).classList.add('answered');
+                    };
+        
+                    updateAIR()
+                };
+        
+                function updateAIR(){
+                    let stringifiedKey = '';
+                    key.forEach((item)=>{
+                        stringifiedKey += item+','
+                    });
+        
+                    stringifiedKey = stringifiedKey.substring(0,stringifiedKey.length-1)
+                    socket.send(JSON.stringify({
+                        action: 'updateKey',
+                        key: stringifiedKey
+                    }))
+        
+                };
+        
+                let tiktak = function(){
+                    let newDate = new Date().getTime();
+        
+                    let difference = (newDate - startTime);
+                    let remainingTime = (examTime - difference)/1000
+        
+                    let mins = Math.floor(remainingTime / 60);
+                    let secs = Math.floor(remainingTime - (mins *60));
+        
+                    if (mins < 0 && secs | 0){
+                        endExam('end-time')
+                        clearInterval(tiktak)
+                    }else{
+                        if(mins < 10){
+                        mins = '0'+mins;
+                        };
+                        if(secs < 10){
+                            secs = '0'+secs;
+                        };
+                        clock.innerHTML = `${mins}:${secs}`;
+                    };
+        
+        
+        
+        
+                };
+
+                tiktak();
+                setInterval(tiktak, 1000);
+                function endExam(why){
+                    if (socket.readyState === WebSocket.OPEN) {
+                        let newDate = new Date().getTime();
+                        
+                        let difference = (newDate - startTime)/1000;
+                        
+                        socket.send(JSON.stringify({
+                            action: 'endExam',
+                            spendTime: difference,
+                        }))
+                    }else{
+                        socket.onopen = function(){
+                            let newDate = new Date().getTime();
+        
+                            let difference = (newDate - startTime)/1000;
+                            
+                            socket.send(JSON.stringify({
+                                action: 'endExam',
+                                spendTime: difference,
+                            }))
+                        }
+                    }
+                }
+                function updateAllDeatils(){
+                    let counter = 0;
+                    key.forEach((item)=>{
+                        if(item != '0'){
+                            counter ++;
+                        }
+                    });
+                    answered.innerHTML = `${counter}/${questionsCount}`;
+        
+                }
+        
+                updateAllDeatils();
+
+                socket.onmessage = function(e){
+                    DATA = JSON.parse(e.data)
+
+                    const action = DATA['action']
+
+                    if (action == 'endExam'){
+                        window.location.href = `/exam/result/${DATA['resultPk']}/`
+                    }else if (action == 'redirect'){
+                        window.location.href = `/exam/result/${DATA['resultPk']}/`
+                    }
+                }
+            </script>
+    {%endif%}
+    
+
+
+
+
+    
+{%endblock content%}

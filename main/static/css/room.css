@@ -1,0 +1,374 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-color: #313338;
+}
+
+.container {
+    height: calc(100% - 60px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.base-container {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 80% 20%;
+    height: fit-content;
+    align-items: center;
+    gap: 5px;  
+    min-height: 40vh;
+}
+
+#webcam {
+    max-width: 100%;
+    margin-top: 0;
+    height: fit-content;
+    
+}
+
+#webcams-container{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: fit-content;
+    max-height: 100%;
+    justify-self: left;
+    margin: 0;
+    border: 1px solid #111;
+    border-radius: 5px;
+    overflow: hidden;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+.options-box {
+    bottom: 0;
+    position: absolute;
+    height: 60px;
+    display: flex;
+    width: 100%;
+    background-color: #1E1F22;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.option {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    background-color: #5d5e61;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all ease-in-out .5s;
+}
+
+
+
+.option > svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+#options {
+    bottom: 100px;
+    height: 280px;
+    display: none;
+    border: 1px solid #111;
+    width: 300px;
+    position: absolute;
+    left: 384px;
+    background-color: #313338;
+    border-radius: 5px;
+    transition: all 300ms ease-in-out;
+    animation: fadeIn .4s ease-in;
+    
+}
+
+button {
+    background-color: #3AE57F;
+    padding: 5px 10px;
+    color: #313338;
+    font-size: .9rem;
+    font-family: 'Poppins';
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    opacity: .6;
+
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        bottom: 60px;
+    }
+    to {
+        opacity: 1;
+        bottom: 100px;
+    }
+}
+
+.optionsBox {
+    padding: 5px;
+    border: none;
+    background-color: #2B2D31;
+    border: 1px solid #1E1F22;
+    border-radius: 4px;
+    color: #949BA4;
+    cursor: pointer;
+    outline: none;
+    margin-left: 50px;
+    width: fit-content;
+}
+
+.optionsBox:hover {
+    background-color: #43444B;
+}
+
+p {
+    margin: 0;
+    color: #949BA4;
+}
+
+
+
+h3 {
+    margin-left: 20px;
+    color: #F2F3F5;
+}
+
+.chat {
+    width: 100%;
+    max-height: 55vh;
+    height: 60%;
+    border: 1px solid #111;
+    justify-self: right;
+    align-self: center;
+    position: relative;
+    border-bottom-right-radius: 5px;
+}
+
+#msgs-section{
+    position: relative;
+    top:30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    width: 100%;
+    overflow-y: auto;
+    background-color: #313338;
+    margin: 0;
+    max-height: calc(100% - 80px);
+    scroll-behavior: smooth;
+}
+
+#msgs-section::-webkit-scrollbar {
+    background-color: #313338;
+    width: 5px;
+}
+
+#msgs-section::-webkit-scrollbar-thumb {
+    background-color: #1E1F22;
+    
+}
+
+
+
+@media screen and (max-width: 900px) {
+    .base-container {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+        gap: 10px;
+    }
+
+    .chat {
+        height: 40vh;
+    }
+
+}
+
+#chat-input {
+    width: 70%;
+    height: 100%;
+    outline: 0;
+    font-size: 1rem;
+    border: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    font-family: 'Gandom', 'Poppins';
+    background-color: #2B2D31;
+    border: 1px solid #111;
+    color: #949BA4;
+}
+
+.send-msg-options {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.7rem;
+    bottom: 15px;
+    width: 100%;
+    
+}
+
+.send-msg-btn {
+    height: 100%;
+    padding: 1px 4px; 
+    display: flex;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    background-color: #3AE57F;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #111;
+    border-left: 0;
+}
+
+.send-msg-btn:hover {
+    opacity: .6;
+}
+
+#more-options {
+    top: 10px;
+    right: 10px;
+    position: absolute;
+    color: #3AE57F;
+    cursor: pointer;
+}
+
+
+#more-options > svg {
+    width: 20px;
+    height: 20px;
+}
+
+#more-options >svg:hover {
+    opacity: .6;
+}
+
+#more-options-panel {
+    animation: moreOptionFadeIn .2s ease;
+    width: fit-content;
+    padding: 5px;
+    height: fit-content;
+    border: 1px solid #111;
+    border-radius: 5px;
+    background-color: #2B2D31;
+    border-top-right-radius: 0;
+    top: 18px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    right: 30px;
+    display: none;
+}
+
+@keyframes moreOptionFadeIn {
+    from {
+        opacity: 0;
+        right: 0;
+    }
+    to {
+        right: 30px;
+        opacity: 1;
+    }
+}
+
+
+.more-option-panel-item{
+    font-size: .85rem;
+    background-color: #2B2D31;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 5px;
+    color: #949BA4;
+    
+}
+
+.more-option-panel-item:hover {
+    background-color: #313338;
+}
+
+.class-detail {
+    width: 100%;
+    border: 1px solid #111;
+    border-top-right-radius: 5px;
+    position: relative;
+    height: 40%;
+}
+
+.side-bar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 5px;
+}
+
+.msg {
+    max-width: 90%;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    
+    height: fit-content;
+    width: fit-content;
+    padding: 5px 1rem;
+}
+
+.msg-sender {
+    width: 100%;
+    color: #F2F3F5;
+    font-size: .9rem;
+    font-family: 'Gandom' 'Poppins';
+}
+
+.msg-content {
+    padding: 7px;
+    font-size: .8rem;
+    background-color: #A1DC95;
+    color: black;
+    border-radius: 5px;
+    font-family: 'Gandom' 'Poppins';
+}
+
+@font-face {
+    font-family: 'Gandom';
+    src: url(../assets/Gandom.ttf);
+}
+
+
+.clock {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: #949BA4;
+    font-family: 'Poppins';
+    font-size: .95rem;
+}
+
+#webcam-2{
+    width: fit-content;
+    height: fit-content;
+}

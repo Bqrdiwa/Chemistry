@@ -1,0 +1,112 @@
+{%extends 'home/base.html'%}
+{%load static%}
+
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/resultquestions.css'%}">
+
+<main>
+    <div class="header">
+        <button class="btn_setting"  onclick="showAnswers('Wrongs');">غلط</button>
+        <button class="btn_setting" onclick="showAnswers('Corrects');">صحیح</button>
+        <button class="btn_setting"  onclick="showAnswers('notAnswered');">نزده</button>
+    </div>
+
+    
+    <div class="mein" id="Wrongs" style="display: none;">
+
+        {%for q in wrongs%}
+            <div class="Q-container" style="border-bottom: 2px solid red;">
+                <img src="{{q.Question.url}}" style="max-width: 100%; height: auto;margin-bottom: 10px;">
+                <div class="question-lower">
+                    <button class="more-detail" onclick="window.location.href = '/questionbank/{{q.pk}}/'">جزئیات</button>
+                    <div class="column-maker">
+                        <p style="font-size: .9rem;font-family: monospace;">{{q.Answer}}</p>
+                        <p style="font-size: .75rem;">~ گزینه صحیح</p>
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+    
+    </div>
+
+
+    <div class="mein" id="notAnswered" style="display: none;">
+
+        {%for q in notAnswered%}
+            <div class="Q-container" style="border-bottom: 2px solid gray;">
+                <img src="{{q.Question.url}}" style="max-width: 100%; height: auto;margin-bottom: 10px;">
+                <div class="question-lower">
+                    <button class="more-detail" onclick="window.location.href = '/questionbank/{{q.pk}}/'">جزئیات</button>
+                    <div class="column-maker">
+                        <p style="font-size: .9rem;font-family: monospace;">{{q.Answer}}</p>
+                        <p style="font-size: .75rem;">~ گزینه صحیح</p>
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+    
+    </div>
+
+
+    <div class="mein" id="Corrects" style="display: none;">
+        {%for q in corrects%}
+            <div class="Q-container" style="border-bottom: 2px solid green;">
+                <img src="{{q.Question.url}}" style="max-width: 100%; height: auto;margin-bottom: 10px;">
+                <div class="question-lower">
+                    <button class="more-detail" onclick="window.location.href = '/questionbank/{{q.pk}}/'">جزئیات</button>
+                    <div class="column-maker">
+                        <p style="font-size: .9rem;font-family: monospace;">{{q.Answer}}</p>
+                        <p style="font-size: .75rem;">~ گزینه صحیح</p>
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+    
+    </div>
+
+    <div class="mein" id="none" style="align-items: center;justify-content: center; border: 1px solid #cecece;border-radius: 5px;">
+        سوالی پیدا نشد
+
+    </div>
+   
+
+</main>
+
+<script>
+    const wrongs = document.getElementById('Wrongs')
+    const corrects = document.getElementById('Corrects')
+    const notAnswered = document.getElementById('notAnswered')
+    
+    function hideAll(){
+        corrects.style.display = 'none'
+        document.getElementById('none').style.display ='none'
+        wrongs.style.display = 'none'
+        notAnswered.style.display = 'none'
+    }
+    
+    function showAnswers(mode){
+        hideAll()
+        if (mode == 'Wrongs'){
+            if ('{{wrongs_q}}' == '[]'){
+                document.getElementById('none').style.display ='flex'
+            }else{
+                wrongs.style.display = 'flex'
+            }
+        }
+        else if (mode =='Corrects'){
+            if ('{{corrects}}' == '[]'){
+                document.getElementById('none').style.display ='flex'
+            }else{
+                corrects.style.display = 'flex'
+            }
+        }
+        else if (mode =='notAnswered'){
+            if ('{{notAnswered}}' == '[]'){
+                document.getElementById('none').style.display ='flex'
+            }else{
+                notAnswered.style.display = 'flex'
+            }
+        }
+    }
+    </script>
+{%endblock content%}

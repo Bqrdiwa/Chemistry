@@ -1,0 +1,115 @@
+:root {
+    font-family: IRSans;
+    font-size: 16px;
+    line-height: 24px;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    --main-theme: hsl(0, 0%, 100%);
+    --sec-theme: hsl(0, 0%, 0%);
+    --radius: 5px;
+}
+
+@font-face {
+    font-family: IRSans;
+    src: url("./IRSans.ttf");
+}
+
+@font-face {
+    font-family: IRSansB;
+    src: url("./IRSansB.ttf");
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+    font-family: 'IRSans';
+}
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5em;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.btn_fill {
+    background: #000;
+    border: #000 solid 1px;
+    border-radius: 5px;
+    color: #fff;
+    padding: 0.4em 1em;
+    cursor: pointer;
+    transition: all 200ms ease;
+    font-size: 0.85rem;
+    z-index: 3;
+    height: fit-content;
+    margin: auto 0;
+}
+
+.btn_fill:hover {
+    background: #fff;
+    color: #000;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+    background-color: #fafafa
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #eaeaea;
+    border-radius: 6px
+}
+
+button {
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    height: fit-content;
+    transition: all 300ms ease;
+    border: 1px solid #000;
+    cursor: pointer;
+    
+}
+button:hover {
+    background-color: white;
+    color: black;
+}
+

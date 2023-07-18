@@ -1,0 +1,346 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{roomname}}</title>
+    <link rel="stylesheet" href="{%static 'css/room.css'%}">
+    <script src='https://meet.jit.si/external_api.js'></script>
+
+</head>
+<body>
+    <div class="container">
+    <div class= 'base-container'>
+        <div class="meet">
+
+            
+        </div>
+        <div class="side-bar">
+            <div class="class-detail">
+                <h3 style="max-width: 100%;text-align: center;margin: 10px 0;">{{roomname}}</h3>
+                <p class="clock"> <span id="hour">00</span> : <span id="min">00</span> : <span id="sec">00</span></p>
+            </div>
+            <div class="chat">
+                <div id="msgs-section" >
+
+                </div>
+                <div id="more-options">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+                <div style="top:10px;left: 20px;font-size: 1rem;position: absolute;color: #3AE57F;font-weight: bold;">
+                    Chat
+
+                </div>
+                <div id="more-options-panel">
+                    <div class="more-option-panel-item">Upload file</div>
+                    <div class="more-option-panel-item">Upload file</div>
+                    <div class="more-option-panel-item">Upload file</div>
+                </div>
+                <div class="send-msg-options">
+                    <input type="text" id="chat-input">
+                    <div class="send-msg-btn" onclick="sendMSG()">
+                        <svg xmlns="http://www.w3.org/2000/svg"  width="23" height="23" viewBox="0 0 24 24" stroke-width="2" stroke="#313338" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M10 14l11 -11"></path>
+                            <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+    <div id="options">
+        <div >
+            <h3>Videos</h3>
+            <select class="optionsBox" id="camera-select">
+            </select>
+        </div>
+        <div style="max-width:80%;display: flex;flex-direction: column;">
+            <h3>Audio</h3>
+            <div style="display: flex;gap: 5px;font-weight: bold;width: fit-content;text-align: left;width: 100%;position: relative;padding-left: 50px;margin-bottom: 20px;">
+                <p>Inputs: </p>
+                
+                <select class="optionsBox" style="margin-left: 5px;justify-self: flex-end;position: absolute;right: 0;max-width: 50%;" id ="input-select">
+                </select>
+            </div>
+            <div style="display: flex;gap: 5px;font-weight: bold;width: fit-content;text-align: left;width: 100%;position: relative;padding-left: 50px;margin-bottom: 20px;">
+                <p>Outputs:</p>
+                 
+                <select class="optionsBox" style="margin-left: 5px;justify-self: flex-end;position: absolute;right: 0;max-width: 50%;" id="output-select">
+                </select>
+            </div>
+        </div>
+        <button style="position: absolute;left: 50%;transform: translateX(-50%);bottom: 15px;" onclick="updateConstraints();openOptions()">Apply</button>
+    </div>
+    <div class="options-box">
+        <div class="option" id="option">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z"></path>
+                <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+             </svg>
+        </div>
+        <div class="option" id="webcam-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
+              </svg>
+        </div>
+    </div>
+</body>
+</html>
+<script>    
+    var webcam = document.getElementById('webcam')
+    var chatSection = document.getElementById('msgs-section')
+    var localStream;
+    var chat = true
+
+
+    var cameraSelect = document.getElementById('camera-select');
+    var inputSelect = document.getElementById('input-select');
+
+    let perm = '{{perm}}'
+    if (perm == 'True'){
+        perm = true
+    }else {
+        perm = false
+    }
+    const jitsiOptions = {
+        roomName: 'Hi',
+    }
+    api = new JitsiMeetExternalAPI('127.0.0.1:1000', jitsiOptions)
+    // Websocket
+    const messageInput = document.getElementById('chat-input')
+    const roomname = '{{roomname}}'
+    socket = new WebSocket(`ws://${window.location.host}/ws/${roomname}/`)
+    socket.onmessage = function(data){
+        const DATA = JSON.parse(data.data)
+        const action = DATA['action']
+
+        if (action == 'message'){
+            AddMSG(DATA['msg'],DATA['sender'])
+        }
+        else if(action == 'pong_msgs'){
+            DATA['msgs'].forEach((msg) =>{
+                AddMSG(msg.msg ,msg.sender)
+            })
+
+        }
+
+        else if(action == 'pong-stamp'){
+            started_time = parseInt(DATA['stamp'])
+
+        }
+        else if(action =='student-join'){
+            getStartTime()
+            
+        }
+        }
+
+
+    socket.onopen = function(){
+        socket.send(JSON.stringify({
+        'action':'get_msgs',
+    }))
+    if (perm){
+        let stamp = new Date().getTime()
+        socket.send(JSON.stringify({
+            'action':'set_start_time',
+            'stamp': stamp
+        }))
+    }
+    }
+
+
+    messageInput.addEventListener('keypress', function(event){
+        if (event.keyCode === 13){
+
+            sendMSG()
+            messageInput.value = ''
+        }
+    })
+    function sendMSG(){
+        if (messageInput.value != ''){
+        socket.send(JSON.stringify({
+            'action':'message',
+            'msg':messageInput.value,
+            'sender':'{{user.username}}'
+        }))}
+    }
+    // WebRTC
+    let domain = 'meet.jit.si'
+    let JIToptions = {
+        roomName : '{{roomname}}',
+        width:700,
+        height:700,
+
+
+    }
+    const JITapi = new JitsiMeetExternalAPI(domain, JIToptions);
+
+    function findDevices(){
+        navigator.mediaDevices.enumerateDevices()
+        .then(function(devices){
+            let cameras = devices.filter(function(device){
+                return device.kind === 'videoinput';
+            })
+          
+            let outputs = devices.filter(function(device){
+                return device.kind === 'audioinput';
+            })
+            
+            let inputs = devices.filter(function(device){
+                return device.kind === 'audiooutput';
+            })
+            
+            cameras.forEach(function(camera){
+                let option = document.createElement('option')
+                option.value= camera.deviceId
+                option.text = camera.label || 'Camera ' + (cameraSelect.length + 1);
+                cameraSelect.appendChild(option)
+            })
+
+            inputs.forEach(function(input){
+                let option = document.createElement('option')
+                option.value= input.deviceId
+                option.text = input.label || 'Input ' + (inputSelect.length + 1);
+                inputSelect.appendChild(option)
+            })
+
+            let outputSelect = document.getElementById('output-select');
+            outputs.forEach(function(output){
+                let option = document.createElement('option')
+                option.value= output.deviceId
+                option.text = output.label || 'Input ' + (outputSelect.length + 1);
+                outputSelect.appendChild(option)
+            })
+
+
+        })
+        
+    }
+
+    findDevices()
+    var webcamButton = document.getElementById('webcam-btn')
+    webcamButton.style.backgroundColor = 'red'
+    webcamButton.addEventListener('click',function(){
+        let wbStyle = webcamButton.style
+        if (wbStyle.backgroundColor =='green'){
+            wbStyle.backgroundColor ='red'
+            turnOffWebcam()
+        }else{
+            wbStyle.backgroundColor ='green'
+            turnOnWebcam()
+        }
+    })
+    async function updateConstraints(){
+        if(perm){
+        constraints = {
+            video: {
+                width: { ideal: 1280, max: 1920 },
+                height: { ideal: 720, max: 1080 },
+                deviceId:  {exact: cameraSelect.value}  // Ask user which camera to use
+            },
+            audio: {
+                deviceId:  {exact:inputSelect.value},
+                echoCancellation:true
+            }
+        };
+    
+        localStream = await navigator.mediaDevices.getUserMedia(constraints)
+    }
+    }
+    
+
+    // CSS HTML
+
+
+    // HotBar
+    function openOptions(){
+        options.style.left = optionButton.offsetLeft-150+12.5+'px'
+        if (options.style.display == 'none'){
+            options.style.display='block'
+            optionButton.style.transform = 'rotate(90deg)'
+        }
+        else{
+            options.style.display='none'
+            optionButton.style.transform = 'rotate(0deg)'
+        }
+    }
+    
+    // Chat
+    function openMoreOptions(){
+        let moreOptionsStyle = moreOptions.style
+        if (moreOptionsStyle.display == 'none'){
+            moreOptionsStyle.display = 'block'
+        }
+        else{
+            moreOptionsStyle.display ='none'
+        }
+    }
+
+
+    function AddMSG(msg,sender){
+        let position = 'left'
+        if (sender == '{{user.username}}'){
+            position = 'right'
+        }
+        chatSection.innerHTML +=    
+            `<div class="msg" style="justify-self:${position};">
+                <div class="msg-sender" style="text-align:${position};">
+                    ${sender}
+                </div>
+                <div class="msg-content">
+                    ${msg}
+                </div>
+            </div>`
+        chatSection.scrollTop = chatSection.scrollHeight;
+    }
+    
+    const moreOptions = document.getElementById('more-options-panel')
+    const moreOptionsBtn = document.getElementById('more-options')
+    moreOptionsBtn.addEventListener('click',openMoreOptions)
+    moreOptions.style.display ='none'
+
+    const optionButton = document.getElementById('option');
+    const options = document.getElementById('options')
+    options.style.display ='none'
+    optionButton.addEventListener('click',openOptions);
+
+    var started_time = 'None'
+    const min = document.getElementById('min')
+    const sec = document.getElementById('sec')
+    const hour = document.getElementById('hour')
+    function updateClock(){
+        if (started_time !='None'){
+            let now_time = new Date().getTime()
+            let clockSec =  (now_time - started_time) / 1000
+            
+            let mins = Math.floor(clockSec / 60)
+            let secs = clockSec - (60 *mins)
+            let hours = Math.floor(mins / 60)
+            mins = mins - (hours * 60)
+
+            min.innerHTML = mins
+            sec.innerHTML = parseInt(secs)
+            hour.innerHTML = hours
+    }}
+
+    function getStartTime(){
+        socket.send(JSON.stringify({
+            'action': 'get_stamp',
+
+        }))
+    }
+    
+    setInterval(updateClock,1000)
+
+
+
+
+</script>

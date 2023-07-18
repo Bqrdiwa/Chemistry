@@ -1,0 +1,434 @@
+{% extends 'home/base.html'%}
+{%load static%}
+
+{% block content %}
+<link rel="stylesheet" href="{%static 'css/question_view.css'%}">
+
+<main>
+    <div class="q-a-container">
+        <div class="question">
+            {%if Q.moredata%}
+            <div class="image">
+                <img src="{{Q.moredata.url}}">
+            </div>
+            {%endif%}
+            <div class="question-detail">
+                <div class="q-t">
+                    <p class="question-id">#{{Q.pk}}</p>
+                    <p class="question-title">> {{Q.title}}</p>
+                </div>
+                
+                <p class="question-content">{{Q.content}}</p>
+                <div class="last-detail">
+                    <p>{{Q.time}}</p>
+                    <p class="user-profile">{{Q.sender.username}}</p>
+                </div>
+            </div>
+        </div>
+        {%if answer%}
+            <div class="question" id="answer">
+                {%if answer.file%}
+                    {% if answer.get_file_type == 'image'%}
+                        <div class="image">
+                            <img src="{{answer.file.url}}">
+                        </div>
+                    {%else%}
+                        <div class="image">
+                            <video src="{{answer.file.url}}" controls>
+                        </div>
+
+                    {%endif%}
+                {%endif%}
+                <div class="answer-detail">
+                    <p class="answer-content">{{answer.content}}</p>
+                    <div class="last-detail">
+                        <p class="user-profile">َAdmin</p>
+                        <p>{{answer.subject}}</p>
+                    </div>
+                </div>
+            </div>
+        {%else%}
+        <div class="no-a-cont" id="answer">
+            برای این سوال جوابی هنوز جوابی ثبت نشده است
+        </div>
+        {%endif%}
+    </div>
+    {%if perm%}
+    <div class="solutionist-panel">
+            <div class="loading-container" id="loading-container">
+                <div class="loading-pulse">
+                    </div>
+                </div>
+
+        <div class="options-cont">
+            <div class="s-option" onclick="initiateDEL()">
+                حذف
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg-delete" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M4 7l16 0"></path>
+                    <path d="M10 11l0 6"></path>
+                    <path d="M14 11l0 6"></path>
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                </svg>
+            </div>
+            <div class="s-option"  id="publisher">
+                متداول
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+                </svg>
+                <div class="loading-container" id="m-loading">
+                    <div class="loading-pulse">
+                        </div>
+                    </div>
+            </div>
+            <div class="s-option" id="close-question">
+                <div style="font-family: inherit;" id="postition">بستن</div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg-position" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M14 4h4v16h-4"></path>
+                    <path d="M5 16h.01"></path>
+                    <path d="M9 16h.01"></path>
+                    <path d="M13 16h.01"></path>
+                 </svg>
+                 <div class="loading-container" id="c-loading">
+                    <div class="loading-pulse">
+                        </div>
+                    </div>
+            </div>
+            {%if answer%}
+                <div class="s-option" id="add-answer" >
+                    ویرایش جواب
+                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-answer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z"></path>
+                        <path d="M16 7h4"></path>
+                        <path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3"></path>
+                    </svg>
+                </div>
+            {%else%}
+                <div class="s-option" id="add-answer" >
+                    جواب دهید
+                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-answer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z"></path>
+                        <path d="M16 7h4"></path>
+                        <path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3"></path>
+                    </svg>
+                </div>
+            {%endif%}
+
+        </div>
+        <div id="solution">
+            <div class="upload-options">
+                <img src="{%static 'assets/default.jpg'%}" id="pm">
+                <video src="" controls id="pv"></video>
+                <div class="upload-OP">
+                    <button>اپلود<input accept="image/*,video/*" type="file" id="file-inp"></button>
+                    <button id="save-solution">ثبت</button>
+                </div>
+
+            </div>
+            <div class="s-h-t">
+                <input type="text" id="subject" maxlength="30" placeholder="مبحث این سوال را وارد کنید">
+                <textarea id="s-h-t-t" maxlength="480" placeholder="جواب خود را اینجا وارد کنید" rows="6"></textarea>
+                <p id="m-l">480/480</p>
+            </div>
+
+        </div>
+        <div id="delete">
+            <p>آیا از حذف این سوال اطمینان دارید؟</p>
+            <div class="prompt-D">
+                <button onclick="DEL()">بله</button>
+                <button onclick="document.getElementById('delete').style.display='none';nowp = false">خیر</button>
+            </div>
+        </div>
+    </div>
+    {%endif%}
+    <div class="more-data">
+
+    </div>
+</main>
+
+<script>
+    var addContent = document.getElementById('s-h-t-t')
+    var subContent = document.getElementById('subject')
+    var maxLength = parseInt(addContent.getAttribute('maxlength'))
+    var mL = document.getElementById('m-l')
+    var fileUploader = document.getElementById('file-inp')
+    var previewImage = document.getElementById('pm')
+    var previewVideo = document.getElementById('pv')
+    var solution = document.getElementById('solution')
+    var loadingCont = document.getElementById('loading-container')
+    var answer = document.getElementById('answer')
+    var nowp = false;
+    var publisher = document.getElementById('publisher')
+    var publishLoader = document.getElementById('m-loading')
+    var positionLoader = document.getElementById('c-loading')
+    var closePos = document.getElementById('close-question')
+    var positionText = document.getElementById('postition')
+
+    
+    if ("{{Q.pos}}" == 'باز'){
+        positionText.innerHTML ='بستن'
+        closePos.style.backgroundColor='white'
+        closePos.style.color ='black'
+        closePos.children[1].style.stroke ='black'
+    }else{
+        positionText.innerHTML ='بسته'
+        closePos.style.backgroundColor='black'
+        closePos.style.color ='white'
+        closePos.children[1].style.stroke ='#99e0f8'
+    }
+    
+    if('True' == '{{Q.publish}}'){
+        publisher.style.backgroundColor = 'black'
+        publisher.children[0].style.stroke = 'yellow'
+        publisher.style.color = 'white'
+    }
+    else{
+        publisher.style.backgroundColor = 'white'
+        publisher.children[0].style.stroke = 'black'
+        publisher.style.color = 'black'
+    }
+
+    
+
+    addContent.addEventListener('input', function(){
+        
+        mL.innerHTML = maxLength - parseInt(addContent.value.length)+'/'+maxLength
+    })
+
+    fileUploader.addEventListener('change', function(){
+        const file = fileUploader.files[0]
+        var reader = new FileReader()
+        reader.addEventListener('load', function(){
+            previewImage.setAttribute('src', reader.result)
+            var fileType = file.type
+
+            if(fileType.startsWith('image/')){
+                previewVideo.style.display ='none'
+                previewImage.style.display ='block'
+                previewImage.setAttribute('src', reader.result)
+            }else if(fileType.startsWith('video/')){
+                previewImage.style.display ='none'
+                previewVideo.style.display ='block'
+                previewVideo.setAttribute('src', reader.result)
+
+            }
+
+        })
+        reader.readAsDataURL(file)
+    })
+
+    $(document).ready(function() {
+    $('#save-solution').click(function() {
+        if(addContent.value != '' &&  subContent.value != ''){
+            loadingCont.style.display = 'flex'
+            addContent.style.border = '1px solid #e2e2e2'
+            subContent.style.border = '1px solid #e2e2e2'
+            var formImageData  = new FormData()
+            if (fileUploader.value != ''){
+                const file = fileUploader.files[0]
+                formImageData.append('file', file)
+                
+            }
+
+            const contentV= addContent.value
+            const subjectV= subContent.value
+            formImageData.append('content', contentV);
+            formImageData.append('action', 'add-answer');
+            formImageData.append('subject', subjectV);
+            formImageData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            $.ajax({
+            url: '/solution/question-{{Q.pk}}/',
+            type: 'POST',
+            data: formImageData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                loadingCont.style.display = 'none'
+                solution.style.display = 'none'
+                // ADD NOTIF
+                document.getElementById('add-answer').innerHTML = 
+                `
+                ویرایش جواب
+                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-answer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z"></path>
+                        <path d="M16 7h4"></path>
+                        <path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3"></path>
+                    </svg>
+                `
+                
+                let data = {}
+                data['subject'] = subjectV
+                data['content'] = contentV
+                
+                if (fileUploader.value != ''){
+                    const file = fileUploader.files[0]
+                    const fileType = file.type
+                    const reader = new FileReader()
+                    
+                    reader.addEventListener('load', function(){
+                        if(fileType.startsWith('image/')){
+                        data['file'] = {type:'image',url:reader.result}
+                        }else if(fileType.startsWith('video/')){
+                        data['file'] = {type:'video',url:reader.result}
+                        }
+                        console.log(data.file)
+                        setNewAnswer(data)
+                    })
+                    reader.readAsDataURL(file)
+                }
+                else{
+                    setNewAnswer(data)
+                }
+
+
+            }
+
+            });
+    }else{
+        if(addContent.value == ''){
+            addContent.style.border = '1px solid red'
+        }else{
+            addContent.style.border = '1px solid #e2e2e2'
+        }
+        if (subContent.value ==''){
+            subContent.style.border = '1px solid red'
+        }else{
+            subContent.style.border = '1px solid #e2e2e2'
+        }
+        
+    }});
+    });
+
+    $('#add-answer').click(function(){
+        if(nowp && nowp != 'solution'){
+            document.getElementById(nowp).style.display='none'
+        }
+        if (solution.style.display == 'flex'){
+            solution.style.display ='none'
+            nowp = false
+        }else{
+            solution.style.display = 'flex'
+            nowp = 'solution'
+        }
+    })
+
+    function DEL (){
+        loadingCont.style.display='flex'
+        $.ajax({
+            url:'/solution/question-{{Q.pk}}/',
+            type:'POST',
+            data:{
+                'action':'delete',
+                'csrfmiddlewaretoken':'{{csrf_token}}'
+            },
+            success:function(response){
+                loadingCont.style.display='none'
+                // ADD NOTIF
+                window.location.href = '/solution/'
+            }
+        })
+    }
+    function initiateDEL(){
+
+        const del = document.getElementById('delete')
+        if(nowp && nowp != 'delete'){
+            document.getElementById(nowp).style.display ='none'
+        }
+        if (del.style.display =='flex'){
+            del.style.display ='none'
+            nowp = false
+        }else{
+            del.style.display='flex'
+            nowp = 'delete'
+        }
+    }
+
+    publisher.addEventListener('click', function(){
+        publishLoader.style.display = 'flex'
+        $.ajax({
+            url:'/solution/question-{{Q.pk}}/',
+            type:'POST',
+            data:{
+                'action':'publish',
+                'csrfmiddlewaretoken':'{{csrf_token}}'
+            },
+            success:function(response){
+                publishLoader.style.display = 'none'
+                if(publisher.style.backgroundColor == 'black'){
+                    publisher.style.backgroundColor = 'white'
+                    publisher.children[0].style.stroke = 'black'
+                    publisher.style.color = 'black'
+                }else{
+                    publisher.style.backgroundColor = 'black'
+                    publisher.children[0].style.stroke = 'yellow'
+                    publisher.style.color = 'white'
+                }
+
+            }
+        })
+    })
+    function setNewAnswer (data){
+
+        console.log(data.file)
+        answer.classList.remove('no-a-cont')
+        answer.classList.add('question')
+        let htmlD = '';
+        if(data.file){
+            console.log('file Detected')
+            if(data.file.type == 'image'){
+                htmlD +=
+                `<div class="image">
+                            <img src="${data.file.url}">
+                        </div>`
+            }else{
+                htmlD +=
+                `<div class="image">
+                            <video src="${data.file.url}" controls>
+                        </div>`
+            }
+        }
+        htmlD +=
+        `<div class="answer-detail">
+                    <p class="answer-content">${data.content}</p>
+                    <div class="last-detail">
+                        <p class="user-profile">َAdmin</p>
+                        <p>${data.subject}</p>
+                    </div>
+         </div>`
+
+         answer.innerHTML = htmlD
+    }
+    $('#close-question').click(function(){
+        positionLoader.style.display = 'flex'
+        $.ajax({
+            url:'/solution/question-{{Q.pk}}/',
+            type:'POST',
+            data:{
+                'action':'close',
+                'csrfmiddlewaretoken':'{{csrf_token}}'
+            },
+            success:function(response){
+                positionLoader.style.display = 'none'
+                if(closePos.style.backgroundColor == 'black'){
+                    positionText.innerHTML ='بستن'
+                    closePos.style.backgroundColor='white'
+                    closePos.style.color ='black'
+                    closePos.children[1].style.stroke ='black'
+                }else{
+                    positionText.innerHTML ='بسته'
+                    closePos.style.backgroundColor='black'
+                    closePos.style.color ='white'
+                    closePos.children[1].style.stroke ='#99e0f8'
+                }
+
+            }
+        })
+    })
+</script>
+{% endblock content %}

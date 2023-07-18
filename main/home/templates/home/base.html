@@ -1,0 +1,725 @@
+{%load static%}
+{%block head%}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
+    {% if title %}
+    <title>{{title}} • Chemistry</title>
+    {% else %}
+    <title>Chemistry</title>
+    {% endif %}
+</head>
+{%endblock%}
+
+<style>
+    body {
+        background: #FAFAFA;
+    }
+
+    header {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 16pt;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    #nav {
+        display: flex;
+        gap: 1.2em;
+    }
+
+    #nav a {
+        height: fit-content;
+        display: flex;
+        margin: auto 0;
+        color: rgb(112, 112, 112);
+        transition: 200ms color ease;
+        font-size: 15px;
+    }
+
+    #nav a:hover {
+        color: black;
+    }
+
+    #themeSwitch {
+        display: flex;
+        margin: auto 0;
+        color: #666;
+        cursor: pointer;
+    }
+
+    #profile {
+        font-size: 10px;
+        color: #666;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #panel {
+        position: absolute;
+        right: 0;
+        top: 53.5px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
+        width: fit-content;
+        min-width: 280px;
+        padding: 8px 0;
+        overflow: visible;
+        display: none;
+        animation: fadeIn 0.1s ease-in;
+        z-index: 99;
+    }
+
+    .panel-name {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+        font-weight: 500;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+
+    .panel-item-wrapper {
+        max-width: 100%;
+        color: #666;
+        transition: color.1s ease, background-color.1s ease;
+    }
+
+    .panel-item-wrapper:hover {
+        background: #f5f5f5;
+        cursor: pointer;
+        color: #000;
+    }
+
+    .panel-item-wrapper p,
+    .panel-item-wrapper a {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        padding: 8px 20px;
+    }
+
+    .seperator {
+        border-top: 1px solid #e2e2e2;
+        margin: 12px 20px;
+    }
+
+    .notifications-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 1em;
+        width: fit-content;
+        z-index: 99;
+    }
+
+    .notification-container {
+        border: 1px solid #e2e2e2;
+        color: black;
+        display: flex;
+        overflow: hidden;
+        background-color: white;
+        border-radius: 5px;
+        flex-direction: column;
+        height: 100px;
+    }
+
+    .notif-items-cont{
+        height: calc(100% - 5px);
+        width: 100%;
+        display: flex;
+    }
+
+    .notif-items-cont > img {
+        height: 100%;
+        object-fit: cover;
+        transform: scale(-1);
+        flex: 0;
+
+    }
+
+    .notification-content{
+        flex: 1;
+        direction: rtl;
+        height: 100%;
+        width: fit-content;
+        padding: .7em;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .notification-content > h3 {
+        font-size: .95rem;
+        font-family: Poppins;
+        margin: 0;
+
+    }
+    .notification-content > p {
+        font-family: IRSans;
+        font-size: .875rem;
+        padding-right: 7px;
+
+    }
+
+    .notification-content > p > a {
+        color: #444;
+        text-decoration: underline;
+        font-size: .9rem;
+        transition: all 300ms ease;
+    }
+    
+    .notification-content > p > a:hover {
+        color: #111;
+    }
+
+    .notif-bar {
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background-color: black;
+        animation: 5s ease loading-bar;
+    }
+
+
+
+    .footer {
+        height: fit-content;
+        width: 100%;
+        padding: 1em;
+        align-items: center;
+        max-width: 1150px;
+        gap: 1.5em;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .left-foot {
+        display: flex;
+        height: 100%;
+        border: 1px solid #dadada;
+        flex-direction: column;
+        border-radius: 5px;
+        padding: .7em;
+        flex-basis: 0;
+    }
+
+    .left-foot >img {
+        height: 150px;width: fit-content;
+    }
+
+    .mid-foot {
+        flex-grow: 1;
+        flex-basis: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 2.3em;
+        align-items: center;
+    }
+
+    .right-text{
+        font-size: .825rem;
+        margin-bottom: 8px;
+    }
+
+    .scroll-up {
+        display: flex;
+        font-size: .9rem;
+        gap: 5px;
+        width: 80%;
+        justify-content: center;
+        padding: 1.5em;
+        border: 1px solid #dadada;
+        font-weight: 500;
+        border-bottom: 3px solid #dadada;
+        border-radius: 5px;
+        transition: all 500ms ease;
+        cursor: pointer;
+    }
+    
+    .scroll-up:hover {
+        border: 1px solid #000;
+        border-bottom: 3px solid #000;
+    }
+
+    .scroll-up > svg {
+        width: 22px;
+        stroke-width: 1.7px;
+        height: 22px;
+    }
+
+    .right-foot {
+        flex-grow: 2;
+        height: 100%;
+        display: flex;
+        flex-basis: 0;
+        gap: 1em;
+        justify-content: center;
+    }
+
+    .socials-foot-cont {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+        padding: 1em .4em .7em .4em;
+        width: fit-content;
+        justify-content: end;
+        gap: 8px;
+        position: relative;
+    }
+
+    .social-foot {
+        display: flex;
+        padding: .5em;  
+        gap: 5px;
+        align-items: center;
+        justify-content: center;
+        background-color: #e4e4e4;
+        font-size: .825rem;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+        border-bottom: 1px solid #000;
+    }
+
+    .social-foot >svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 1.5px;
+    }
+
+    .socials-foot-head {
+        margin: 0;
+        top: -14px;
+        left: 50%;
+        border: 1px solid #dadada;
+        border-radius: 3px;
+        padding: 0 .8em;
+        font-family: IRSansb;
+        white-space: nowrap;
+        font-size: .8rem;
+        background-color: white;
+        transform: translateX(-50%);
+        position: absolute;
+    }
+
+    .free-use-foot {
+        flex: 1;
+        border-radius: 5px;
+        border: 1px solid #dadada;
+        height: 100%;
+        position: relative;
+        padding: 1em;
+        padding-top: 1em;
+
+    }
+
+    .use-foot-item {
+        width: 100%;
+        border-bottom: 1px solid #e2e2e2;
+        padding: .4em 1.5em;
+        font-size: .86rem;
+        justify-content: space-between;
+        display: flex;
+        transition: all 300ms ease;
+        cursor: pointer;
+        align-items: center;
+        flex-direction: row-reverse;
+    }
+
+    .use-foot-item:hover {
+        border-bottom: 1px solid #000;
+        border-radius: 5px;
+    }
+
+    .use-foot-item > svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 1.5px;
+    }
+
+    .kiani-name {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .kiani-name > h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+    @keyframes loading-bar {
+        0% {
+            width: 0;
+        }
+        100%{
+            width: 100%;
+        }
+    }
+    @font-face {
+        font-family: Farnaz;
+        src: url(../assets/Farnaz.ttf);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .notifications-container{
+            width: 100%;
+            max-width: 100%;
+            margin:0;
+        }
+
+        .notification-container{
+            border-radius: 0;
+        }
+
+        .footer {
+            flex-direction: column;
+        }
+
+        .left-foot {
+            width: 60%;
+        }
+
+        .left-foot > img {
+            width: 100%;
+            height: fit-content;
+        }
+
+        .right-foot {
+            width: 100%;
+        }
+        
+    }
+</style>
+
+<script>
+    function notifTimeOut(notifId){
+        const message = document.getElementById(`notif-${notifId}`)
+        setTimeout(function(){
+            message.style.display = 'none'
+        }, 5000)
+    }
+</script>
+
+<body>
+    <div style="background: #fff; border-bottom: 1px solid #e2e2e2;">
+        <header>
+            <div style="display: flex; justify-content: space-between; height: 54px;">
+                <h3 style="margin: auto 0; display: flex;">{{HT}}</h3>
+                <div style="display: flex; gap: 1em;">
+                    <a id="themeSwitch">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </a>
+                    {%if user.is_authenticated%}
+                    <a style="width: 30px; height: 30px; border: 1px solid #e2e2e2; position: relative;
+                        border-radius: 100%; margin: auto 0;" href="{%url 'profile'%}">
+                        <span id="profile"></span>
+                    </a>
+                    {%else%}
+                    <span style="display: flex; margin: auto 0; font-size: 0.875rem; color: #666;">[ کاربر مهمان
+                        ]</span>
+                    {%endif%}
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; height: 54px;">
+                <div id="nav">
+                    <a href="/#">درباره</a>
+                    <a href="/#">تماس</a>
+                    <a href="{%url 'announcment'%}">اطلاعیه</a>
+                </div>
+                {%if user.is_authenticated%}
+                <div style="display: grid; grid-template-columns: 1fr;">
+                    <div
+                        style="width: 100px; height: 33.2px; position: relative; display: flex; margin: auto 0; grid-row-start: 1; grid-column-start: 1;">
+                        <div id="panel">
+                            <div style="max-width: 100%; padding: 8px 20px; color: #666; cursor: default;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <p class="panel-name" style="color: #444;">{{user.username}}</p>
+                                    <p style="color: #666; font-weight: 500; font-size: 0.875rem;">{{user.grade}}</p>
+                                </div>
+                                <p style="font-family: monospace; text-align: left;">+98 {{user.phone_number}}</p>
+                            </div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'home'%}">صفحه اصلی <span>
+                                        <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="1.5"
+                                            shape-rendering="geometricPrecision" viewBox="0 0 24 24"
+                                            class="jsx-3060654314" height="16" width="16" style="color: currentcolor;">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                            <path d="M9 22V12h6v10"></path>
+                                        </svg>
+                                    </span></a>
+                            </div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'home'%}" style="padding: 8px 20px 8px 19.1px;">بانک سوالات<span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" 
+                                        class="icon icon-tabler icon-tabler-building-bank" 
+                                        width="18.5" height="18.5" viewBox="0 0 24 24" 
+                                        stroke-width="1.5" stroke="currentColor" 
+                                        fill="none" stroke-linecap="round" 
+                                        stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M3 21l18 0"></path>
+                                            <path d="M3 10l18 0"></path>
+                                            <path d="M5 6l7 -3l7 3"></path>
+                                            <path d="M4 10l0 11"></path>
+                                            <path d="M20 10l0 11"></path>
+                                            <path d="M8 14l0 3"></path>
+                                            <path d="M12 14l0 3"></path>
+                                            <path d="M16 14l0 3"></path>
+                                        </svg>
+                                    </span></a>
+                            </div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'exam'%}" style="padding: 8px 20px 8px 18.9px;">ویدیو آموزشی<span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" class="icon icon-tabler icon-tabler-brand-youtube" width="19" height="19" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M3 5m0 4a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z"></path>
+                                        <path d="M10 9l5 3l-5 3z"></path>
+                                     </svg>
+                                    </span></a>
+                            </div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'exam'%}">آزمون انلاین <span>
+                                        <svg data-testid="geist-icon" fill="none" height="16"
+                                            shape-rendering="geometricPrecision" stroke="currentColor"
+                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            viewBox="0 0 24 24" width="16" style="color: currentcolor;">
+                                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M8 21h8"></path>
+                                            <path d="M12 17v4"></path>
+                                        </svg>
+                                    </span></a>
+                            </div>
+                            <div class="seperator" style="padding: 0; max-width: unset;"></div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'solution'%}">رفع اشکال<span><svg data-testid="geist-icon"
+                                            fill="none" height="16" shape-rendering="geometricPrecision"
+                                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="1.5" viewBox="0 0 24 24" width="16"
+                                            style="color: currentcolor;">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z">
+                                            </path>
+                                        </svg></span></a>
+                            </div>
+                            <div class="panel-item-wrapper">
+                                <a href="{%url 'logout'%}">خروج از حساب <span style="transform: rotate(90deg)"><svg
+                                            style="transform: rotate(90deg)" fill="none" stroke="currentColor"
+                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            shape-rendering="geometricPrecision" viewBox="0 0 24 24"
+                                            class="jsx-3060654314" height="16" width="16" style="color: currentcolor;">
+                                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"></path>
+                                        </svg></span></a>
+                            </div>
+                            <div class="seperator" style="padding: 0; max-width: unset;"></div>
+                            <div style="padding: 8px 20px;">
+                                <a href="{%url 'profile'%}" class="btn_fill"
+                                    style="padding: 0.3em 0.8em; font-size: 0.8rem; display: flex; justify-content: center;">پروفایل</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button style="grid-row-start: 1; grid-column-start: 1; padding: 0 !important;" type="button"
+                        class="btn_fill" id="menuDropdown" onclick="toggleMenu()" onkeydown="toggleMenu()">
+
+                        <div
+                            style="display: flex; gap: 0.3em; padding: 0.4em 0.8em; font-size: 0.8rem; pointer-events: none;">
+                            <svg id="arrow"
+                                style="margin: auto 0; transform: rotate(90deg); transition: transform 0.15s ease"
+                                data-testid="geist-icon" fill="none" height="20" shape-rendering="geometricPrecision"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                viewBox="0 0 24 24" width="20" style="color: currentcolor;">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+
+                            <span style="margin: auto 0;">پنل کاربری</span>
+                        </div>
+                    </button>
+                </div>
+                {%else%}
+                <a type="button" class="btn_fill" style="display: flex; flex-direction: row-reverse; gap: 0.4em;"
+                    href="{% url 'login'%}">ورود <span style="display: flex; margin: auto 0;"><svg fill="none"
+                            stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            shape-rendering="geometricPrecision" viewBox="0 0 24 24" class="jsx-3060654314" height="18"
+                            width="18" style="color: currentcolor;">
+                            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"></path>
+                        </svg></span></a>
+                {%endif%}
+            </div>
+        </header>
+    </div>
+
+    <div class="notifications-container">
+        {%if messages%}
+            {%for message in messages%}
+                <div class="notification-container" id="notif-{{message.level}}">
+                    <div class="notif-items-cont">
+                        <img src="{%static 'assets/notif-border.jpg'%}">
+                        <div class="notification-content">
+                            <h3 >Security</h3>
+                            <p>{{message|safe}}</p>
+                        </div>
+                    </div>
+                    <div class="notif-bar">
+
+                    </div>
+                </div>
+
+                <script>
+                    notifTimeOut('{{message.level}}')
+                </script>
+            {%endfor%}
+        {%endif%}
+    </div>
+    {%block content%}
+    {%endblock%}
+    <div style="border-top: 1px solid #e2e2e2;margin-top: 30px;display: flex;justify-content: center;">
+        <div class="footer">
+            <div class="left-foot">
+                <img src="{%static 'assets/logo.png'%}">
+
+
+            </div>
+            
+
+
+            <div class="right-foot">
+                
+                <div class="free-use-foot">
+                    <h3 class="socials-foot-head" style="padding: 0 2.5em;">دسترسی</h3>
+                    <a href="{%url 'home'%}">
+                        <div class="use-foot-item">
+                            صفحه اصلی
+                            <svg fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="1.5"
+                            shape-rendering="geometricPrecision" viewBox="0 0 24 24"
+                            class="jsx-3060654314" height="16" width="16" style="color: currentcolor;">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                            <path d="M9 22V12h6v10"></path>
+                        </svg>
+                        </div>
+                    </a>
+
+                    <a href="{%url 'plans'%}">
+                        <div class="use-foot-item">
+                            دوره ها
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cell" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M8 4l-4 2v5l4 2l4 -2v-5z"></path>
+                                <path d="M12 11l4 2l4 -2v-5l-4 -2l-4 2"></path>
+                                <path d="M8 13v5l4 2l4 -2v-5"></path>
+                            </svg>
+                        </div>
+                    </a>
+
+                    <a href="{%url 'question-bank'%}">
+                        <div class="use-foot-item">
+                            بانک اطلاعات
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-gamepad" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M2 6m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z"></path>
+                                <path d="M6 12h4m-2 -2v4"></path>
+                                <path d="M15 11l0 .01"></path>
+                                <path d="M18 13l0 .01"></path>
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+                <div class="socials-foot-cont">
+                    <h3 class="socials-foot-head">فضای مجازی</h3>
+                    <a href="https://t.me/chemistry_kiani1">
+                        <div class="social-foot">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-telegram" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"></path>
+                            </svg>
+                            Telegram
+                        </div>
+                    </a>
+
+                    <a href="https://instagram.com/chemistry_kiani?igshid=1ch7fdswd2s">
+                        <div class="social-foot">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-instagram" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M4 4m0 4a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"></path>
+                                <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                                <path d="M16.5 7.5l0 .01"></path>
+                            </svg>
+                            Instagram
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="mid-foot">
+                <div class="scroll-up" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+                    Scroll up
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M6 15l6 -6l6 6"></path>
+                     </svg>
+                </div>
+                <div class="right-text"><p>.تمامی حقوق برا تیم مهندس کیانی محفوظ میباشد</p></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+        "use strict";
+        const userPanel = document.querySelector('#panel');
+        const menuBtn = document.querySelector('#menuDropdown');
+        const arrow = document.querySelector('#arrow');
+
+        var showMenu = false;
+        var toggleMenu = function () {
+            showMenu = !showMenu;
+            userPanel.style.display = showMenu ? 'block' : 'none';
+            arrow.style.transform = showMenu ? 'rotate(0deg)' : 'rotate(90deg)';
+        };
+
+        document.addEventListener('click', function (event) {
+            if (!userPanel.contains(event.target) && event.target !== menuBtn) {
+                showMenu = false;
+                userPanel.style.display = 'none';
+                arrow.style.transform = showMenu ? 'rotate(0deg)' : 'rotate(90deg)';
+            }
+        });
+
+        let user = document.querySelector('.panel-name').innerHTML;
+        document.querySelector('#profile').innerHTML = user.substring(0, 2).toUpperCase();
+
+        function showBox(elementId){
+            element = document.getElementById(elementId)
+
+        }
+    </script>
+</body>

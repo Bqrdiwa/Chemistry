@@ -1,0 +1,590 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    :root {
+        --background-rgb: 29 30 34;
+        --blue-rgb: 33 150 243;
+        --primary-rgb: var(--blue-rgb);
+
+        --input-color: #000;
+        --input-border: #e2e2e2;
+        --input-background: #fff;
+        --input-placeholder: #e2e2e2;
+        --input-border-focus: #666;
+
+        --group-color: #000;
+        --group-border: var(--input-border);
+
+        --group-background: #FAFAFA;
+        --group-color-focus: #fff;
+        --group-border-focus: var(--input-border-focus);
+        --group-background-focus: #000;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        margin: 0;
+    }
+
+    body,
+    html {
+        height: fit-content;
+        background: #fff;
+        overflow-x: hidden;
+    }
+
+    main {
+        margin: 2em auto 3em auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 2em;
+    }
+
+    userPanel {
+        display: block;
+        width: 500px;
+        max-width: 100%;
+    }
+
+    #dual-input {
+        display: flex;
+        gap: 32px;
+    }
+
+    .btn_fill {
+        padding: 0.2em 0.6em;
+        font-size: 0.8rem;
+    }
+
+    .form-field {
+        display: block;
+        width: 100%;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        border-radius: 5px;
+        -webkit-appearanced: none;
+        color: var(--input-color);
+        border: 1px solid var(--input-border);
+        background: var(--input-background);
+        text-align: right;
+        transition: border 0.3s ease;
+    }
+
+    .form-field::placeholder,
+    .form-field:-ms-input-placeholder,
+    .form-field::-moz-placeholder {
+        color: var(--input-placeholder);
+        user-select: none;
+        font-size: 0.8rem;
+    }
+
+    .form-field:focus {
+        outline: none;
+        border-color: var(--input-border-focus);
+    }
+
+    .form-group {
+        position: relative;
+        display: flex;
+        width: 300px;
+        max-width: 100%;
+        margin: auto 0 auto auto;
+    }
+
+    .indicator-span,
+    .form-group .form-field {
+        white-space: nowrap;
+        display: block;
+    }
+
+    .indicator-span:not(:first-child):not(:last-child),
+    .form-group .form-field:not(:first-child):not(:last-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .indicator-span:first-child,
+    .form-group .form-field:first-child {
+        border-radius: 6px 0 0 6px;
+    }
+
+    .indicator-span:last-child,
+    .form-group .form-field:last-child {
+        border-radius: 0 6px 6px 0;
+    }
+
+    .indicator-span:not(:first-child),
+    .form-group .form-field:not(:first-child) {
+        margin-left: -1px;
+    }
+
+    .form-group .form-field {
+        position: relative;
+        z-index: 1;
+        flex: 1 1 auto;
+        width: 1%;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .indicator-span {
+        text-align: center;
+        width: 6em;
+        padding: 4px 0;
+        font-size: 0.8rem;
+        color: #888;
+        background: #fafafa;
+        border: 1px solid var(--group-border);
+        display: block;
+        user-select: none;
+    }
+
+
+    .area-container {
+        min-width: 200px;
+        border: 1px solid #e2e2e2;
+        border-radius: 5px;
+        margin-bottom: 32px;
+    }
+
+    .upper-area {
+        padding: 24px;
+    }
+
+    .area-title {
+        text-align: right;
+        font-size: 1.25rem;
+        letter-spacing: -.020625rem;
+        font-family: IRSansB;
+    }
+
+    /* .input-wrapper {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    } */
+
+    .area-desc {
+        text-align: right;
+        font-size: .875rem;
+        line-height: 1.6;
+        margin: 12px 0 12px 16px;
+    }
+
+    footer {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        position: relative;
+        min-height: 57px;
+        align-items: center;
+        background-color: #fafafa;
+        border-top: 1px solid #e2e2e2;
+        color: #444;
+        font-size: .875rem;
+        padding: 12px 24px;
+        box-sizing: border-box;
+        line-height: 1.6;
+    }
+
+    .footer-save {
+        min-width: 80px;
+        height: 32px;
+        font-size: .875rem;
+        padding: 6px 12px 6px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .select-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        color: #000;
+        max-width: 180px;
+        margin-left: auto;
+    }
+
+    select {
+        text-align: left;
+        cursor: pointer;
+        font-size: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        font-size: 0.875rem;
+        height: 40px;
+        line-height: 1.25rem;
+        text-rendering: auto;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #e2e2e2;
+        background: #fff;
+        color: #000;
+        padding: 0 12px;
+        padding-left: calc(1.5 * 24px);
+        transition: border-color .15s ease;
+        outline: none;
+    }
+
+    select:hover,
+    select:focus {
+        border-color: #666;
+    }
+
+    option {
+        text-align: right;
+    }
+
+    #myexams {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        max-width: 100%;
+        height: 300px;
+        background: #fff;
+    }
+
+    #exam-container {
+        border: 1px solid #e2e2e2;
+        border-radius: 5px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    #exam-container::-webkit-scrollbar {
+        width: 10px;
+        background-color: #fafafa
+    }
+
+    #exam-container::-webkit-scrollbar-thumb {
+        background-color: #e2e2e2;
+        border-radius: 6px
+    }
+
+    .exam-wrapper {
+        width: 100%;
+        min-height: 55px;
+        background-color: #fff;
+        border-bottom: 1px solid #e2e2e2;
+        text-align: right;
+        align-items: center;
+        padding: 1em;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    }
+
+    .exam-wrapper:last-child {
+        border-bottom: none;
+    }
+
+    .exam-title {
+        color: #111;
+        font-family: IRSansB;
+        font-size: 0.9rem;
+    }
+
+    .exam-time {
+        color: #666;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+
+    .finished {
+        background: #fff;
+        color: #000;
+    }
+
+    #backfall {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        inset: 0;
+        backdrop-filter: grayscale(0.5) blur(2px);
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 100;
+        display: none;
+    }
+
+    #dataContent {
+        width: 30em;
+        height: 15em;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        z-index: 101;
+        border: 1px #888 solid;
+        border-radius: 5px;
+        display: none;
+    }
+
+    #dataContent span {
+        margin: auto 0;
+        font-size: 0.85rem;
+    }
+
+    .box-wrapper {
+        display: flex;
+        gap: 1em;
+        width: 50%;
+        justify-content: center;
+        align-items: center;
+        padding: 0 2em;
+    }
+
+    .box {
+        border: 1px solid #e2e2e2;
+        height: fit-content;
+        padding: 0.4em 1em;
+        border-radius: 5px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .not_found{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 250px;
+    }
+    @media only screen and (max-width: 800px) {
+        main {
+            display: block;
+        }
+
+        #myexams {
+            margin: 2em auto;
+        }
+
+        userPanel {
+            margin: 0 auto;
+        }
+
+        .upper-area:nth-child(2) {
+            margin: 0 auto;
+        }
+    }
+
+    @media only screen and (max-width: 500px) {
+        #dual-input {
+            display: block;
+            gap: none;
+        }
+
+        .select-wrapper {
+            margin: 0 auto;
+        }
+    }
+</style>
+
+<div id="backfall">
+    <div id="dataContent">
+        <div style="display: flex; height: 10%; justify-content: flex-end;">
+            <a onclick="printData()"
+                style="padding: 0.5em; cursor: pointer; user-select: none; font-size: 1.4rem; color: #666">×</a>
+        </div>
+        <div style="display: flex; height: 45%;">
+            <div class="box-wrapper">
+                <div class="box">
+                    <span id="grade"></span>
+                    <span>: تعداد درست</span>
+                </div>
+            </div>
+            <div class="box-wrapper">
+                <div class="box">
+                    <span id="percent"></span>
+                    <span>:درصد</span>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; height: 45%;">
+            <div class="box-wrapper">
+                <div class="box">
+                    <span id="ranking"></span>
+                    <span> : آزمون</span>
+                </div>
+            </div>
+
+            <div class="box-wrapper">
+                <a href="" class="btn_fill" style="width: 100%; text-align: center;" id="result-a">کلید
+                    آزمون</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<main>
+
+    <div id="myexams">
+        <span
+            style="margin-left: auto; padding-bottom: 0.5em; margin-right: 2em; border-bottom: 2px solid #000; transform: translateY(2px); font-size: 0.9rem;">آزمون
+            های من
+        </span>
+        <div id="exam-container">
+            {%if finded%}
+            
+            
+            {%for exam in exams.not_started%}
+                <div class="exam-wrapper">
+                    <div>
+                        <div class="exam-title">{{exam.name}}</div>
+                        <div class="exam-time"> ~ 13:30</div>
+                    </div>
+                    <a class="btn_fill" href="{%url 'exam-started' exam.name%}"
+                        style="padding: 0.2em 0.6em; font-size: 0.8rem;">شرکت در آزمون</a>
+                </div>
+            {%endfor%}
+            {%for exam in exams.not_ended%}
+                <div class="exam-wrapper">
+                    <div>
+                        <div class="exam-title">{{exam.name}}</div>
+                        <div class="exam-time">12:00 ~ 13:30</div>
+                    </div>
+                    <a class="btn_fill" href="{%url 'exam-started' exam.name%}"
+                        style="padding: 0.2em 0.6em; font-size: 0.8rem;">ادامه ازمون</a>
+                </div>
+            {%endfor%}
+            {%for result in exams.ended%}
+                <div class="exam-wrapper">
+                    <div>
+                        <div class="exam-title">{{result.Exam_related.name}}</div>
+                        <div class="exam-time">12:00 ~ 13:30</div>
+                    </div>
+                    <a href="{%url 'exam-result' result.pk %}">
+                    <button class="btn_fill finished">مشاهده نتیجه</button>
+                        </a>
+                </div>
+            {%endfor%}
+
+
+            
+            {%else%}
+                <div class="not_found">
+                    آزمونی پیدا نشد
+                </div>
+            {%endif%}
+
+        </div>
+    </div>
+
+    <!-- <div style="border-left: 1px solid #e2e2e2; margin: 0 12px;"></div> -->
+
+    <userPanel>
+        <form method="POST">
+            {%csrf_token%}
+            <div class="area-container">
+                <div class="upper-area">
+                    <h4 class="area-title">نام کاربری</h4>
+                    <p class="area-desc">.نامی که با آن وارد سایت میشوید</p>
+                    <div class="form-group">
+                        <span class="indicator-span" style="font-family: monospace;">Username</span>
+                        {{form.username}}
+                    </div>
+                </div>
+                <footer>
+                    <span class="footer-desc">انگلیسی و حداکثر 36 کاراکتر</span>
+                    <div class="btn_fill footer-save">بازنشانی</div>
+                </footer>
+            </div>
+
+            <div id="dual-input">
+
+                <div class="area-container" style="flex: 1; width: 100%;">
+                    <div class="upper-area">
+                        <h4 class="area-title">پایه تحصیلی</h4>
+                        <p class="area-desc">پایه شما در دبیرستان</p>
+                        <div class="select-wrapper">
+                            {{form.grade}}
+                            <span
+                                style="left: 12px; display: inline-flex; position: absolute; pointer-events: none; color: var(--accents-5); transition: color .15s ease;">
+                                <svg data-testid="geist-icon" fill="none" height="18"
+                                    shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="18"
+                                    style="color: currentcolor;">
+                                    <path d="M6 9l6 6 6-6"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="area-container" style="flex: 1; width: 100%;">
+                    <div class="upper-area">
+                        <h4 class="area-title">رشته تحصیلی</h4>
+                        <p class="area-desc">حوضه تحصیلی شما</p>
+                        <div class="select-wrapper">
+                            {{form.subject}}
+                            <span
+                                style="left: 12px; display: inline-flex; position: absolute; pointer-events: none; color: var(--accents-5); transition: color .15s ease;">
+                                <svg data-testid="geist-icon" fill="none" height="18"
+                                    shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="18"
+                                    style="color: currentcolor;">
+                                    <path d="M6 9l6 6 6-6"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="area-container">
+                <div class="upper-area">
+                    <h4 class="area-title">نام اصلی</h4>
+                    <p class="area-desc">.نام اصلی شما جهت شناسایی بهتر</p>
+                    <div class="form-group">
+                        {{form.full_name}}
+                        <span class="indicator-span">نام اصلی</span>
+                    </div>
+                </div>
+                <footer>
+                    <span class="footer-desc">فارسی و حداکثر 32 کاراکتر</span>
+                    <div class="btn_fill footer-save">بازنشانی</div>
+                </footer>
+            </div>
+
+
+            <div class="area-container">
+                <div class="upper-area">
+                    <h4 class="area-title">شماره موبایل</h4>
+                    <p class="area-desc">.شماره پیوند داده شده با این حساب کاربری</p>
+                    <div class="form-group">
+                        <span class="indicator-span" style="font-family: monospace; font-size: 0.9rem;">+98</span>
+                        <input class="form-field" style="text-align: left; background-color: #fafafa;" disabled
+                            value="{{user.phone_number}}">
+                    </div>
+                </div>
+                <footer>
+                    <span class="footer-desc">این شماره قابل تغییر نیست</span>
+
+                </footer>
+            </div>
+
+            <button class="btn_fill" style="width: 100%; padding: 0.5em" type="submit">ذخیره</button>
+        </form>
+    </userPanel>
+</main>
+
+
+
+<script data-username="{{ user.username }}" data-fullname="{{ user.full_name }}">
+    const data = document.currentScript.dataset;
+
+    const username = data.username;
+    const fullname = data.fullname;
+
+    document.querySelector('#username_input').value = username;
+    document.querySelector('#fullname_input').value = fullname;
+
+</script>
+{% endblock content %}

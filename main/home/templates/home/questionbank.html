@@ -1,0 +1,404 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/questionbank.css'%}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<div class="SI" id="SI"></div>
+
+<div class="trial-exam-cont" id="trial-exam">
+    <h2 class="create-exam">ساخت آزمون آزمایشی</h2>
+    <div class="exam-form former" style="gap :20px;border: none;padding: 0;">
+    <div class="exam-form">
+        <select style="font-family: monospace;" id="form-question-count">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+        </select>
+        <h4 class="form-name">تعداد سوالات</h4>
+    </div>
+
+    <div class="exam-form" id="exam-time">
+        <input type="number" id="quantity" name="quantity" min="5" max="60" step='5' value="5">
+        <h4 class="form-name">(5 ~ 60 min) زمان سوالات</h4>
+    </div>
+    </div>
+
+    <div class="exam-form">
+        <select id="e-diff">
+            <option value="1">ساده</option>
+            <option value="2">متوسط</option>
+            <option value="3">سخت</option>
+        </select>
+        <h4 class="form-name"> <span style="display: flex;gap: 2px;"><div class="hard"></div><div class="hard"></div><div class="easy"></div></span> درجه سختی</h4>
+    </div>
+
+    <div class="exam-form" id="form-filter" style="position: relative;">
+        <div class="filters-list" id="filters-list">
+            <div class="list-filter" id="sort-1" onclick="filterADD('1')">
+                دهم
+            </div>
+            <div class="list-filter" id="sort-2" onclick="filterADD('2')">
+                یازدهم
+            </div>
+            <div class="list-filter" id="sort-3" onclick="filterADD('3')">
+                دوازدهم
+            </div>
+            <div class="list-filter" id="sort-4" onclick="filterADD('4')">
+                فصل اول
+            </div>
+            <div class="list-filter" id="sort-5" onclick="filterADD('5')">
+                فصل دوم
+            </div>
+            <div class="list-filter" id="sort-6" onclick="filterADD('6')">
+                فصل سوم
+            </div>
+            <div class="list-filter" id="sort-7" onclick="filterADD('7')">
+                فصل چهارم
+            </div>
+        </div>
+        <div style="flex: 1;display: flex;flex-direction: column;gap: 10px; direction: rtl;">
+            <div class="exam-form" style="padding: 0;border: none;width: 100%;">
+                <h3 style="font-family: IRSansB;font-size: .875rem;margin: 5px;">فیلتر ها</h3>
+                <button id="add-filter">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 5l0 14"></path>
+                        <path d="M5 12l14 0"></path>
+                        </svg>
+                    جدید
+                </button>
+            </div>
+            <div class="filters-cont" id="filtersCONT">
+                <div class="filter">
+                    <svg  xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    همه درس ها
+                </div>
+
+                <div class="filter" id="filter-4" >
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('4')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    فصل اول
+                </div>
+
+                <div class="filter" id="filter-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('5')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    فصل دوم
+                </div>
+
+                <div class="filter" id="filter-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('6')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    فصل سوم
+                </div>
+
+                <div class="filter" id="filter-7">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('7')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    فصل چهارم
+                </div>
+
+                <div class="filter" id="filter-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('1')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    دهم
+                </div>
+
+                <div class="filter" id="filter-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('2')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    یازدهم
+                </div>
+
+                <div class="filter" id="filter-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="filterREM('3')" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>
+                    دوازدهم
+                </div>
+
+                <div class="filter" id="f-all" style="display: flex;">
+                    همه
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="exam-form">
+        <div class="exam-date">
+            {{time}}
+        </div>
+        <button class="createbtn-exam" onclick="createExam()">ساخت آزمون</button>
+
+    </div>  
+</div>
+<main style="position: relative;">
+    <div class="sorter">
+        <div class="sort-item">دهم<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">یازدهم<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">دوازدهم<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">فصل اول<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">فصل دوم<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">فصل سوم<div class="sorted"></div></div>
+        <hr>
+        <div class="sort-item">فصل چهارم<div class="sorted"></div></div>
+    </div>
+<div class="q-head">
+        <div class="head-item" id="virtualexam">
+            <p>ساخت آزمون</p>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                <path d="M9 17h6"></path>
+                <path d="M9 13h6"></path>
+             </svg>
+        </div>
+
+        <div class="head-item-white" onclick="window.location.href = '/questionbank/virtualexam/'">
+            <p>لیست آزمون ها</p>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checklist" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"></path>
+                <path d="M14 19l2 2l4 -4"></path>
+                <path d="M9 8h4"></path>
+                <path d="M9 12h2"></path>
+             </svg>
+        </div>
+    <!-- <div class="head-item" id="openmenu">
+        <p>دسته بندی</p>
+        <div id="hamberger">
+            <div class="hambergerIcon">
+            </div>
+        </div>
+    </div> -->
+    {%if admin%}
+        <div class="head-item">
+            <p>اضافه کردن سوال</p>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M12 5l0 14"></path>
+                <path d="M5 12l14 0"></path>
+            </svg>
+        </div>
+    {%endif%}
+
+</div>
+
+<div class="questions-box">
+     {%for question in questions%}
+        <div class="question">
+            <div class="question-upper">
+                <div class="question-id">
+                    #{{question.pk}}
+                </div>
+                <div class="grade-unit">
+                    {{question.Grade}} فصل {{question.Unit}} 
+                </div>
+            </div>
+            <img src="{{question.Question.url}}" class="question-img">
+            <div class="number-hider">
+            </div>
+            <div class="question-lower">
+                <a href="/questionbank/{{question.pk}}">
+                    <div class="q-solution">
+                        جواب
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M3 16v-5.5a2.5 2.5 0 0 1 5 0v5.5m0 -4h-5"></path>
+                            <path d="M12 6l0 12"></path>
+                            <path d="M16 16v-8h3a2 2 0 0 1 0 4h-3m3 0a2 2 0 0 1 0 4h-3"></path>
+                        </svg> 
+                    </div>
+                </a>
+            </div>
+        </div>
+     {%endfor%}
+</div>
+<div class="paginator-container">
+    {%if questions.has_previous%}
+        {%if questions.previous_page_number != 1%}
+            <div class="page-number" style="font-size: .9rem;color: black;">
+                <a href="?page=1" class="page-number" style="font-family: IRSans;">اول</a>
+            </div>
+        
+        {%endif%}
+            <div class="page-number" style="font-size: .9rem;color: black;">
+                <a href="?page={{questions.previous_page_number}}" class="page-number">{{questions.previous_page_number}}</a>
+            </div>
+    {%endif%}
+    <div class="page-number" style="font-size: 1rem;color: black;text-decoration: underline;">
+        {{questions.number}}
+    </div>
+
+    {%if questions.has_next %}
+    <div class="page-number" style="font-size: .9rem;color: black;">
+        <a href="?page={{questions.next_page_number}}" class="page-number">{{questions.next_page_number}}</a>
+    </div>
+    {%endif%}
+</div>
+</main>
+
+<script>
+    var filtersList = document.getElementById('filters-list')
+    var virtualExam = document.getElementById('trial-exam')
+    var virtualExamBTN = document.getElementById('virtualexam')
+    var filtersCont = document.getElementById('filtersCONT')
+    
+    var filters = {
+        '1': false,
+        '2': false,
+        '3': false,
+        '4': false,
+        '5': false,
+        '6': false,
+        '7': false,
+    }
+
+    $("#openmenu").on('click',function(){
+        $('.sorter').toggleClass('openmenu')
+        $(this).find(".hambergerIcon").toggleClass("open");
+        });
+
+    $('#virtualexam').on('click', function(){
+        $('.trial-exam-cont').toggleClass('openmenu')
+        $('#SI').toggleClass('opensi')
+    })
+
+    $('#add-filter').on('click', function(){
+        $('#filters-list').toggleClass('opengrid')
+    })
+
+
+    document.addEventListener('click',function(event){ 
+        if (event.target !== virtualExam && !virtualExam.contains(event.target) && event.target !== virtualExamBTN && !virtualExamBTN.contains(event.target)){
+            if(!event.target.id.startsWith('filter')){
+                virtualExam.classList.remove('openmenu')
+                document.getElementById('SI').classList.remove('opensi')}
+            }
+
+    })
+
+    function filterADD(id){
+        filters[id] = true
+        const element = document.getElementById('sort-'+id)
+        element.style.display = 'none'
+        const sortName = element.innerHTML
+
+        const filter = document.getElementById('filter-'+id)
+        filter.style.display='flex'
+
+        filtersList.classList.remove('opengrid')
+        document.getElementById('f-all').style.display='none'
+    }
+
+    function filterREM(id){
+        const values = Object.values(filters)
+        let c =0
+        for (let i=0;i<values.length;i++){
+            if(values[i] == true){
+                c ++
+            }
+        }
+
+        if (c > 1){
+            filters[id] = false
+
+            const filter = document.getElementById('filter-'+id)
+            filter.style.display='none'
+
+            const element = document.getElementById('sort-'+id)
+            element.style.display = 'flex'
+        }
+    }
+
+    function createExam(){
+        let ERR = false
+        const etime = parseInt(document.getElementById('quantity').value)
+        const equestionC = parseInt(document.getElementById('form-question-count').value)
+        const edifficulty = document.getElementById('e-diff').value
+        if (etime > 60 | etime < 5){
+            ERR = true
+            document.getElementById('exam-time').classList.add('form-err')
+        }
+
+        let filtersList = ''
+        const filtersBoll = Object.values(filters)
+        let tC = 0
+        for(let i = 0;i< filtersBoll.length;i++){
+            if(filtersBoll[i] == true){
+                filtersList += 'T,'
+                tC ++
+            }else{
+                filtersList += 'F,'
+            }
+        }
+
+        if(tC == 0){
+            filtersList = 'T,'.repeat(7)
+        }
+
+        filtersList = filtersList.substring(0, filtersList.length -1)
+        
+        if (ERR == false){
+            // create azmoon
+            document.getElementById('exam-time').classList.remove('form-err')
+            console.log(edifficulty)
+            $.ajax({
+                url:'/questionbank/',
+                type:'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    'action': 'createExam',
+                    'etime': etime,
+                    'ecount': equestionC,
+                    'ediff': edifficulty,
+                    'efilters': filtersList
+                },
+                success: function(response){
+                    const RERR = response['ERR']
+
+                    if (RERR == 'filter') {
+                        document.getElementById('form-filter').classList.add('form-err')
+                    }
+                    else {
+                        window.location.href = '/questionbank/virtualexam/'
+                        document.getElementById('form-filter').classList.remove('form-err')
+                    }
+                }
+            })
+        }
+    }
+</script>
+{%endblock content%}

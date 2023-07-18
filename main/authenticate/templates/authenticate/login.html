@@ -1,0 +1,76 @@
+{%load static%}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'home/auth.css'%}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
+
+    <title>Login • Chemistry</title>
+
+</head>
+
+<body>
+    <main>
+
+        <a href="{%url 'home'%}" style="position: absolute; top: 0em; left: 0em; padding: 1em; z-index: 99;">
+            <svg style="margin: auto 0; transform: rotate(90deg); color: rgb(51, 51, 51);" data-testid="geist-icon"
+                fill="none" height="20" shape-rendering="geometricPrecision" stroke="currentColor"
+                stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="20"
+                style="color: currentcolor;">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </a>
+
+        <div id="loginPanel">
+            <heading>
+                <h2 style="font-family: monospace">Login</h2>
+                <p style="font-size: 0.85rem; color: #111; margin-top: 1em;">اگر از قبل حساب دارید از اینجا وارد شوید
+                </p>
+                <div id="err_wrapper">
+                    {%for error in errors.values%}
+                    <p class="err_message">{{error}}</p>
+                    {%endfor%}
+                </div>
+            </heading>
+            <form method="POST" style="all: unset; display: flex; flex-direction: column; gap: 2em; padding: 0 1.5em;">
+                {%csrf_token%}
+                <div class="input-wrapper">
+                    <div class="form-group">
+                        <span class="indicator-span">نام کاربری</span>
+                        {{lform.username}}
+                    </div>
+                    <div class="form-group" style="margin-top: 0.5em;">
+                        <span class="indicator-span">رمز عبور</span>
+                        {{lform.password}}
+                    </div>
+                </div>
+
+                <button type="submit" id="submitLogin" class="btn_fill" style="margin-top: 3em;">انجام</button>
+            </form>
+        </div>
+
+        <a class="forgot-pass" href="/passwordreset/">
+            رمز عبور خود را فراموش کردید؟ 
+        </a>
+
+        <div id="toggle-radio" style="margin-top: 0;">
+            <div id="switch">
+                <a href="{%url 'register'%}">ثبت نام</a>
+                <svg style="display: flex; margin: auto 0; color: #111;" data-testid="geist-icon" fill="none"
+                    height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="1" viewBox="0 0 24 24" width="32"
+                    style="color: var(--accents-2);">
+                    <path d="M16.88 3.549L7.12 20.451"></path>
+                </svg>
+                <label>ورود</label>
+            </div>
+        </div>
+
+
+
+    </main>
+    
+</body>

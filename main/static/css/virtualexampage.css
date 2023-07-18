@@ -1,0 +1,139 @@
+.exam-detail {
+    margin: 30px 0;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.detail {
+    display: flex;
+    flex-direction: column;
+    padding: .7em;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    gap: 5px;
+}
+
+.column-maker {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #cecece;
+    border-radius: 5px;
+    padding: .4em .6em;
+}
+
+.column-maker > h4 {
+    font-size: .85rem;
+    margin: 0;
+}
+
+.exam-name {
+    margin: 0;
+    padding: .2em .7em;
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-family: IRSansb;
+    font-size: .875rem;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.questions-lister {
+    flex: 1;
+    display: flex;
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+}
+
+.end-exam-btn {
+    padding: .35em .6em;
+    margin-bottom: 5px;
+}
+
+.questions-lister {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em;
+    overflow-y: auto;
+    max-height: 180px;
+    gap: 6px;
+}
+
+.question-list{
+    display: flex;
+    gap: 5px;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e2e2;
+    padding: .2em .7em;
+    border-radius: 3px;
+}
+
+.question-num {
+    font-family: monospace;
+    font-size: .825rem;
+}
+
+.choices-cont {
+    display: flex;
+    gap: 3px;
+}
+
+.choice {
+    height: 2px;
+    background-color: black;
+    width: 5px;
+}
+
+.questions-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e2e2;
+    padding: .7em 0;
+    gap: 30px;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.question-img {
+    width: 100%;
+    height: auto;
+}
+
+.chooseZ {
+    display: flex;
+    width: 50%;
+    padding: 0 2em;
+    justify-content: space-evenly;
+    gap: 15px;
+}
+
+.chz {
+    font-family: monospace;
+    font-size: .8rem;
+    flex-grow: 1;
+    flex-basis: 0;
+    padding: .3em 2em;
+    background-color: white;
+    color: black;
+}
+
+.chz:hover {
+    background-color: black;
+    color: white;
+}
+
+.selected{
+    background-color: black;
+    color: white;
+}

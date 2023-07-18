@@ -1,0 +1,394 @@
+@import url(//fonts.googleapis.com/css?family=Oswald:400);
+.base-container {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+.chart {
+  display: block;
+  margin: auto;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.doughnutTip {
+  position: absolute;
+  min-width: 30px;
+  max-width: 300px;
+  padding: 5px 15px;
+  border-radius: 1px;
+  background: rgba(0, 0, 0, .8);
+  color: #ddd;
+  font-size: 17px;
+  text-shadow: 0 1px 0 #000;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+  letter-spacing: .06em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+
+  
+}
+
+.doughnutTip::after{
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    content: "";
+    height: 0;
+    margin: 0 0 0 -6px;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, .7);
+    line-height: 0;
+  
+}
+
+.doughnutSummary {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #d5d5d5;
+  text-align: center;
+  text-shadow: 0 -1px 0 #000;
+  cursor: default;
+}
+
+.doughnutSummaryTitle {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  margin-top: -27%;
+  font-size: 22px;
+  letter-spacing: .06em;
+}
+
+.doughnutSummaryNumber {
+  position: absolute;
+  color: #000;
+  font-family: Poppins;
+  font-size: 1rem;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.chart path:hover {
+  opacity: 0.65;
+}
+
+.dough-holder {
+  display: block;
+  padding: 2%;
+  margin: auto;
+  width: 250px;
+  height: 250px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 20px;
+
+
+}
+
+.Box-1 {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #cecece;
+  padding: 1em;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 8px;
+}
+
+
+.Box-2 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 1;
+    padding: 1em;
+    border: 1px solid #cecece;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+.result-detail-item {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #e2e2e2;
+    padding: .6em;
+    align-items: center;
+    border-radius: 5px;
+}
+.result-data-idenifier {
+    display: flex;
+    gap: 3px;
+    color: white;
+    background-color: black;
+    padding: .3em;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-data {
+    font-family: monospace;
+}
+.questions-btn {
+  font-family: IRSansB;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+  padding: .6em 2em;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all 300ms ease;
+  border-radius: 5px;
+}
+
+.questions-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+.detail-exam-lower{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-detail{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid #e2e2e2;
+    padding: .6em;
+    border-radius: 5px;
+}
+
+.exam-detail-item{
+    display: flex;
+}
+
+.exam-detail-item{
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.result-detail-span {
+  display: flex;
+  align-items: center;
+  min-width: 30px;
+  justify-content: center;
+  height: 100%;
+  border-radius: 5px;
+  width: 100%;
+  background-color: black;
+  color: white;
+      
+}
+
+.result-detail-span > svg {
+  width: 25px;
+  height: auto;
+}
+.result-detail-text {
+  display: block;
+  margin: auto;
+}
+
+.result-detail-button {
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid #000;
+  height: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.result-detail-button:hover {
+  background-color: #000;
+  color: #fff;
+  border: #fff 1px solid;
+}
+
+.Score_Board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+
+  height: 100%;
+  gap: 5px;
+
+}
+
+.text_design {
+  align-items: center; 
+  display: flex;
+  justify-content: center;
+  height:100%;
+  font-size: 1rem;
+}
+
+.apexcharts-background {
+fill: #ffffff; /* Set the background color to white */
+}
+
+.apexcharts-legend-text {
+  fill: #000000; /* Set the legend text color to black */
+}
+
+.tooltip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: .5em;
+}
+
+.tooltip-colmn-breaker {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tooltip-colmn-breaker > h4 {
+  font-family: IRSansB;
+  font-size: .875rem;
+  margin: 0;
+}
+
+.container-1 {
+display: flex;
+width: 100%;
+gap: 10px;
+}
+
+.container-2 {
+  display: flex; 
+  margin-top: 10px;
+  height: fit-content;
+  gap: 5px;
+}
+
+.Score_Board-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff; 
+  border: 1px solid #cecece;
+  border-top-right-radius: 5px;
+  gap: 10px;
+  border-bottom-right-radius: 5px;
+  padding: 1em;
+}
+
+.Score_Board-container > h2 {
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  padding: .7em;
+  font-family: IRSansB;
+  margin: 0;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.chart-container{
+  width: 100%;
+  height: 100%;
+  border: 1px solid #cecece;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.result-detail-container{
+  width: 100%; 
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.student-score {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+.student-score > h5 {
+  font-family: IRSansB;
+  font-size: .9rem;
+}
+
+#chart {
+  width: 100%;
+  
+}
+
+.exam-name {
+    padding:  .7em 0 ;
+    margin: 0;
+    border-bottom: 1px solid #333;
+    font-family: IRSans;
+    text-align: center;
+}
+
+.apexcharts-text tspan {
+  font-family: Poppins;
+  color: #000;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .container-1 {
+    flex-direction: column;
+
+  }
+
+  .container-2 {
+    display: block;
+    position: relative;
+    
+  }
+
+  .Box-1{
+    border-radius: 5px;
+  }
+
+  .Box-2{
+    border-radius: 5px;
+  }
+
+
+  .result-detail-text{
+    text-align: center;
+  }
+
+  .Score_Board-container {
+    margin-top: 5px;
+    border-radius: 5px;
+  }
+
+  .detail-exam-lower{
+    flex-direction: column-reverse;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .detail-exam-lower > div {
+    width: 100%;
+  }
+
+  .detail-exam-lower > a  {
+    width: 100%;
+  }
+  .questions-btn{
+    width: 100%;
+  }
+}

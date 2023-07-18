@@ -1,0 +1,288 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/exam.css'%}">
+<script>
+    var availableExams = {};
+</script>
+<main>
+    
+    <div class="exam-header">
+        <div class="header-item">
+            <div class="column-breaker">
+                <h2 style="font-family: monospace;">{{detail.participantsCount}}</h2>
+                <h2>تعداد کل شرکت کنندگان
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+                     </svg>
+                </h2>
+            </div>
+        </div>
+
+        <div class="header-item">
+            <div class="column-breaker">
+                <h2 style="font-family: monospace;">{{detail.examsCount}}</h2>
+                <h2>تعداد آزمون ها 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-certificate" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M15 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                        <path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5"></path>
+                        <path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73"></path>
+                        <path d="M6 9l12 0"></path>
+                        <path d="M6 12l3 0"></path>
+                        <path d="M6 15l2 0"></path>
+                     </svg>
+                </h2>
+            </div>
+        </div>
+
+        <div class="header-item">
+            <div class="column-breaker">
+                <h2 style="font-family: monospace;">{{detail.questionsCount}}</h2>
+                <h2>تعداد تست های ازمون ها
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M3 16v-5.5a2.5 2.5 0 0 1 5 0v5.5m0 -4h-5"></path>
+                        <path d="M12 6l0 12"></path>
+                        <path d="M16 16v-8h3a2 2 0 0 1 0 4h-3m3 0a2 2 0 0 1 0 4h-3"></path>
+                     </svg>
+                </h2>
+            </div>
+        </div>
+        
+
+    </div>
+    {%if admi%}
+    <div class="admin-panel">
+        <h2>Admin panel</h2>
+
+        <div class="search">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+                <path d="M21 21l-6 -6"></path>
+             </svg>
+             <input type="text" placeholder="جستجوی آزمون">
+        </div>
+        {%for exam in allExams%}
+        <div class="exam-panel-cont">
+
+            <h3 style="font-family: IRSansB;">{{exam.exam.name}}</h3>
+
+            <h3>{{exam.status}}</h3>
+            <a href="/exam/{{exam.exam.name}}/"><button>Admin panel</button></a>
+
+        </div>
+        {%endfor%}
+    </div>
+    {%endif%}
+    {%if DuringExams%}
+    <div class="exams-during">
+        <h2>بازگشت به ازمون</h2>
+
+    {%for during in DuringExams%}
+        <div class="during-cont">
+            <a href="/exam/{{during.name}}">
+                <button>
+                    ادامه آزمون
+                </button>
+            </a>
+            <div class="column-maker">
+                <h3>{{during.name}}</h3>
+                <div class="progress-cont"><div id="progress-{{during.pk}}" class="progress"></div></div>
+            </div>
+        </div>
+        <script>
+
+            document.getElementById('progress-{{during.pk}}').style.width = '{{during.progress}}'+'%'
+        </script>
+    {%endfor%}
+</div>
+    {%endif%}
+
+    <div class="exams-available">
+        <h2>آزمون هایی که میتوانید در انها شرکت کنید</h2>
+        
+        <div id="available-exam-detail"></div>
+        <div class="available-exams-container">
+            {%if availableExams%}
+            {%for exam in availableExams%}
+            <div class="exam-wrapper">
+                <div class="column-breaker">
+                    <button id="openDetail-{{exam.pk}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                            <path d="M9 17h6"></path>
+                            <path d="M9 13h6"></path>
+                         </svg>
+                        جزئیات 
+                    </button>
+                    <div class="column-maker">
+                        <h3>{{exam.name}}</h3>
+                        <h3 style="color: #444;padding-right: .8em; font-size: .825rem;font-family: monospace;">{{exam.endTime|time:'H:i'}} ~ {{exam.startTime|time:'H:i'}}</h3>
+                    </div>
+                </div>
+            </div>
+            <script>
+                availableExams['{{exam.pk}}'] = {
+                    name: '{{exam.name}}',
+                    grade: '{{exam.grade}}',
+                    unit: '{{exam.unit}}',
+                    time: '{{exam.time}}',
+                    Q_C: '{{exam.get_q_l}}',
+                    plans: []
+                }
+
+                document.getElementById('openDetail-{{exam.pk}}').addEventListener('click', function(){
+                    openExamDetail('{{exam.pk}}')
+                })
+            </script>
+            {%for plan in exam.plans.all%}
+                <script>availableExams['{{exam.pk}}']['plans'].push('{{plan.name}}')</script>
+            {%endfor%}
+            {%endfor%}
+            {%else%}
+            <div class="dissapoint">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-report-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M8 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5.697"></path>
+                    <path d="M18 12v-5a2 2 0 0 0 -2 -2h-2"></path>
+                    <path d="M8 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path>
+                    <path d="M8 11h4"></path>
+                    <path d="M8 15h3"></path>
+                    <path d="M16.5 17.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path>
+                    <path d="M18.5 19.5l2.5 2.5"></path>
+                 </svg>آزمونی پیدا نشد
+            </div>
+            {%endif%}
+        </div>
+    </div>
+
+    <div class="results-container">
+        <h2>کارنامه های شما</h2>
+
+        <div class="result-container">
+            {%if ResultExams%}
+                {%for result in ResultExams%}
+                <div class="result-item">
+                    <div class="result-detail-btn">
+                        <a href="/exam/result/{{result.pk}}">
+                        <button>
+                            جزئیات <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-report-analytics" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path>
+                                <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path>
+                                <path d="M9 17v-5"></path>
+                                <path d="M12 17v-1"></path>
+                                <path d="M15 17v-3"></path>
+                            </svg>
+                        </button>
+                        </a>
+                    </div>
+                    <div class="column-maker">
+                        <h3>{{result.Exam_related.name}}</h3>
+                        <div class="detail-cont">
+                            <h3 class="result-detail">
+                                تاریخ آزمون: 
+                                {{result.Exam_related.date}}
+                            </h3>
+                            <h3 class="result-detail">
+                                تعداد سوالات: 
+                                {{result.Exam_related.get_q_l}}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+            {%else%}
+                <div class="dissapoint">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-report-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M8 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5.697"></path>
+                        <path d="M18 12v-5a2 2 0 0 0 -2 -2h-2"></path>
+                        <path d="M8 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path>
+                        <path d="M8 11h4"></path>
+                        <path d="M8 15h3"></path>
+                        <path d="M16.5 17.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path>
+                        <path d="M18.5 19.5l2.5 2.5"></path>
+                    </svg>کارنامه ای پیدا نشد
+                </div>
+            {%endif%}
+        </div>
+    </div>
+
+</main>
+
+<script>
+    var availableDetailCont = document.getElementById('available-exam-detail')
+    var first = 800
+
+    function openExamDetail(pk){
+        const examRelated = availableExams[pk]
+        availableDetailCont.style.display = 'flex'
+
+        console.log(availableDetailCont.innerHTML)
+
+        
+        let plans = ''
+        console.log(examRelated.plans)
+        examRelated.plans.forEach((plan)=>{
+
+            plans += plan+','
+        })
+
+        plans = plans.substring(0, plans.length -1)
+        if (plans == ''){
+            plans = '---'
+        }
+        const element = `            
+        <div class="detail-head">
+                ${examRelated.name}
+            </div>
+            <div class="detail-content">
+
+                <div class="detail-breaker opaci0">
+                    <h4 style="font-family: monospace;color: #222;">${examRelated.Q_C}</h4>
+                    <h4>تعداد سوالات</h4>
+                </div>
+                <div class="detail-breaker opaci0">
+                    <h4 style="font-family: monospace;color: #222;">${examRelated.time}min</h4>
+                    <h4>زمان</h4>
+                </div>
+
+                <div class="detail-breaker opaci0">
+                    <h4 style="font-family: monospace;color: #222;">${plans}</h4>
+                    <h4>پلن ها</h4>
+                </div>
+                <div class="detail-breaker opaci0">
+                    <h4 style="color: #222;">فصل ${examRelated.unit} ${examRelated.grade}</h4>
+                    <h4>پایه ~ فصل</h4>
+                </div>
+            </div>
+            <a href="/exam/${examRelated.name}/" style="width:100%;animation: .4s ease fadeIn;">
+            <button style="width: 100%;" class="black-btn">شرکت در آزمون</button>
+            </a>`
+
+
+            setTimeout(function(){
+                availableDetailCont.innerHTML = element
+                setTimeout(function(){
+                    document.querySelectorAll('.detail-breaker').forEach((detail)=>{
+                        detail.classList.remove('opaci0')
+                    })
+                },200)
+                },first)
+            first = 0
+
+
+
+    }
+</script>
+
+{%endblock content%}

@@ -1,0 +1,40 @@
+{%extends 'home/base.html'%}
+{%load static%}
+
+{%block content%}
+<link rel="stylesheet" href="{% static 'css/plans.css'%}">
+    <main>
+        <div class="plans-container" style="position: relative;">
+            {%if plans%}
+            {%for plan in plans%}
+            <div class="plan-card">
+                <div class="card-upper">
+                    <h2 class="plan-name">{{plan.name}}</h2>
+                    {%for feature in plan.features.all%}
+                        <div class="colum-breaker">
+                            <p>{{feature.name}}</p>
+                            {{feature.icon|safe}}
+                        </div>
+                    {%endfor%}
+
+                </div>
+                <div class="card-lower">
+                    <h3 class="price">{{plan.price}}T</h3>
+                   
+                    <div class="subscribe">
+                        SUBSCRIBE
+                    </div>
+                </div>
+
+            </div>
+            {%endfor%}
+            {%else%}
+            <div style="border: 1px solid #444;border-radius: 5px;height: 30vh;position: absolute; width: 100%; display: flex;font-family: IRSansB;font-size: .875rem;align-items: center;justify-content: center;">
+                دوره ای پیدا نشد
+            </div>
+            {%endif%}
+            <!-- <p class="contact"> برای اطلاعات بیشتر با ما در <span><a href="/contact/">تماس</a></span> باشید</p> -->
+            
+        </div>
+    </main>
+{%endblock content%}
