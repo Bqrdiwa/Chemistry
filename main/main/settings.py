@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wh80xhiza2x%usibxsei)&b7l(5l8_ok^6@na!&xgi3@+t9v$7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['5.201.142.249','192.168.1.158','127.0.0.1']
+ALLOWED_HOSTS = ['5.201.142.249','chemistrykiani.com','127.0.0.1']
 
 
 # Application definition
@@ -135,7 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     BASE_DIR/'static'
 ]
@@ -160,7 +160,4 @@ DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 
-# SECURE_SSL_REDIRECT = True
-CORS_ORIGIN_WHITELIST = [
-    'https://meet.jit.si'
-]
+CSRF_TRUSTED_ORIGINS = ['https://chemistrykiani.com']
