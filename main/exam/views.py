@@ -1,5 +1,4 @@
-from django.shortcuts import render,redirect,get_object_or_404
-from django.views.generic import ListView , DetailView, View
+from django.shortcuts import render,redirect
 from .models import Exam, Result, Question, ExamAir
 from json import dumps
 from django.http import JsonResponse

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Solution, Answer, SolutionLike, Plan, Student
+from .models import Solution, Answer, SolutionLike, Plan
 from jdatetime import datetime
 from django.utils import timezone as Tz
 from pytz import timezone

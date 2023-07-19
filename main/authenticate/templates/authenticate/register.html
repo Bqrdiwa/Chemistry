@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
-    <link type="text/css" rel="stylesheet" href="{%static 'home/auth.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'css/globals.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'css/auth.css'%}" />
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Register • Chemistry</title>
@@ -13,6 +13,12 @@
 </head>
 
 <body>
+    <div id="loading-base">
+        <div class='loading-container'>
+            <div class='loading-pulse'>
+                </div>
+            </div>
+    </div>
     <main>
 
         <a href="{%url 'home'%}" style="position: absolute; top: 0em; left: 0em; padding: 1em; z-index: 99;">
@@ -134,6 +140,7 @@
     }
     
     function submitVC(){
+        toggleLoading()
         remainT.innerHTML = ''
         const phone_number = document.getElementById('reg_phone').value
         const vc = document.getElementById('vertification_code').value
@@ -153,6 +160,7 @@
                 'action':'vc_verify'
             },
             success: function(response){
+                toggleLoading()
                 const err = response['ERR']
                 if (err != 'None'){
                    errWrapper.innerHTML = `   <p class="err_message">کد وارد شده <span style='font-family:monospace;'>(${vc})</span> مطابقت ندارد</p>`
@@ -166,6 +174,7 @@
     }
 
     function submitRegister(){
+        toggleLoading()
         errWrapper.innerHTML =''
         const username = document.getElementById('reg_username').value
         const password1 = document.getElementById('reg_pass').value
@@ -187,6 +196,7 @@
                 'action':'create_account'
             },
             success: function(response){
+                toggleLoading()
                 let errors = JSON.parse(response['ERR'])
                 if(errors['HAS'] == 'Y'){
                     let Keys = Object.keys(errors)
@@ -225,3 +235,4 @@
         })
     }
 </script>
+<script src="{%static 'js/base.js'%}"></script>

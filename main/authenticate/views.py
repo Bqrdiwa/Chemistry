@@ -6,7 +6,6 @@ from .models import LoginForm,RegisterForm,ProfileForm, VertificationCode, Verti
 from django.contrib.auth.models import Group
 import re
 from django.http import JsonResponse
-from django.contrib import messages
 from exam.models import Exam, Result, ExamAir
 from json import dumps
 from home.models import Student

@@ -375,6 +375,7 @@
             // create azmoon
             document.getElementById('exam-time').classList.remove('form-err')
             console.log(edifficulty)
+            toggleLoading()
             $.ajax({
                 url:'/questionbank/',
                 type:'POST',
@@ -387,6 +388,7 @@
                     'efilters': filtersList
                 },
                 success: function(response){
+                    toggleLoading()
                     const RERR = response['ERR']
 
                     if (RERR == 'filter') {

@@ -3,7 +3,6 @@ from home.models import Student
 from home.models import Plan
 from django.utils import timezone
 import os
-import random
 from jdatetime import datetime
 from pytz import timezone as Tz
 

@@ -32,22 +32,22 @@ ALLOWED_HOSTS = ['5.201.142.249','192.168.1.158','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'home.apps.HomeConfig',
-    'jalali_date',
-    'authenticate.apps.AuthenticateConfig',
-    'exam.apps.ExamConfig',
-    'video.apps.VideoConfig',
-    'room.apps.RoomConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dj_static',
+    'jalali_date',
     'channels',
-    'channels_redis'
+    'channels_redis',
+    'main',
+    'home',
+    'authenticate',
+    'exam',
+    'video',
+    'room',
+    
     
 ]
 
@@ -135,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     BASE_DIR/'static'
 ]

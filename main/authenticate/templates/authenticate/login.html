@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
-    <link type="text/css" rel="stylesheet" href="{%static 'home/auth.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'css/globals.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'css/auth.css'%}" />
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
 
     <title>Login • Chemistry</title>
@@ -13,6 +13,12 @@
 </head>
 
 <body>
+    <div id="loading-base">
+        <div class='loading-container'>
+            <div class='loading-pulse'>
+                </div>
+            </div>
+    </div>
     <main>
 
         <a href="{%url 'home'%}" style="position: absolute; top: 0em; left: 0em; padding: 1em; z-index: 99;">
@@ -74,3 +80,4 @@
     </main>
     
 </body>
+<script src="{%static 'js/base.js'%}"></script>

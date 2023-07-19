@@ -2,7 +2,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from channels.db import database_sync_to_async
 from .models import ExamAir, Exam, Result
-from django.shortcuts import redirect
 
 class ExamConsumer(AsyncWebsocketConsumer):
     async def connect(self):

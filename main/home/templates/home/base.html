@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="{%static 'home/globals.css'%}" />
+    <link type="text/css" rel="stylesheet" href="{%static 'css/globals.css'%}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/icon.png'%}">
     {% if title %}
@@ -72,7 +72,7 @@
         background: #fff;
         box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
         width: fit-content;
-        min-width: 280px;
+        min-width: 240px;
         padding: 8px 0;
         overflow: visible;
         display: none;
@@ -215,7 +215,8 @@
     }
 
     .left-foot >img {
-        height: 150px;width: fit-content;
+        height: 150px;
+        width: 150px;
     }
 
     .mid-foot {
@@ -229,8 +230,12 @@
     }
 
     .right-text{
-        font-size: .825rem;
+        font-size: .8rem;
         margin-bottom: 8px;
+    }
+
+    .right-text > p {
+        text-align: right;
     }
 
     .scroll-up {
@@ -287,11 +292,18 @@
         gap: 5px;
         align-items: center;
         justify-content: center;
-        background-color: #e4e4e4;
+        background-color: #ececec;
         font-size: .825rem;
         border: 1px solid #dadada;
         border-radius: 5px;
+        transition: all 300ms ease;
+        color: #333;
+    }
+
+    .social-foot:hover {
         border-bottom: 1px solid #000;
+        color: black;
+        background-color: white;
     }
 
     .social-foot >svg {
@@ -360,18 +372,6 @@
         margin: 0;
         font-size: 1.2rem;
         color: #333;
-    }
-    @keyframes loading-bar {
-        0% {
-            width: 0;
-        }
-        100%{
-            width: 100%;
-        }
-    }
-    @font-face {
-        font-family: Farnaz;
-        src: url(../assets/Farnaz.ttf);
     }
 
     @keyframes fadeIn {
@@ -477,33 +477,11 @@
                                     </span></a>
                             </div>
                             <div class="panel-item-wrapper">
-                                <a href="{%url 'home'%}" style="padding: 8px 20px 8px 19.1px;">بانک سوالات<span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" 
-                                        class="icon icon-tabler icon-tabler-building-bank" 
-                                        width="18.5" height="18.5" viewBox="0 0 24 24" 
-                                        stroke-width="1.5" stroke="currentColor" 
-                                        fill="none" stroke-linecap="round" 
-                                        stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M3 21l18 0"></path>
-                                            <path d="M3 10l18 0"></path>
-                                            <path d="M5 6l7 -3l7 3"></path>
-                                            <path d="M4 10l0 11"></path>
-                                            <path d="M20 10l0 11"></path>
-                                            <path d="M8 14l0 3"></path>
-                                            <path d="M12 14l0 3"></path>
-                                            <path d="M16 14l0 3"></path>
-                                        </svg>
-                                    </span></a>
+                                <a href="{%url 'question-bank'%}" style="padding: 8px 20px 8px 19.1px;">بانک سوالات<span>
+                                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" shape-rendering="geometricPrecision" viewBox="0 0 24 24" class="jsx-3371494958" height="16" width="16" style="color: currentcolor;"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"></path></svg></a>
                             </div>
                             <div class="panel-item-wrapper">
-                                <a href="{%url 'exam'%}" style="padding: 8px 20px 8px 18.9px;">ویدیو آموزشی<span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" class="icon icon-tabler icon-tabler-brand-youtube" width="19" height="19" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M3 5m0 4a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z"></path>
-                                        <path d="M10 9l5 3l-5 3z"></path>
-                                     </svg>
-                                    </span></a>
+                                <a href="{%url 'video-list'%}" style="padding: 8px 20px 8px 18.9px;">ویدیو آموزشی<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" shape-rendering="geometricPrecision" viewBox="0 0 24 24" class="jsx-3371494958" height="16" width="16" style="color: currentcolor;"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"></path><path d="M9.75 15.02l5.75-3.27-5.75-3.27v6.54z"></path></svg></a>
                             </div>
                             <div class="panel-item-wrapper">
                                 <a href="{%url 'exam'%}">آزمون انلاین <span>
@@ -597,20 +575,23 @@
             {%endfor%}
         {%endif%}
     </div>
+    <div id="loading-base">
+        <div class='loading-container'>
+            <div class='loading-pulse'>
+                </div>
+            </div>
+    </div>
     {%block content%}
     {%endblock%}
     <div style="border-top: 1px solid #e2e2e2;margin-top: 30px;display: flex;justify-content: center;">
         <div class="footer">
             <div class="left-foot">
                 <img src="{%static 'assets/logo.png'%}">
-
-
             </div>
             
 
 
             <div class="right-foot">
-                
                 <div class="free-use-foot">
                     <h3 class="socials-foot-head" style="padding: 0 2.5em;">دسترسی</h3>
                     <a href="{%url 'home'%}">
@@ -719,7 +700,9 @@
 
         function showBox(elementId){
             element = document.getElementById(elementId)
-
         }
+
+
     </script>
 </body>
+<script src="{%static 'js/base.js'%}"></script>
