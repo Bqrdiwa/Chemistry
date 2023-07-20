@@ -271,10 +271,11 @@ def Question_bank(request):
                     all_filters += i + ','
             all_filters = all_filters[:-1]
 
+            if grade_filter == []: grade_filter = ['دهم','یازدهم','دوازدهم']
             questions_grade = Question.objects.filter(
                 Grade__in = grade_filter
             )
-            
+            if unit_filter == []: unit_filter = ['اول','دوم','سوم','چهارم']
             filtered_questions = questions_grade.filter(
                 Unit__in = unit_filter
             )
@@ -474,7 +475,9 @@ def virtualExamResultQuestions(request,pk):
                                                                     'corrects':corrects_q,
                                                                     'notAnswered':notAnswered_q
                                                                     })
-
+def informationBank(request):
+    context ={'title':'Information-bank','HT':'بانک اطلاعات'}
+    return render(request, 'home/informationbank.html',context)
 def error_404(request, exception):
     return render(request, 'home/404.html', context={'err':'404','detail':'صفحه مورد نظر پیدا نشد'})
 def error_400(request, exception):

@@ -2,10 +2,8 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, View
 from .models import  Video, WatchList
 from django.http import JsonResponse
-import json
-from django.core import serializers
-from django.db.models import Q
-from functools import reduce
+from json import loads, dumps
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required 
 
 # Create your views here.
@@ -13,36 +11,49 @@ from django.contrib.auth.decorators import login_required
 def video(request):
     context = {'title':'Video','HT':'ویدیو'}
     if request.method =='POST':
-        filters = json.loads( request.POST['filters'])
-        
-        videos = Video.objects.all()
-        filterRawGrade = []
-        filterRawUnit = []
+        context['ERR'] = 'None'
+        filters = loads(request.POST['filters']) 
+        keys = filters.keys()
+        grade_filters = []
+        unit_filters = []
+        for item in keys:
+            if item in ['دهم', 'یازدهم', 'دوازدهم'] and filters[item] == True:
+                grade_filters.append(item)
+            elif filters[item] == True:
+                unit_filters.append(item)
 
+        if not grade_filters :grade_filters = ['دهم', 'یازدهم', 'دوازدهم']
+        if not unit_filters :unit_filters = ['اول','دوم','سوم','چهارم']
+        filtered_videos = Video.objects.filter(
+            grade__in = grade_filters
+        ).filter(
+            Unit__in = unit_filters
+        )
         
-        for filter in filters:
-            if filter in ['دهم','دوازدهم','یازدهم']:
-                filterRawGrade.append(Q(grade = filter))
-            else:
-                filterRawUnit.append(Q(Unit=filter))
-        filtered1 = Video.objects.none()
-        filtered1 = reduce(lambda qs, f: qs | Video.objects.filter(f), filterRawUnit, filtered1)
-        filtered2 = Video.objects.none()
-        filtered2 = reduce(lambda qs, f: qs | Video.objects.filter(f), filterRawGrade, filtered2)
-        
-        videos = filtered1.union(filtered2)   
-        if filters  == []: videos = Video.objects.all()  
-        context['videos'] =  serializers.serialize('json',videos)
-        videosDuration = []
-        if videos.count() == 0:
-            context['videos'] = 'None'
+        page_num = request.GET.get('page')
+        paginator = Paginator(filtered_videos, 30)
+        filtered_videos = paginator.get_page(page_num)
+        videos_list = []
 
-        for vid in videos:
-            videosDuration.append(vid.get_video_duration())
-        context['duration'] = videosDuration
+        pr = paginator.page_range
+        page_ranges = []
+        for i in pr :
+            page_ranges.append(i)
+        for video in filtered_videos:
+            videos_list.append({
+                'title': video.Title,
+                'thumb': video.Thumbnail.url,
+                'pk': video.pk
+            })
+        context['videos'] = dumps(videos_list)
+        context['page_ranges'] = dumps(page_ranges)
+
         return JsonResponse(context)
     else:
         videos = Video.objects.all()
+        page_num = request.GET.get('page')
+        paginator = Paginator(videos, 30)
+        videos = paginator.get_page(page_num)
         context['videos'] = videos
         return render(request,'video/video.html',context)
 

@@ -1,419 +1,164 @@
 {%extends 'home/base.html'%}
+{%load static%}
 
 
 {%block content%}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<style>
-    @-webkit-keyframes pulse {
-        50% {
-        background: white;
-    }
-    }
-    @keyframes pulse {
-        50% {
-        background: white;
-    }
-    }
-    .base-container {
-        height: 100%;
-        width: 100%;
-    }
-
-    .videos-container {
-        margin-top: 40px;
-        width: 100%;
-        padding: 20px;
-        display: grid;
-        gap: 15px;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-
-    .video-container {
-        width: 100%;
-        height: fit-content;
-        display: block;
-        position: relative;
-        flex-direction: column;
-        margin: auto;
-        overflow: hidden;
-        border: 1px solid #dadada;
-        border-radius: 5px;
-    }
-
-    .btn-duration {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        margin-bottom: 5px;
-        margin-right: 5px;
-        color: #EAEAEA;
-        border: none;
-
-
-    }
-
-    .img-container {
-        width: 100%;
-        height: 60%;
-    }
-
-    .thumbnail-img {
-        width: 100%; 
-        height: 100%;
-        cursor: pointer;
-        filter: grayscale(100%);
-        transition: all 600ms ease;
-        margin: auto;
-        display: block;
-
-    }
-
-    .thumbnail-img:hover {
-        scale: 1.05;
-        filter: grayscale(0%);
-        
-        
-    }
-
-    .link {
-        text-align: center;
-        display: block;
-        font-size: .85rem;
-        margin: 10px;
-    }
-
-    .link:hover {
-        color: #000000e7;
-    }
-
-    .line {
-			position: relative;
-			height: 2px;
-			background-image: linear-gradient(to right, transparent, black 50%, transparent), linear-gradient(to left, transparent, black 50%, transparent);
-			background-position: center;
-			background-repeat: no-repeat;
-            margin: auto;
-            display: block;
-            width: 85%;
-
-		}
-    
-    .options-container {
-        display: flex;
-        gap: 5px;
-        align-items: center;
-        width: 100%;
-        height: fit-content;
-        border: 1px solid #EAEAEA;
-        border-radius: 5px;
-        position: relative;
-        flex-direction: row;
-        margin-top: 10px;
-    }
-
-    .sort {
-        right: 5px;
-        width: 100%;
-        display: grid;
-        border-radius: 4px;
-        overflow: hidden;
-        border: 1px solid #dadada;
-        grid-template-columns: auto auto auto auto auto auto auto auto;
-        height: 40px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        
-        
-    }
-
-    .special-btn-option {
-        border: none;
-        font-size: .9rem;
-        cursor: pointer;
-        background-color: #000;
-        color: #fff;
-        height: 100%;
-        transition: all ease 400ms;
-        
-    }
-
-
-
-    .options-btn {
-        background-color: white;
-        border: none;
-        font-size: .9rem;
-        cursor: pointer;
-        transition: all 200ms ease;
-        border-left: 1px solid #fff;
-    }
-
-    .options-btn:hover {
-        background-color: #000;
-        color: #fff;
-    }
-
-    .button-fill {
-        border-radius: 5px;
-        background-color: #fff;
-        font-size: .85rem;
-        transition: all ease 200ms;
-        color: #fff;
-        background-color: #000;
-        cursor: pointer;
-        width: 50%;
-        border: 1px solid #dadada;
-        width: 30%;
-        height: 40px;
-        border-bottom-left-radius: 0%;
-        border-top-left-radius: 0;
-    }
-
-    .button-fill:hover {
-        background-color: white;
-        color: #000;
-    }
-
-    .video-detail {
-        position: relative;
-        width: fit-content;
-        display: block;
-        height: 100%;
-    }
-
-    .error-filter {
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        top: 50%;
-    }
-
-    .loading-pulse {
-        position: relative;
-        width: 6px;
-        height: 24px;
-        background: rgb(0, 0, 0);
-        -webkit-animation: pulse 750ms infinite;
-                animation: pulse 750ms infinite;
-        -webkit-animation-delay: 250ms;
-                animation-delay: 250ms;
-    }
-
-    .loading-pulse:before, .loading-pulse:after {
-        content: "";
-        position: absolute;
-        display: block;
-        height: 16px;
-        width: 6px;
-        background: rgb(0, 0, 0);
-        top: 50%;
-        transform: translateY(-50%);
-        -webkit-animation: pulse 750ms infinite;
-                animation: pulse 750ms infinite;
-    }
-
-    .loading-pulse:before {
-        left: -12px;
-    }
-
-    .loading-pulse:after {
-        left: 12px;
-        -webkit-animation-delay: 500ms;
-                animation-delay: 500ms;
-    }
-
-    .loading-container {
-        width: fit-content;
-        position: absolute;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-    }
-    
-
-    @media screen and (max-width: 768px) {
-        .videos-container {
-            grid-template-columns: 1fr 1fr ;
-        }
-
-        .options-container {
-            flex-direction: column;
-        }
-
-        .sort{
-            grid-template-rows: 1fr 1fr;
-            grid-template-columns: auto auto auto auto auto;
-            height: fit-content;
-            gap: 3px;
-        }
-
-        .special-btn-option {
-            grid-area: 1  /  1  / span 2 / span 1;
-        }
-
-        .button-fill {
-            width: 100%;
-        }
-
-        .thumbnail-img {
-            width: 100%;
-            filter: grayscale(0);
-        }
-    }
-</style>
-
-
-
+<link rel="stylesheet" href="{%static 'css/video.css'%}">
 <main>
-    <div class="base-container">
-        <div class="options-container">
-            <div class="sort">
-                <button class="special-btn-option">دسته بندی</button>
-                <button class="options-btn" onclick="filterAppend('دهم')" id ='دهم'>دهم</button>
-                <button class="options-btn" onclick="filterAppend('یازدهم')" id = 'یازدهم'>یازدهم</button>
-                <button class="options-btn" onclick="filterAppend('دوازدهم')" id ='دوازدهم'>دوازدهم</button>
-                <button class="options-btn" onclick="filterAppend('اول')" id="اول">فصل اول</button>
-                <button class="options-btn" onclick="filterAppend('دوم')" id="دوم">فصل دوم</button>
-                <button class="options-btn" onclick="filterAppend('سوم')" id="سوم">فصل سوم</button>
-                <button class="options-btn" onclick="filterAppend('چهارم')" id="چهارم">فصل چهارم</button>
+    <div class="options-container">
+        <div class="sort-cont">
+            <div class="sort-list-cont" id="enabled-filters"><h3 id="no-sort">فیلتری پیدا نشد</h3></div>
+            <div class="line">
+                <button id="update-filter-button">اعمال فیلتر</button>
             </div>
-            <button class="button-fill" onclick="window.location.href = 'watchlist/{{user.username}}'">Watch List</button>
+            <div class="sort-list-cont" id="disabled-filters">
+                <div class="sort-item sort-disabled" type="دهم">دهم</div>
+                <div class="sort-item sort-disabled" type="یازدهم">یازدهم</div>
+                <div class="sort-item sort-disabled" type="دوازدهم">دوازدهم</div>
+                <div class="sort-item sort-disabled" type="اول">فصل اول</div>
+                <div class="sort-item sort-disabled" type="دوم">فصل دوم</div>
+                <div class="sort-item sort-disabled" type="سوم">فصل سوم</div>
+                <div class="sort-item sort-disabled" type="چهارم">فصل چهارم</div>
+            </div>
         </div>
-        <div class="videos-container" id="videos-container">
-
-            {%for video in videos%}
-            
-
-            <div class="video-container">
-                <div class="video-detail">
-                    <img src="{{video.Thumbnail.url}}" class="thumbnail-img" onclick="window.location.href = '{{video.pk}}'">
-                </div>
-                <a class="link" href="{{video.pk}}">{{video.Title}}</a>
-
-
-            </div>
-            {%endfor%}
+        <button class="button-white" id="sorter-button">دسته بندی
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sort-a-z" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M16 8h4l-4 8h4"></path>
+            <path d="M4 16v-6a2 2 0 1 1 4 0v6"></path>
+            <path d="M4 13h4"></path>
+            <path d="M11 12h2"></path>
+         </svg>
+        </button>
+        <button class="button-white" onclick="window.location.href = 'watchlist/{{user.username}}'">لیست تماشا
+            <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path>
+            <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path>
+            <path d="M9 12l.01 0"></path>
+            <path d="M13 12l2 0"></path>
+            <path d="M9 16l.01 0"></path>
+            <path d="M13 16l2 0"></path>
+         </svg>
+        </button>
     </div>
-    
+    <div id="videos-container">
+
+        {%for video in videos%}
+        
+
+        <div class="video-container">
+            <a href="/video/{{video.pk}}">
+            <img src="{{video.Thumbnail.url}}" class="thumbnail-img">
+                </a>
+            <a class="video-link" href="/video/{{video.pk}}">{{video.Title}}</a>
+        </div>
+        {%endfor%}
+
+    </div>
+
+    <div id="paginator-cont">
+        {%for page in videos.paginator.page_range%}
+        <a href="/video/?page={{page}}">
+            <div class="paginator">
+                {{page}}
+            </div>
+        </a>
+        {%endfor%}
+    </div>
 </main>
 
 <script>
-    
-    
-
-    $("li").click(function(){
-    $(this).find('.drop-down').slideDown(300);
-    $(this).find(".accent").addClass("animate");
-    $(this).find(".item").css("color","#FFF");
-    }).mouseleave(function(){
-    $(this).find(".drop-down").slideUp(300);
-    $(this).find(".accent").removeClass("animate");
-    $(this).find(".item").css("color","#000");
-    });
+    var filters = {
+        'دهم': false,
+        'یازدهم': false,
+        'دوازدهم': false,
+        'اول': false,
+        'دوم': false,
+        'سوم': false,
+        'چهارم': false,
+    }
 
 
 
-    function postFilter(){
-        let elemet = document.getElementById('videos-container')
-        elemet.innerHTML = ''
-        let loading = document.createElement('div')
-        let loadingC = document.createElement('div')
-
-        loading.classList.add('loading-pulse')
-        loadingC.classList.add('loading-container')
-        loadingC.appendChild(loading)
-        elemet.appendChild(loadingC)
+    $('#update-filter-button').on('click', function(){
+        toggleLoading()
         $.ajax({
-            type: 'POST',
-            url: '{% url "video-list"%}',
-            data: {
-                // Your data here
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                filters:JSON.stringify(filter)
+            url:'/video/',
+            type:'POST',
+            data:{
+                'csrfmiddlewaretoken':'{{csrf_token}}',
+                'filters':JSON.stringify(filters)
             },
             success: function(response){
-                elemet.innerHTML = ''
-                if (response.videos !== 'None'){
-                    const durations = response.duration
-                    const Data = JSON.parse(response.videos)
-                    for (let i =0;i<Data.length;i++){
-                        let videoContainer = document.createElement('div')
-                        videoContainer.classList.add("video-container")
-                        let videoDetail = document.createElement('div')
-                        videoDetail.classList.add('video-detail')
-                        videoContainer.appendChild(videoDetail)
-                        let linkVideo = document.createElement('a')
-                        linkVideo.classList.add('link')
-                        linkVideo.href = Data[i].pk
-                        linkVideo.innerHTML = Data[i].fields.Title
-                        videoContainer.appendChild(linkVideo)
-                        let thumbnailImg = document.createElement('img')
-                        thumbnailImg.classList.add('thumbnail-img')
-                        videoDetail.appendChild(thumbnailImg)
-                        console.log(Data[i].fields.Thumbnail)
-                        thumbnailImg.src = '/assets/'+Data[i].fields.Thumbnail
-                        
-                        let videoDuration = document.createElement('p')
-                        videoDuration.innerHTML = durations[i]
-                        videoDuration.classList.add('btn-duration')
-                        videoDetail.appendChild(videoDuration)
-                        elemet.appendChild(videoContainer)
-                    }
-                    
-            }   else{
+                toggleLoading()
+                const videosCont = document.getElementById('videos-container')
+                videosCont.innerHTML = ''
+                const videos = JSON.parse(response['videos'])
+                const page_ranges = JSON.parse(response['page_ranges'])
+                var paginatorCont = document.getElementById('paginator-cont')
+                paginatorCont.innerHTML =''
+                console.log(page_ranges, page_ranges.length)
+                for(let i=0;i<page_ranges.length;i++){
+                    console.log('added')
+                    paginatorCont.innerHTML += `        
+                    <a href="/video/?page=${page_ranges[i]}">
+                        <div class="paginator">
+                            ${page_ranges[i]}
+                        </div>
+                    </a>`
+                }
+                for(let i=0;i<videos.length;i++){
+                    videosCont.innerHTML += 
+                    `
+                    <div class="video-container">
+                        <a href="/video/${videos[i].pk}">
+                        <img src="${videos[i].thumb}" class="thumbnail-img">
+                            </a>
+                        <a class="video-link" href="/video/${videos[i].pk}">${videos[i].title}</a>
+                    </div>
+                    `
+                }
+            }
+        })
 
-                let errorFilter = document.createElement('p')
-                errorFilter.classList.add('error-filter')
-                errorFilter.innerHTML = 'با دسته بندی مورد نظر ویدیو پیدا نشد' 
-                elemet.appendChild(errorFilter)
+    })
 
-            }}
-        });
-    };
-
-    var filter = []
-
-    function filterAppend(mode){
-        let index  = filter.indexOf(mode);
-        const element = document.getElementById(mode)
-
-        if (index !== -1){
-            filter.splice(index,1)
-            
-
-            element.addEventListener('mouseover',function(){
-                this.style.backgroundColor = 'black'
-                this.style.color= 'white'
-            })
-
-            element.addEventListener('mouseleave',function(){
-                this.style.backgroundColor = 'white'
-                this.style.color= 'black'
-            })
-
-            element.style.backgroundColor = '#fff'
-            element.style.color = '#000'
-
+    
+    function changeLoc(el){
+        const parentEl = el.parentElement
+        const type = el.getAttribute('type')
+        const noSort = document.getElementById('no-sort')
+        if(parentEl.getAttribute('id') == 'enabled-filters'){
+            document.getElementById('disabled-filters').appendChild(el)
+            el.classList.add('sort-disabled')
+            el.classList.remove('sort-enabled')
+            filters[type] = false
+        }else{
+            document.getElementById('enabled-filters').appendChild(el)
+            el.classList.add('sort-enabled')
+            el.classList.remove('sort-disabled')
+            filters[type] = true
         }
-        else {
-            filter.push(mode)
-            element.style.backgroundColor = '#000'
-            element.style.color = '#fff'
-
-            element.addEventListener('mouseover',function(){
-                element.style.color = 'black'
-                element.style.backgroundColor = '#EAEAEA'
-            })
-            element.addEventListener('mouseleave',function(){
-                element.style.color = 'white'
-                element.style.backgroundColor = 'black'
-            })
-
-
+        noSort.style.display='none'
+        if(parentEl.querySelectorAll('div.sort-item').length == 0){
+            noSort.style.display='flex'
+            parentEl.appendChild(noSort)
         }
-
-        postFilter();
     }
+    
+    const sortBtns = document.querySelectorAll('div.sort-item')
+    for(let i=0;i<sortBtns.length;i++){
+        sortBtns[i].addEventListener('click', function(){
+            changeLoc(sortBtns[i])
+        })
+    }
+    
+    $('#sorter-button').on('click', function(){
+        $('.sort-cont').toggleClass('menu-show')
+    })
+
 
 </script>
     

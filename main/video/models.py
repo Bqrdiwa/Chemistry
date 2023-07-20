@@ -22,11 +22,13 @@ class Video(models.Model):
     
     def save(self, *args, **kwargs):
         super(Video,self).save(*args, **kwargs)
-        
-        with Image.open(self.Thumbnail.path) as img:
-            resize = (1920,1080)
-            img=  img.resize(resize)
-            img.save(self.Thumbnail.path)
+        if self.Thumbnail.size > 5048576:
+            # Resize the image to fit within 5MB
+            max_size = (1024, 1024)
+            image_path = self.Thumbnail.path
+            image = Image.open(image_path)
+            image.thumbnail(max_size, Image.ANTIALIAS)
+            image.save(image_path)
             
         
 

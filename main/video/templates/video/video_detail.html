@@ -27,6 +27,7 @@
         grid-template-columns: 11fr 5fr;
         height: fit-content;
         width: 100%;
+        margin-top: 30px;
     }
 
     .video-container {
@@ -117,6 +118,35 @@
         border: 1px solid #d3d3d3;
     }
 
+    .save {
+        background-color: white;
+        padding: .3em;
+        display: flex;
+        font-size: .824rem;
+        align-items: center;
+        justify-content: center;
+        transition: all 400ms ease;
+        gap: 8px;
+        border: 1px solid #000;
+        transition: all 300ms ease;
+        cursor: pointer;
+        padding: .2em .5em;
+        border-radius: 5px;
+    }
+
+    .save >svg {
+        stroke-width: 1.8px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .blacked {
+        color: white;
+        background-color: black;
+    }
+
+
+
     @media screen and (max-width: 768px) {
         .container {
             grid-template-columns: 1fr;
@@ -141,43 +171,28 @@
                 <h2 style="text-align: end;margin-right: 20px;">{{video.Title}}</h2>
                 <p style="display: block;text-align: right;margin-right: 25px;color: rgb(66, 66, 66);">{{video.Description}}</p>
                 <div class="options">
-
-                    <a href="{{video.File.url}}">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
-                        <path d="M7 11l5 5l5 -5"></path>
-                        <path d="M12 4l0 12"></path>
-                     </svg>
-                    </a>
-
                     {%if video in watchlist%}
-                        <button id="my-button" style="border: none;cursor: pointer;">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bookmarks" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="black" stroke-linecap="round" stroke-linejoin="round" id="wl" style="transition: all 400ms ease;">
+                        <div id="my-button" class="save blacked">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M13 7a2 2 0 0 1 2 2v12l-5 -3l-5 3v-12a2 2 0 0 1 2 -2h6z"></path>
-                                <path d="M9.265 4a2 2 0 0 1 1.735 -1h6a2 2 0 0 1 2 2v12l-1 -.6"></path>
-                            </svg>
-                        </button>
+                                <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"></path>
+                                <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                <path d="M14 4l0 4l-6 0l0 -4"></path>
+                             </svg>
+                                لیست تماشا
+                        </div>
                     {%else%}
-                        <button id="my-button" style="border: none;cursor: pointer;">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bookmarks" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="wl" style="transition: all 400ms ease;">
+                        <div id="my-button" class="save">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M13 7a2 2 0 0 1 2 2v12l-5 -3l-5 3v-12a2 2 0 0 1 2 -2h6z"></path>
-                                <path d="M9.265 4a2 2 0 0 1 1.735 -1h6a2 2 0 0 1 2 2v12l-1 -.6"></path>
-                            </svg>
-                        </button>
-
+                                <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"></path>
+                                <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                <path d="M14 4l0 4l-6 0l0 -4"></path>
+                             </svg>
+                              لیست تماشا
+                        </div>
                     {%endif%}
 
-                     <button style="border: none;cursor: pointer;" onclick="share();">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M9 15l6 -6"></path>
-                            <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path>
-                            <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path>
-                         </svg>
-                        </button>
 
                      <div class="tags">
                         {{video.grade}} فصل {{video.Unit}} 
@@ -198,22 +213,14 @@
 </main>
 
 <script>
-    const player = new Plyr('#player',{
-        previewThumbnails:{enabled:true,src:'{{video.Thumbnail.url}}'},
-        settings:['quality', 'speed', 'loop'],
-        controls:['play-large', 'play', 'progress', 'current-time', 'mute', 'volume',  'settings','quality', 'fullscreen']
-    });
-
-
-
     const element = document.getElementById('video-suggest-{{video.pk}}');
     const Box = document.getElementById('Box-2')
     const YPOS = element.offsetTop;
     Box.scrollTo({top:YPOS,behavior:'smooth'});
 
-    const button = document.getElementById('wl')
-    $(document).ready(function(){
-    $('#my-button').click(function(){
+    const button = document.getElementById('my-button')
+    button.onclick = function(){
+        toggleLoading()
         $.ajax({
             type: 'POST',
             url: '{% url "video-detail" video.pk%}',
@@ -222,15 +229,16 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function(response){
+                toggleLoading()
                 if (response.message == 'add'){
-                    button.style.fill = 'black'
+                    button.classList.add('blacked')
                 }
                 else{
-                    button.style.fill = 'none'
+                    button.classList.remove('blacked')
                 }
             }
         });
-    });
-});
+    };
+;
   </script>
 {%endblock content%}
