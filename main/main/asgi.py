@@ -21,10 +21,9 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 
 
 from main.routing import websocket_urlpatterns as ROUTERS
-asgi_app =get_asgi_application()
 application = ProtocolTypeRouter(
     {
-        'http':asgi_app,
+        'http':get_asgi_application(),
         'websocket':AllowedHostsOriginValidator(
             AuthMiddlewareStack(
                 URLRouter(

@@ -2,9 +2,36 @@
 {%load static%}
 {%block content%}
     
+<script src="{%static 'js/base.js'%}"></script>
 <script>
     const ExamName = '{{Exam.pk}}'
-    var socket = new WebSocket(`ws://${window.location.host}/ws/exam/${ExamName}/`)
+
+    if (window.location.protocol === "https:") {
+        var sSocket = 'wss://'
+        } else if (window.location.protocol === "http:") {
+        var sSocket = 'ws://'
+        }
+
+    var websocket_url = `${sSocket}${window.location.host}/ws/exam/${ExamName}/`
+    const reconnectInterval = 1000;
+    var socket = new WebSocket(websocket_url);
+    toggleLoading()
+    connected = false
+    setInterval(function(){
+        if(socket.readyState === WebSocket.CLOSED){
+            if(connected){
+                toggleLoading()
+                connected = false
+            }
+        }else{
+            if(!connected){
+                toggleLoading()
+                connected = true
+            }
+        }
+    },1000)
+
+
     
 
 </script>
@@ -503,6 +530,7 @@
                 }
 
             }
+
             socket.onmessage = function(e){
                 DATA = JSON.parse(e.data)
 

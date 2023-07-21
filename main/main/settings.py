@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['5.201.142.249','chemistrykiani.com','127.0.0.1']
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = ['daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
