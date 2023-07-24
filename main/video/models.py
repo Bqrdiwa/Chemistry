@@ -1,16 +1,17 @@
 from django.db import models
 from home.models import Student
-from moviepy.video.io.VideoFileClip import VideoFileClip
 from PIL import Image
 
 # Create your models here.
 class Video(models.Model):
-    grad = [('',''),('دهم','دهم'),('یازدهم','یازدهم'),('دوازدهم','دوازدهم')]
-    fasl = [('',''),('اول','فصل اول'),('دوم','فصل دوم'),('سوم','فصل سوم'),('چهارم','فصل چهارم')]
+    grad = [('دهم','دهم'),('یازدهم','یازدهم'),('دوازدهم','دوازدهم')]
+    fasl = [('اول','فصل اول'),('دوم','فصل دوم'),('سوم','فصل سوم'),('چهارم','فصل چهارم')]
+    types = [('دانش آموزان','حل تست به همراهی دانش آموزان'),('نکته تست','نکته تست'),('درسنامه','درسنامه')]
     
     Title = models.CharField(max_length=128)
     Description = models.CharField(max_length=320,default='')
-    
+
+    Type = models.CharField(max_length=12,choices= types,default='')
     grade = models.CharField(max_length=16,choices=grad,default='')
     Unit = models.CharField(max_length=16,choices=fasl,default='')
     

@@ -16,18 +16,31 @@ def video(request):
         keys = filters.keys()
         grade_filters = []
         unit_filters = []
+        type_filters = []
+
+        type_translator  = {
+            'درسنامه': 'درسنامه',
+            'تست': 'نکته تست',
+            'حل': 'دانش آموزان'
+        }
         for item in keys:
             if item in ['دهم', 'یازدهم', 'دوازدهم'] and filters[item] == True:
                 grade_filters.append(item)
-            elif filters[item] == True:
+            elif item in ['اول','دوم','سوم','چهارم'] and filters[item] == True:
                 unit_filters.append(item)
+            elif item in ['حل','تست','درسنامه'] and filters[item] == True:
+                type_filters.append(type_translator[item])
+
 
         if not grade_filters :grade_filters = ['دهم', 'یازدهم', 'دوازدهم']
         if not unit_filters :unit_filters = ['اول','دوم','سوم','چهارم']
+        if not type_filters :type_filters = ['دانش آموزان','نکته تست','درسنامه']
         filtered_videos = Video.objects.filter(
             grade__in = grade_filters
         ).filter(
             Unit__in = unit_filters
+        ).filter(
+            Type__in = type_filters
         )
         
         page_num = request.GET.get('page')

@@ -101,18 +101,19 @@ class ExamConsumer(AsyncWebsocketConsumer):
                     'userPk':data['userPk'],
                     'resultPk':data['resultPk']
                 }))
-        elif action == 'updateProgress' and self.admin:
-            key = data['key'].split(',')
-            answered = 0
-            for item in key:
-                if item != '0':
-                    answered += 1
-            progressPercent = answered / len(key) * 100
-            await self.send(json.dumps({
-                'action':action,
-                'userPk':data['userPk'],
-                'progressPercent':progressPercent
-            }))
+        elif action == 'updateProgress':
+            if self.admin or str(self.user.pk) == str(data['userPk']):
+                key = data['key'].split(',')
+                answered = 0
+                for item in key:
+                    if item != '0':
+                        answered += 1
+                progressPercent = answered / len(key) * 100
+                await self.send(json.dumps({
+                    'action':action,
+                    'userPk':data['userPk'],
+                    'progressPercent':progressPercent
+                }))
         elif action == 'userJoin':
 
             if self.admin and self.user.pk != data['userPk']:

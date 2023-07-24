@@ -714,11 +714,15 @@
                 height: fit-content;
                 align-items: center;
                 justify-content: center;
+                border: 1px solid #cecece;
+                border-radius: 5px;
+                padding: .2em .5em;
             }
 
             .choices{
                 display: flex;
                 flex: 1;
+                align-items: center;
                 gap: 3px;
             }
 
@@ -800,7 +804,7 @@
                 align-items: center;
                 flex-direction: column;
                 justify-content: center;
-                font-family: Farnaz;
+                font-family: IRSansB;
                 border-radius: 5px;
                 font-size: 1rem;
                 transition: all 300ms ease;
@@ -825,13 +829,21 @@
                 align-items: center;
                 justify-content: center;
                 width: 3%;
-                font-family: Farnaz;
+                font-family: IRSansB;
                 font-size: 1rem;
             }
 
             .answered {
                 background-color: black;
                 color: white;
+            }
+
+            .p-answer {
+                height: 5px;
+            }
+
+            .o-answred {
+                border: 1px solid #444;
             }
             @media screen and (max-width: 768px) {
                 .exam-header-lower{
@@ -860,306 +872,311 @@
             }
             }
         </style>
-            <main>
-                <div class="exam-header-cont">
-                    <div class="exam-title">
-                        {{Exam.name}}
+
+        <main>
+            <div class="exam-header-cont">
+                <div class="exam-title">
+                    {{Exam.name}}
+                </div>
+
+                <div class="exam-header-lower">
+                    <div class="questions-cont">
+                        {%for question in Questions%}
+                            <div class="question-obj" id="question-p-{{question.pk}}">
+                                <h5>{{question.pk}}</h5>
+                                <div class="choices">
+                                    <div class="choice">
+
+                                    </div>
+                                    <div class="choice">
+
+                                    </div>
+                                    <div class="choice">
+
+                                    </div>
+                                    <div class="choice">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        {%endfor%}
                     </div>
 
-                    <div class="exam-header-lower">
-                        <div class="questions-cont">
-                            {%for question in Questions%}
-                                <div class="question-obj">
-                                    <h5>{{question.pk}}</h5>
-                                    <div class="choices">
-                                        <div class="choice">
-
-                                        </div>
-                                        <div class="choice">
-
-                                        </div>
-                                        <div class="choice">
-
-                                        </div>
-                                        <div class="choice">
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            {%endfor%}
+                    <div class="clock-cont">
+                        <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
+                        <div class="head-column-breakder">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alarm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 13m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+                                <path d="M12 10l0 3l2 0"></path>
+                                <path d="M7 4l-2.75 2"></path>
+                                <path d="M17 4l2.75 2"></path>
+                                </svg>
+                            <h2>تایم باقیمانده</h2>
                         </div>
 
-                        <div class="clock-cont">
-                            <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
-                            <div class="head-column-breakder">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alarm" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M12 13m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-                                    <path d="M12 10l0 3l2 0"></path>
-                                    <path d="M7 4l-2.75 2"></path>
-                                    <path d="M17 4l2.75 2"></path>
-                                 </svg>
-                                <h2>تایم باقیمانده</h2>
-                            </div>
-
-                            <div class="clock">
-                                <h4 id="clock">00:00</h4>
-                            </div>
-                            </div>
-
-                            <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
-                                    <div class="head-column-breakder">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M3 16v-5.5a2.5 2.5 0 0 1 5 0v5.5m0 -4h-5"></path>
-                                            <path d="M12 6l0 12"></path>
-                                            <path d="M16 16v-8h3a2 2 0 0 1 0 4h-3m3 0a2 2 0 0 1 0 4h-3"></path>
-                                         </svg>
-                                        <h2>سوالات</h2>
-                                    </div>
-                                    
-                                    <div class="column-breaker">
-                                        <h3 id="answered">12 /34</h3>
-                                        <h3>جواب داده شده</h3>
-                                    </div>
-
-                                    <div class="column-breaker">
-                                        <h3>2</h3>
-                                        <h3>زمانگیر</h3>
-                                    </div>
-                                </div>
+                        <div class="clock">
+                            <h4 id="clock">00:00</h4>
+                        </div>
                         </div>
 
-                        <div class="exam-desc">
-                            <div>
+                        <div style="width: 100%;height: 50%;display: flex;align-items: center;flex-direction: column;">
                                 <div class="head-column-breakder">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-                                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                                        <path d="M9 17h6"></path>
-                                        <path d="M9 13h6"></path>
-                                    </svg>
-                                    <h2>جزئیات آزمون</h2>
+                                        <path d="M3 16v-5.5a2.5 2.5 0 0 1 5 0v5.5m0 -4h-5"></path>
+                                        <path d="M12 6l0 12"></path>
+                                        <path d="M16 16v-8h3a2 2 0 0 1 0 4h-3m3 0a2 2 0 0 1 0 4h-3"></path>
+                                        </svg>
+                                    <h2>سوالات</h2>
                                 </div>
+                                
                                 <div class="column-breaker">
-                                    <h3>{{Exam.time}}min</h3>
-                                    <h3>زمان آزمون</h3>
-                                </div>
-                                <div class="column-breaker">
-                                    <h3>{{Exam.get_q_l}}</h3>
-                                    <h3>تعداد سوالات</h3>
-                                </div>
-                                <div class="column-breaker">
-                                    <h3>{{Exam.grade}} ~ فصل {{Exam.unit}}</h3>
-                                    <h3>پایه - فصل</h3>
+                                    <h3 id="answered">12 /34</h3>
+                                    <h3>جواب داده شده</h3>
                                 </div>
                             </div>
-                            <button onclick="endExam()">اتمام آزمون</button>
-                        </div>
                     </div>
-                </div>
 
-                <div class="questions-container">
-                    <h2 style="position: absolute;top: -25px;right: 20px;margin:0;font-family: Farnaz;border-bottom: 2px solid black;font-size: 1rem;">سوالات</h2>
-                    <h2 style="position: absolute;top: -25px;left: 20px;margin:0;font-family: Farnaz;border-bottom: 2px solid black;font-size: 1rem;">Questions</h2>
-                    {%for question in Questions%}
-                    <div class="question">
-                        <img src="{{question.Question.url}}">
-                        <h3 class="question-number">{{question.pk}}</h3>
-                        <div class="question-settings">
-                            <div class="question-choices">
-                                <div class="q-c" id="{{question.pk}}-1">
-                                    1
-                                </div>
-                                <div class="q-c" id="{{question.pk}}-2">
-                                    2
-                                </div>
-                                <div class="q-c" id="{{question.pk}}-3">
-                                    3
-                                </div>
-                                <div class="q-c" id="{{question.pk}}-4">
-                                    4
-                                </div>
-                            </div>
-
-                            <div class="question-options">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-empty" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <div class="exam-desc">
+                        <div>
+                            <div class="head-column-breakder">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
-                                    <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
-                                 </svg>
+                                    <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                                    <path d="M9 17h6"></path>
+                                    <path d="M9 13h6"></path>
+                                </svg>
+                                <h2>جزئیات آزمون</h2>
+                            </div>
+                            <div class="column-breaker">
+                                <h3>{{Exam.time}}min</h3>
+                                <h3>زمان آزمون</h3>
+                            </div>
+                            <div class="column-breaker">
+                                <h3>{{Exam.get_q_l}}</h3>
+                                <h3>تعداد سوالات</h3>
+                            </div>
+                            <div class="column-breaker">
+                                <h3>{{Exam.grade}} ~ فصل {{Exam.unit}}</h3>
+                                <h3>پایه - فصل</h3>
                             </div>
                         </div>
+                        <button onclick="endExam()">اتمام آزمون</button>
                     </div>
-                    <script>
-                        document.getElementById('{{question.pk}}-1').addEventListener('click', function(){
-                            updateKey('{{question.pk}}', 1)
-                        })
-
-                        document.getElementById('{{question.pk}}-2').addEventListener('click', function(){
-                            updateKey('{{question.pk}}', 2)
-                        })
-
-                        document.getElementById('{{question.pk}}-3').addEventListener('click', function(){
-                            updateKey('{{question.pk}}', 3)
-                        })
-
-                        document.getElementById('{{question.pk}}-4').addEventListener('click', function(){
-                            updateKey('{{question.pk}}', 4)
-                        })
-                    </script>
-                    {%endfor%}
                 </div>
-            </main>
-            <script>
+            </div>
 
-                
-                var key = '{{AIR.key}}';
-                var startTime = '{{AIR.start}}';
-                var questionsCount = parseInt('{{Exam.get_q_l}}');
-                var clock = document.getElementById('clock');
-                var answered = document.getElementById('answered')
-                var examTime = parseInt('{{Exam.time}}')*60000;
-        
-                if(key == ''){
-                    let keyArr = ''
-                    for(let i =0;i<questionsCount;i++){
-                        keyArr += '0,'
-                    };
-                    let newStartTime = new Date().getTime();
-                    let generatedKey = keyArr.substring(0,keyArr.length-1);
-                    key = generatedKey;
-                    key= key.split(',');
-                    startTime = newStartTime;
+            <div class="questions-container">
+                <h2 style="position: absolute;top: -25px;right: 20px;margin:0;font-family: IRSansB;border-bottom: 2px solid black;font-size: 1rem;">سوالات</h2>
+                <h2 style="position: absolute;top: -25px;left: 20px;margin:0;font-family: IRSansB;border-bottom: 2px solid black;font-size: 1rem;">Questions</h2>
+                {%for question in Questions%}
+                <div class="question">
+                    <img src="{{question.Question.url}}">
+                    <h3 class="question-number">{{question.pk}}</h3>
+                    <div class="question-settings">
+                        <div class="question-choices">
+                            <div class="q-c" id="{{question.pk}}-1">
+                                1
+                            </div>
+                            <div class="q-c" id="{{question.pk}}-2">
+                                2
+                            </div>
+                            <div class="q-c" id="{{question.pk}}-3">
+                                3
+                            </div>
+                            <div class="q-c" id="{{question.pk}}-4">
+                                4
+                            </div>
+                        </div>
 
-                    socket.onopen = function(){
-                        socket.send(JSON.stringify({
-                        action: 'initiate',
-                        key: generatedKey,
-                        startTime: newStartTime
-                    }))
 
-                    }
+                    </div>
+                </div>
+                <script>
+                    document.getElementById('{{question.pk}}-1').addEventListener('click', function(){
+                        updateKey('{{question.pk}}', 1)
+                    })
 
-                }else{
-                    key= key.split(',');
+                    document.getElementById('{{question.pk}}-2').addEventListener('click', function(){
+                        updateKey('{{question.pk}}', 2)
+                    })
+
+                    document.getElementById('{{question.pk}}-3').addEventListener('click', function(){
+                        updateKey('{{question.pk}}', 3)
+                    })
+
+                    document.getElementById('{{question.pk}}-4').addEventListener('click', function(){
+                        updateKey('{{question.pk}}', 4)
+                    })
+                </script>
+                {%endfor%}
+            </div>
+        </main>
+
+        <script>
+            var key = '{{AIR.key}}';
+            var startTime = '{{AIR.start}}';
+            var questionsCount = parseInt('{{Exam.get_q_l}}');
+            var clock = document.getElementById('clock');
+            var answered = document.getElementById('answered')
+            var examTime = parseInt('{{Exam.time}}')*60000;
+    
+            if(key == ''){
+                let keyArr = ''
+                for(let i =0;i<questionsCount;i++){
+                    keyArr += '0,'
                 };
-                
-                for (let i =0;i<questionsCount;i++){
-                    if(key[i] != '0'){
-                        document.getElementById((i+1)+'-'+key[i]).classList.add('answered')
-                    }
-                };
-                function updateKey(question, choice){
-                    let questionIndex = parseInt(question)-1;
-                    
-                    let alreadyAnswered = key[questionIndex];
-        
-                    if(alreadyAnswered != '0' | alreadyAnswered == choice){
-                        document.getElementById(`${question}-${alreadyAnswered}`).classList.remove('answered');
-                        key[questionIndex] = '0';
-                    };
-                    if(alreadyAnswered != choice){
-                        key[questionIndex] = choice;
-                        document.getElementById(`${question}-${choice}`).classList.add('answered');
-                    };
-        
-                    updateAIR()
-                };
-        
-                function updateAIR(){
-                    let stringifiedKey = '';
-                    key.forEach((item)=>{
-                        stringifiedKey += item+','
-                    });
-        
-                    stringifiedKey = stringifiedKey.substring(0,stringifiedKey.length-1)
+                let newStartTime = new Date().getTime();
+                let generatedKey = keyArr.substring(0,keyArr.length-1);
+                key = generatedKey;
+                key= key.split(',');
+                startTime = newStartTime;
+
+                socket.onopen = function(){
                     socket.send(JSON.stringify({
-                        action: 'updateKey',
-                        key: stringifiedKey
-                    }))
-        
-                };
-        
-                let tiktak = function(){
-                    let newDate = new Date().getTime();
-        
-                    let difference = (newDate - startTime);
-                    let remainingTime = (examTime - difference)/1000
-        
-                    let mins = Math.floor(remainingTime / 60);
-                    let secs = Math.floor(remainingTime - (mins *60));
-        
-                    if (mins < 0 && secs | 0){
-                        endExam('end-time')
-                        clearInterval(tiktak)
-                    }else{
-                        if(mins < 10){
-                        mins = '0'+mins;
-                        };
-                        if(secs < 10){
-                            secs = '0'+secs;
-                        };
-                        clock.innerHTML = `${mins}:${secs}`;
-                    };
-        
-        
-        
-        
-                };
+                    action: 'initiate',
+                    key: generatedKey,
+                    startTime: newStartTime
+                }))
 
-                tiktak();
-                setInterval(tiktak, 1000);
-                function endExam(why){
-                    if (socket.readyState === WebSocket.OPEN) {
+                }
+
+            }else{
+                key= key.split(',');
+            };
+            
+            for (let i =0;i<questionsCount;i++){
+                if(key[i] != '0'){
+                    document.getElementById((i+1)+'-'+key[i]).classList.add('answered')
+                    let p = document.getElementById('question-p-'+(i+1))
+                    p.classList.add('o-answred')
+                    p.children[1].children[parseInt(key[i])-1].classList.add('p-answer')
+                }
+            };
+            function updateKey(question, choice){
+                let questionIndex = parseInt(question)-1;
+                let questionPan = document.getElementById('question-p-'+question)
+                let questionP = questionPan.children[1]
+                let alreadyAnswered = key[questionIndex];
+                
+                for (let i =0;i<4;i++){
+                    questionP.children[i].classList.remove('p-answer')
+                }
+                
+                if(alreadyAnswered != '0' | alreadyAnswered == choice){
+                    document.getElementById(`${question}-${alreadyAnswered}`).classList.remove('answered');
+                    key[questionIndex] = '0';
+                    questionPan.classList.remove('o-answred')
+                };
+                if(alreadyAnswered != choice){
+                    key[questionIndex] = choice;
+                    document.getElementById(`${question}-${choice}`).classList.add('answered');
+                    questionPan.classList.add('o-answred')
+                    questionP.children[parseInt(choice)-1].classList.add('p-answer')
+                };
+                updateAllDeatils();
+                updateAIR()
+            };
+    
+            function updateAIR(){
+                let stringifiedKey = '';
+                key.forEach((item)=>{
+                    stringifiedKey += item+','
+                });
+    
+                stringifiedKey = stringifiedKey.substring(0,stringifiedKey.length-1)
+                toggleLoading()
+                socket.send(JSON.stringify({
+                    action: 'updateKey',
+                    key: stringifiedKey
+                }))
+    
+            };
+    
+            let tiktak = function(){
+                let newDate = new Date().getTime();
+    
+                let difference = (newDate - startTime);
+                let remainingTime = (examTime - difference)/1000
+    
+                let mins = Math.floor(remainingTime / 60);
+                let secs = Math.floor(remainingTime - (mins *60));
+    
+                if (mins < 0 && secs | 0){
+                    endExam('end-time')
+                    clearInterval(tiktak)
+                }else{
+                    if(mins < 10){
+                    mins = '0'+mins;
+                    };
+                    if(secs < 10){
+                        secs = '0'+secs;
+                    };
+                    clock.innerHTML = `${mins}:${secs}`;
+                };
+    
+    
+    
+    
+            };
+
+            tiktak();
+            setInterval(tiktak, 1000);
+            function endExam(why){
+                toggleLoading()
+                if (socket.readyState === WebSocket.OPEN) {
+                    let newDate = new Date().getTime();
+                    
+                    let difference = (newDate - startTime)/1000;
+                    
+                    socket.send(JSON.stringify({
+                        action: 'endExam',
+                        spendTime: difference,
+                    }))
+                }else{
+                    socket.onopen = function(){
                         let newDate = new Date().getTime();
-                        
+    
                         let difference = (newDate - startTime)/1000;
                         
                         socket.send(JSON.stringify({
                             action: 'endExam',
                             spendTime: difference,
                         }))
-                    }else{
-                        socket.onopen = function(){
-                            let newDate = new Date().getTime();
-        
-                            let difference = (newDate - startTime)/1000;
-                            
-                            socket.send(JSON.stringify({
-                                action: 'endExam',
-                                spendTime: difference,
-                            }))
-                        }
                     }
                 }
-                function updateAllDeatils(){
-                    let counter = 0;
-                    key.forEach((item)=>{
-                        if(item != '0'){
-                            counter ++;
-                        }
-                    });
-                    answered.innerHTML = `${counter}/${questionsCount}`;
-        
-                }
-        
-                updateAllDeatils();
-
-                socket.onmessage = function(e){
-                    DATA = JSON.parse(e.data)
-
-                    const action = DATA['action']
-
-                    if (action == 'endExam'){
-                        window.location.href = `/exam/result/${DATA['resultPk']}/`
-                    }else if (action == 'redirect'){
-                        window.location.href = `/exam/result/${DATA['resultPk']}/`
+            }
+            function updateAllDeatils(){
+                let counter = 0;
+                key.forEach((item)=>{
+                    if(item != '0'){
+                        counter ++;
                     }
+                });
+                answered.innerHTML = `${counter}/${questionsCount}`;
+    
+            }
+    
+            updateAllDeatils();
+            socket.onmessage = function(e){
+                DATA = JSON.parse(e.data)
+                const action = DATA['action']
+                console.log(action)
+                if (action == 'endExam'){
+                    toggleLoading()
+                    setTimeout(function(){
+                        window.location.href = `/exam/result/${DATA['resultPk']}/`
+                    },1000)
+                }else if (action == 'redirect'){
+                    window.location.href = `/exam/result/${DATA['resultPk']}/`
+                }else if (action == 'updateProgress'){
+                    toggleLoading()
                 }
-            </script>
+            }
+        </script>
     {%endif%}
     
 
