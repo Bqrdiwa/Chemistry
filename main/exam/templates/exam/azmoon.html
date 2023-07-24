@@ -1166,10 +1166,8 @@
                 const action = DATA['action']
                 console.log(action)
                 if (action == 'endExam'){
-                    toggleLoading()
-                    setTimeout(function(){
-                        window.location.href = `/exam/result/${DATA['resultPk']}/`
-                    },1000)
+                    window.location.href = `/exam/result/${DATA['resultPk']}/`
+
                 }else if (action == 'redirect'){
                     window.location.href = `/exam/result/${DATA['resultPk']}/`
                 }else if (action == 'updateProgress'){

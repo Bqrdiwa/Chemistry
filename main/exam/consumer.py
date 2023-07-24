@@ -179,7 +179,7 @@ class ExamConsumer(AsyncWebsocketConsumer):
             spendedTime = 0
 
 
-        result = Result.objects.create(Answers = result_key,
+        result, _ = Result.objects.get_or_create(Answers = result_key,
                                 timeSpended = spendedTime,
                                 percent = percent,
                                 wrongs= wrongs,
