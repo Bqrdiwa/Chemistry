@@ -50,12 +50,11 @@
     <div id="videos-container">
 
         {%for video in videos%}
-        
-
         <div class="video-container">
             <a href="/video/{{video.pk}}">
             <img src="{{video.Thumbnail.url}}" class="thumbnail-img">
                 </a>
+            <div class="line" style="height: 2px;background-color: #444;margin: 5px;width: 100%;"></div>
             <a class="video-link" href="/video/{{video.pk}}">{{video.Title}}</a>
         </div>
         {%endfor%}
@@ -123,6 +122,7 @@
                         <a href="/video/${videos[i].pk}">
                         <img src="${videos[i].thumb}" class="thumbnail-img">
                             </a>
+                        <div class="line" style="height: 2px;background-color: #444;margin: 5px;width: 100%;"></div>
                         <a class="video-link" href="/video/${videos[i].pk}">${videos[i].title}</a>
                     </div>
                     `

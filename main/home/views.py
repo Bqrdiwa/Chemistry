@@ -6,7 +6,7 @@ from .models import Solution, Answer, SolutionLike, Plan
 from jdatetime import datetime
 from django.utils import timezone as Tz
 from pytz import timezone
-from .decorators import virtualExamNotEnded
+from .decorators import virtualExamNotEnded, BasePlanReq
 from django.core.paginator import Paginator
 from exam.models import Question, virtualExam
 from django.db.models import Q
@@ -20,6 +20,7 @@ def Home(request):
 
     
 @login_required
+@BasePlanReq
 def Announcement(request):
     return render(request, 'home/announcment.html',context={'title':'Announcment','HT':'اطلاعیه'})
 
@@ -124,6 +125,7 @@ def Solution_view(request):
             context['myQs'] = myquestions
         return render(request, 'home/solution.html',context=context)
 @login_required
+@BasePlanReq
 def Solution_Question_view(request, pk):
     context = {'title': f'Q - {pk}', 'HT':f'سوال - {pk}',}
     question = Solution.objects.get(pk= pk)
@@ -228,6 +230,7 @@ def Plans_view(request):
     return render(request, 'home/plans.html', context=context)
 
 @login_required
+@BasePlanReq
 def Question_bank(request):
     context = {'title':'Q-Bank','HT':'بانک سوالات'}
     if request.method == 'POST':
@@ -354,6 +357,7 @@ def Question_bank(request):
         return render(request, 'home/questionbank.html', context=context)
 
 @login_required
+@BasePlanReq
 def Question_view(request, pk):
     question = Question.objects.get(pk= pk)
     context = {'title':f'Q - {pk}', 'HT': f'سوال {pk}'}
@@ -409,6 +413,7 @@ def Question_view(request, pk):
 
         return render(request, 'home/questionbank-question-view.html', context=context)
 @login_required
+@BasePlanReq
 def VirtualExam(request):
     context = {'title':'Virtual Exam', 'HT':' آزمون آزمایشی'}
 
@@ -438,6 +443,7 @@ def VirtualExam(request):
 
 @virtualExamNotEnded
 @login_required
+@BasePlanReq
 def virtualExamPage(request, pk):
     ve = virtualExam.objects.get(pk= pk)
     context = {'title': 'Exam - #'+pk , 'HT':'#'+'آزمون '+pk}
@@ -454,6 +460,8 @@ def virtualExamPage(request, pk):
             ve.status = 'started'
             ve.save()
         return render(request, 'home/virtualexampage.html', context)
+@login_required
+@BasePlanReq
 def virtualExamResultQuestions(request,pk): 
     wrongs_q = []
     corrects_q =[]
@@ -475,6 +483,8 @@ def virtualExamResultQuestions(request,pk):
                                                                     'corrects':corrects_q,
                                                                     'notAnswered':notAnswered_q
                                                                     })
+@login_required
+@BasePlanReq
 def informationBank(request):
     context ={'title':'Information-bank','HT':'بانک اطلاعات'}
     return render(request, 'home/informationbank.html',context)

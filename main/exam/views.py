@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .decorators import result_permission, exam_permission
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.contrib.auth.decorators import login_required 
+from home.decorators import BasePlanReq
 from pytz import timezone
 from jdatetime import datetime
 # Create your views here.
@@ -74,6 +75,7 @@ def exam(request):
 
 @exam_permission
 @login_required
+@BasePlanReq
 def Azmoon(request, name):
     azmoon = Exam.objects.get(name=name)
     EXAM_STATUS = azmoon.status
@@ -140,6 +142,7 @@ def Azmoon(request, name):
 
 @result_permission
 @login_required
+@BasePlanReq
 def Javab(request, pk):
     my_result = Result.objects.get(pk = pk)
     examRelated = my_result.Exam_related
@@ -216,6 +219,7 @@ def Javab(request, pk):
         
 
 @login_required
+@BasePlanReq
 def Javab_questions(request,pk):
     result = Result.objects.get(pk=pk)
     wrongs_list = result.wrongs_link.split(',')
@@ -241,6 +245,7 @@ def Javab_questions(request,pk):
                                                                 'notAnswered':notAnswered_q
                                                                 })
 @login_required
+@BasePlanReq
 def examQuestions(request, examName):
 
     exam =Exam.objects.get(name = examName)

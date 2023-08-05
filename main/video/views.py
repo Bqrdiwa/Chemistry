@@ -4,10 +4,12 @@ from .models import  Video, WatchList
 from django.http import JsonResponse
 from json import loads, dumps
 from django.core.paginator import Paginator
+from home.decorators import BasePlanReq
 from django.contrib.auth.decorators import login_required 
 
 # Create your views here.
 @login_required 
+@BasePlanReq
 def video(request):
     context = {'title':'Video','HT':'ویدیو'}
     if request.method =='POST':
@@ -71,6 +73,7 @@ def video(request):
         return render(request,'video/video.html',context)
 
 @login_required 
+@BasePlanReq
 def video_detail(request,pk):
     watchlist = WatchList.objects.get(userRelated=request.user)
     
@@ -93,6 +96,7 @@ def video_detail(request,pk):
 
         return render(request,'video/video_detail.html',context=context)
 @login_required 
+@BasePlanReq
 def saved_video(request,username):
     videos = WatchList.objects.get(userRelated = request.user).videos.all()
     count = videos.count()
