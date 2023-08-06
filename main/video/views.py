@@ -90,7 +90,7 @@ def video(request):
                 'Thumbnail': tu,
                 'pk': video.pk
             })
-        context['videos'] = videos
+        context['videos'] = video_list
         return render(request,'video/video.html',context)
 
 @login_required 
