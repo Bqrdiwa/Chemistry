@@ -57,11 +57,11 @@ def video(request):
         for video in filtered_videos:
             tu= ''
             if video.grade == 'دهم':
-                tu = '/assets/video_thumbnail/a62f09_4vYi6hu.jpg'
+                tu = '/assets/dah.jpg'
             elif video.grade == 'یازدهم':
-                tu = '/assets/video_thumbnail/davazdahom_hiOe7Cf.jpg'
+                tu = '/assets/yaz.jpg'
             else :
-                tu = '/assets/video_thumbnail/yazdahom_d3t9HmX.jpg'
+                tu = '/assets/dav.jpg'
             videos_list.append({
                 'title': video.Title,
                 'thumb': tu,
@@ -73,24 +73,26 @@ def video(request):
         return JsonResponse(context)
     else:
         videos = Video.objects.all()
-        page_num = request.GET.get('page')
-        paginator = Paginator(videos, 15)
-        videos = paginator.get_page(page_num)
         video_list = []
         for video in videos:
             tu= ''
             if video.grade == 'دهم':
-                tu = '/assets/video_thumbnail/a62f09_4vYi6hu.jpg'
+                tu = '/assets/dah.jpg'
             elif video.grade == 'یازدهم':
-                tu = '/assets/video_thumbnail/davazdahom_hiOe7Cf.jpg'
+                tu = '/assets/yaz.jpg'
             else :
-                tu = '/assets/video_thumbnail/yazdahom_d3t9HmX.jpg'
+                tu = '/assets/dav.jpg'
             video_list.append({
                 'Title': video.Title,
                 'Thumbnail': tu,
                 'pk': video.pk
             })
-        context['videos'] = video_list
+        page_num = request.GET.get('page')
+        paginator = Paginator(video_list, 15)
+        videos = paginator.get_page(page_num)
+
+
+        context['videos'] = videos
         return render(request,'video/video.html',context)
 
 @login_required 
