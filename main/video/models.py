@@ -16,7 +16,7 @@ class Video(models.Model):
     Unit = models.CharField(max_length=16,choices=fasl,default='')
     
     url = models.CharField(max_length=4000,default='')
-    Thumbnail = models.ImageField(upload_to='video_thumbnail' ,default='default.png')
+    Thumbnail = models.ImageField(upload_to='video_thumbnail' ,default='default.jpg')
     
     def __str__(self):
         return self.Title
