@@ -115,6 +115,25 @@ def video_detail(request,pk):
         video = Video.objects.get(pk=pk)
         grade = video.grade
         videos_related = Video.objects.all().filter(grade = grade)
+        video_list = []
+        for video in videos_related:
+            tu = '/assets/default.jpg/'
+            if video.grade == 'دهم':
+                tu = '/assets/dah.jpg'
+            elif video.grade == 'یازدهم':
+                tu = '/assets/yaz.jpg'
+            else :
+                tu = '/assets/dav.jpg'
+            video_list.append({
+                'pk': video.pk,
+                'Title': video.Title,
+                'Thumbnail': tu
+            })
+
+        page_num = request.GET.get('page')
+        paginator = Paginator(video_list, 7)
+        videos_related = paginator.get_page(page_num)
+        
         context = {'video':video,'videos_related':videos_related,'watchlist':watchlist.videos.all(),'title':'Video','HT':'ویدیو'}
 
         return render(request,'video/video_detail.html',context=context)
