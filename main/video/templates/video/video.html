@@ -52,7 +52,7 @@
         {%for video in videos%}
         <div class="video-container">
             <a href="/video/{{video.pk}}">
-            <img src="{{video.Thumbnail.url}}" class="thumbnail-img">
+            <img src="{{video.Thumbnail}}" class="thumbnail-img">
                 </a>
             <div class="line" style="height: 2px;background-color: #444;margin: 5px;width: 100%;"></div>
             <a class="video-link" href="/video/{{video.pk}}">{{video.Title}}</a>

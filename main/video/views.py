@@ -55,9 +55,16 @@ def video(request):
         for i in pr :
             page_ranges.append(i)
         for video in filtered_videos:
+            tu= ''
+            if video.grade == 'دهم':
+                tu = '/assets/video_thumbnail/a62f09_4vYi6hu.jpg'
+            elif video.grade == 'یازدهم':
+                tu = '/assets/video_thumbnail/davazdahom_hiOe7Cf.jpg'
+            else :
+                tu = '/assets/video_thumbnail/yazdahom_d3t9HmX.jpg'
             videos_list.append({
                 'title': video.Title,
-                'thumb': video.Thumbnail.url,
+                'thumb': tu,
                 'pk': video.pk
             })
         context['videos'] = dumps(videos_list)
@@ -67,8 +74,22 @@ def video(request):
     else:
         videos = Video.objects.all()
         page_num = request.GET.get('page')
-        paginator = Paginator(videos, 30)
+        paginator = Paginator(videos, 15)
         videos = paginator.get_page(page_num)
+        video_list = []
+        for video in videos:
+            tu= ''
+            if video.grade == 'دهم':
+                tu = '/assets/video_thumbnail/a62f09_4vYi6hu.jpg'
+            elif video.grade == 'یازدهم':
+                tu = '/assets/video_thumbnail/davazdahom_hiOe7Cf.jpg'
+            else :
+                tu = '/assets/video_thumbnail/yazdahom_d3t9HmX.jpg'
+            video_list.append({
+                'Title': video.Title,
+                'Thumbnail': tu,
+                'pk': video.pk
+            })
         context['videos'] = videos
         return render(request,'video/video.html',context)
 
