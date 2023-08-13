@@ -104,6 +104,65 @@
     font-size: .9rem;
 }
 
+.plan-detail-cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 500px;
+    max-width: 90%;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    background-color: white;
+    position: relative;
+    padding: 1em;
+}
+
+.plan-detail-cont > h2 {
+    width: 100%;
+    text-align: center;
+    font-size: .95rem;
+    font-family: IRSansB;
+    margin: 0;
+    margin-bottom: 1em;
+}
+
+.plan-detail-cont > p {
+    font-size: .875rem;
+    width: 100%;
+    text-align: right;
+
+}
+
+
+.plan-cont-cont {
+    display: none;
+    z-index: 150;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: saturate(200%) blur(3px);
+    align-items: center;
+    animation: fadeIn 500ms ease;
+    justify-content: center;
+}
+
+.close-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1em;
+    padding: .0em .5em;
+    border-radius: 3px;
+}
+
+.close-detail > svg {
+    stroke-width: 1.5px;
+    width: 24px;
+    height: 24px;
+}
 @media only screen and (max-width:767px){
     .plans-container{
         grid-template-columns: 1fr;

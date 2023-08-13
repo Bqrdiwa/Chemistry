@@ -18,7 +18,8 @@ class Feature(models.Model):
 class Plan(models.Model):
     name = models.CharField(max_length=48)
     features = models.ManyToManyField(Feature)
-    price = models.CharField(max_length=120, default='0')
+    Globalprice = models.CharField(max_length=120, default='0')
+    Studentprice = models.CharField(max_length=120, default='0')
     def __str__(self):
         return self.name
     

@@ -23,6 +23,8 @@
     src: url("./IRSansB.ttf");
 }
 
+
+
 body,
 html {
     margin: 0;
@@ -113,3 +115,6 @@ button:hover {
     color: black;
 }
 
+img {
+    align-self: baseline;
+}

@@ -187,3 +187,7 @@ button:hover {
         width: 100%;
     }
 }
+
+img {
+    align-self: baseline;
+}

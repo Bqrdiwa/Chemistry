@@ -4,6 +4,35 @@
 {%block content%}
 <link rel="stylesheet" href="{% static 'css/plans.css'%}">
     <main>
+        <div class="plan-cont-cont" id="base-detail-cont">
+            <div class="plan-detail-cont">
+                <h2>راهنمای خرید دوره پایه</h2>
+                <p>برای خرید دوره پایه برای دانش اموزان کلاس حضوری (استعلام توسط تیم مهندس کیانی) قیمت 180,000 تومان در نظر گرفته شده</p>
+                <p>و برای باقی دانش اموزان 1,800,000 تومان در نظر گرفته شده</p>
+                <p>شماره کارت واریزی جهت خرید دوره</p>
+                <div style="display: flex;justify-content: space-between;padding: 5px 1em;border:1px solid #dadada;border-radius: 3px;margin: 5px;">
+                    <p style="font-family: monospace;text-align: left;font-size: .9rem;margin: 0;">5859-8311-7717-6129</p>
+                    <p style="font-family: IRSansB;font-size: .8rem;">میثم کیانی</p>
+                </div>
+
+                <P>فیش واریزی خود را برای تیم پشتیبانی ما در تلگرام  به ایدی</P>
+                <div style="display: flex;justify-content: space-between;padding: 5px 1em;border:1px solid #dadada;border-radius: 3px;margin: 5px;">
+                    <P style="font-family: monospace;text-align: left;font-size: .9rem;margin: 0;">@shimikiani_rezaei</P>
+                    <p style="font-family: IRSansB;font-size: .8rem;">خانم رضایی</p>
+                </div>
+
+
+                <P>.ارسال کنید</P>
+                <button class="close-detail" onclick="document.getElementById('base-detail-cont').style.display='none'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M18 6l-12 12"></path>
+                        <path d="M6 6l12 12"></path>
+                     </svg>
+                </button>
+            </div>
+        </div>
+
         <div class="plans-container" style="position: relative;">
             {%if plans%}
             {%for plan in plans%}
@@ -19,10 +48,14 @@
 
                 </div>
                 <div class="card-lower">
-                    <h3 class="price">{{plan.price}}T</h3>
+                    <h3 class="price" style="display: flex;align-items: center;justify-content: end;gap: 1em;">
+                        <p style="margin: 0;font-family: monospace;">تومان</p>
+                        180,000 - 1,800,000
+
+                    </h3>
                    
-                    <div class="subscribe" onclick="openSocial()">
-                        به فضای مجازی تیم مهندس کیانی مراجعه کنید
+                    <div class="subscribe" onclick="document.getElementById('base-detail-cont').style.display='flex'">
+                        خرید دوره
                     </div>
                 </div>
 
@@ -37,4 +70,8 @@
             
         </div>
     </main>
+
+    <script>    
+
+    </script>
 {%endblock content%}

@@ -223,7 +223,8 @@ def Plans_view(request):
         cooked_plans.append({
             'name': plan.name,
             'features': plan.features,
-            'price': plan.price
+            'upperprice': plan.Globalprice,
+            'lowerprice': plan.Studentprice
         })
     context['plans'] = cooked_plans
 
