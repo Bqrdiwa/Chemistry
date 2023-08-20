@@ -112,8 +112,8 @@ def video_detail(request,pk):
         
         return JsonResponse(context)
     else:
-        video = Video.objects.get(pk=pk)
-        grade = video.grade
+        videoR = Video.objects.get(pk=pk)
+        grade = videoR.grade
         videos_related = Video.objects.all().filter(grade = grade)
         video_list = []
         for video in videos_related:
@@ -134,7 +134,7 @@ def video_detail(request,pk):
         paginator = Paginator(video_list, 7)
         videos_related = paginator.get_page(page_num)
         
-        context = {'video':video,'videos_related':videos_related,'watchlist':watchlist.videos.all(),'title':'Video','HT':'ویدیو'}
+        context = {'video':videoR,'videos_related':videos_related,'watchlist':watchlist.videos.all(),'title':'Video','HT':'ویدیو'}
 
         return render(request,'video/video_detail.html',context=context)
 @login_required 
