@@ -1,4 +1,5 @@
 {%extends 'home/base.html'%}
+{%load static%}
 {%block content%}
 
 <style>
@@ -133,7 +134,7 @@
         }
     }
 </style>
-
+<link rel="stylesheet" href="{%static 'css/video.css'%}">
 <main>
     <div class="optionsBox">
         <a class="backVideo" href="{%url 'video-list'%}">
@@ -152,20 +153,28 @@
         </a>
         <p style="position:absolute;right: 5px;margin: 10px 0;">{{count}} :تعداد کل </p>
     </div>
-    
-    <div class="mainbox">
-        {%for video in videos%}
+    {%if videos%}
+        <div id="videos-container">
+
+            {%for video in videos%}
             <div class="video-container">
-                <div class="video-detail">
-                    <img src="{{video.Thumbnail.url}}" class="thumbnail-img" onclick="window.location.href = '/video/{{video.pk}}'">
-                    <p class="btn-duration" id="dur-{{video.pk}}">{{video.get_video_duration}}</p>
-                </div>
-                <a class="link" href="/video/{{video.pk}}">{{video.Title}}</a>
-
-
+                <a href="/video/{{video.pk}}">
+                <img src="{{video.Thumbnail}}" class="thumbnail-img">
+                    </a>
+                <div class="line" style="height: 2px;background-color: #444;margin: 5px;width: 100%;"></div>
+                <a class="video-link" href="/video/{{video.pk}}">{{video.Title}}</a>
             </div>
-        {%endfor%}
-    </div>
+            {%endfor%}
+
+
+
+        </div>
+    {%else%}
+        <div style="width: 100%;margin: auto; height: 350px;border: 1px solid black;border-radius: 5px;font-family: IRSansB;font-size: .9rem;display: flex;justify-content: center;align-items: center;">
+            ویدیو ای در لیست پخش شما وجود ندارد
+
+        </div>
+    {%endif%}
 </main>
 
 {%endblock content%}

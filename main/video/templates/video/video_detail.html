@@ -203,9 +203,9 @@
 
         <div class="Box-2" id="Box-2">
             {%for video in videos_related%}
-                <a class="video-suggest" href="{{video.pk}}" id="video-suggest-{{video.pk}}">
-                    <img src="{{video.Thumbnail}}" style="width: 50%;">
-                    <p style="font-size: .7rem;text-align: end;width: 90%;padding: .5em;">{{video.Title}}</p>
+                <a class="video-suggest" href="{{video.pk}}" id="video-suggest-{{video.pk}}" style="display: flex;flex-direction: column;gap: 0;align-items: center;border: 1px solid #dadada;margin: 8px 0;">
+                    <img src="{{video.Thumbnail}}" style="width: 100%;filter: grayscale(30%);">
+                    <p style="font-size: .7rem;text-align: end;width: 90%;padding: .3em;text-align: center;">{{video.Title}}</p>
                 </a>
             {%endfor%}
         </div>

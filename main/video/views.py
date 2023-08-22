@@ -142,5 +142,19 @@ def video_detail(request,pk):
 def saved_video(request,username):
     videos = WatchList.objects.get(userRelated = request.user).videos.all()
     count = videos.count()
-    context = {'title':'WatchList','HT':'لیست پخش','videos':videos,'count':count}
+    video_list = []
+    for video in videos:
+        tu = '/assets/default.jpg/'
+        if video.grade == 'دهم':
+            tu = '/assets/dah.jpg'
+        elif video.grade == 'یازدهم':
+            tu = '/assets/yaz.jpg'
+        else :
+            tu = '/assets/dav.jpg'
+        video_list.append({
+            'pk': video.pk,
+            'Title': video.Title,
+            'Thumbnail': tu
+        })
+    context = {'title':'WatchList','HT':'لیست پخش','videos':video_list,'count':count}
     return render(request,'video/watchlist.html',context)

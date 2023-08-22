@@ -35,7 +35,7 @@
             <path d="M11 12h2"></path>
          </svg>
         </button>
-        <button class="button-white" onclick="window.location.href = 'watchlist/{{user.username}}'">لیست تماشا
+        <button class="button-white" onclick="window.location.href = 'watchlist/{{user.username}}/'">لیست تماشا
             <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path>
@@ -61,13 +61,15 @@
 
     </div>
 
-    <div id="paginator-cont">
+    <div id="paginator-cont" style="gap: 1em;flex-direction: row;display: flex;">
         {%for page in videos.paginator.page_range%}
         <a href="/video/?page={{page}}">
-            <div class="paginator">
+            <div class="paginator" style="border: 1px solid #000;border-radius: 5px;width: 30px;height: 30px;display: flex;justify-content: center;align-items: center;">
                 {{page}}
             </div>
+
         </a>
+        
         {%endfor%}
     </div>
 </main>
