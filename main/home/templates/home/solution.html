@@ -17,6 +17,55 @@
     var allitems = {}
 </script>
 <main>
+    <style>
+        * { 
+            transition: all 0s ease;
+        }
+        .solutionist-admin {
+            display: flex;
+            padding: 1em 2em;
+            align-items: center;
+            border: 1px solid #dadada;
+            font-size: .8rem;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-family: IRSansB;
+            justify-content: space-between;
+        }
+
+        .solutionist-admin > button {
+            transition: all 300ms ease;
+        }
+
+        .solutionist-admin > button > svg {
+            stroke-width: 1.5px;
+        }
+
+        @media only screen and (max-width:767px){
+            .solutionist-admin {
+                flex-direction: column-reverse;
+                gap: 1em;
+                text-align: right;
+            }
+        }
+    
+    </style>
+    <div class="solutionist-admin">
+        <a href="{%url 'not-answered-questions'%}">
+        <button style="padding: .3em 1em; display: flex;align-items: center;justify-content: center;gap: .1em;">لیست سوالات 
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checkup-list" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"></path>
+                <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"></path>
+                <path d="M9 14h.01"></path>
+                <path d="M9 17h.01"></path>
+                <path d="M12 16l1 1l3 -3"></path>
+             </svg>
+            </button>
+        </a>
+        در حال حاضر {{not_answered_c}} سوال وجود دارد که جواب داده نشده برای رسیدگی به سوالات کلیک کنید
+
+    </div>
     <div class="loading-container" id="like-loading">
         <div class="loading-pulse">
             </div>
@@ -158,6 +207,7 @@
             </div>
         </div>
     </div>
+
     <div class="add-question-container">
         <div class="loading-container" id="loading-container">
             <div class="loading-pulse">

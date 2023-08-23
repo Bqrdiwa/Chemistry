@@ -6,7 +6,7 @@ from .models import Solution, Answer, SolutionLike, Plan
 from jdatetime import datetime
 from django.utils import timezone as Tz
 from pytz import timezone
-from .decorators import virtualExamNotEnded, BasePlanReq
+from .decorators import virtualExamNotEnded, BasePlanReq, SolutionistView
 from django.core.paginator import Paginator
 from exam.models import Question, virtualExam
 from django.db.models import Q
@@ -123,7 +123,36 @@ def Solution_view(request):
             context['otherQs'] = publishedQs
         if your_S.count() > 0:
             context['myQs'] = myquestions
+
+        not_answeredQs = Solution.objects.filter(position = 'باز').count()
+        context['not_answered_c'] = not_answeredQs
         return render(request, 'home/solution.html',context=context)
+
+@login_required
+@SolutionistView
+def Solution_Not_Answered(request):
+    context = {'title':'notAnswered-Qs', 'HT':'سوالات بی جواب'}
+    questions = Solution.objects.filter(position = 'باز').order_by('-create_time')
+    q_list = []
+    for q in questions:
+        dc = q.create_time
+        ltz = timezone('Asia/Tehran')
+        dc = dc.astimezone(ltz)
+        pdt = datetime.fromgregorian(datetime = dc)
+        time = pdt.strftime('%Y/%m/%d')
+        data =  {
+                'title': q.title,
+                'time':time,
+                'pos':q.position,
+                'pk':q.pk,
+                'grade':q.grade,
+                'unit':q.unit,
+            }
+        if q.moredata:
+            data['MD'] = q.moredata.url
+        q_list.append(data)
+    context['questions'] = q_list
+    return render(request, 'home/s_notanswered.html', context)
 @login_required
 @BasePlanReq
 def Solution_Question_view(request, pk):

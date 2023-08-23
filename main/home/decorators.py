@@ -23,3 +23,13 @@ def BasePlanReq(view_func):
             messages.success(request, f'شما برای دیدن این صفحه باید دوره {BasePlan.name} را داشته باشید')
             return redirect('plans')
     return wrapper
+
+def SolutionistView(view_func):
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+        if user.groups.filter(name ='Solutionist').count() > 0:
+            return view_func(request,*args,**kwargs)
+        else:
+            messages.success(request, f'شما برای دیدن این صفحه اجازه لازم را ندارید')
+            return redirect('home')
+    return wrapper
