@@ -231,7 +231,7 @@
             <div class="number-hider">
             </div>
             <div class="question-lower">
-                <a href="/questionbank/{{question.pk}}">
+                <a href="/questionbank/{{question.pk}}/">
                     <div class="q-solution">
                         جواب
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-a-b" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -246,24 +246,24 @@
         </div>
      {%endfor%}
 </div>
-<div class="paginator-container">
+<div class="paginator-container" >
     {%if questions.has_previous%}
         {%if questions.previous_page_number != 1%}
-            <div class="page-number" style="font-size: .9rem;color: black;">
+            <div class="page-number" style="font-size: .9rem;color: black;border: 1px solid black;height: 25px;width: 25px;border-radius: 3px;display: flex;align-items: center;justify-content: center;">
                 <a href="?page=1" class="page-number" style="font-family: IRSans;">اول</a>
             </div>
         
         {%endif%}
-            <div class="page-number" style="font-size: .9rem;color: black;">
+        <div class="page-number" style="font-size: .9rem;color: black;border: 1px solid black;height: 25px;width: 25px;border-radius: 3px;display: flex;align-items: center;justify-content: center;">
                 <a href="?page={{questions.previous_page_number}}" class="page-number">{{questions.previous_page_number}}</a>
             </div>
     {%endif%}
-    <div class="page-number" style="font-size: 1rem;color: black;text-decoration: underline;">
+    <div class="page-number" style="font-size: 1rem;color: black;text-decoration: underline;border: 1px solid black;height: 25px;width: 25px;border-radius: 3px;display: flex;align-items: center;justify-content: center;">
         {{questions.number}}
     </div>
 
     {%if questions.has_next %}
-    <div class="page-number" style="font-size: .9rem;color: black;">
+    <div class="page-number" style="font-size: .9rem;color: black;border: 1px solid black;height: 25px;width: 25px;border-radius: 3px;display: flex;align-items: center;justify-content: center;">
         <a href="?page={{questions.next_page_number}}" class="page-number">{{questions.next_page_number}}</a>
     </div>
     {%endif%}
