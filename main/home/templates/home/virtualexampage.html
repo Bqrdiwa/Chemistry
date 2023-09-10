@@ -74,7 +74,7 @@
     <div class="questions-container">
         {%for question in exam.questions.all%}
             <div class="question" id="q-{{question.pk}}">
-                <img src="http://127.0.0.1:8000/assets/questions_pics/81_nmTjf9E.gif" class="question-img">
+                <img src="{{question.Question.url}}" class="question-img">
                 <div class="chooseZ">
                     <button class="chz" onclick="updateKey('{{question.pk}}',1)" id="q-1-{{question.pk}}">1</button>
                     <button class="chz" onclick="updateKey('{{question.pk}}',2)" id="q-2-{{question.pk}}">2</button>
