@@ -26,14 +26,13 @@ def exam(request):
                 'status':'در حال اجرا ...',
             })
             try:
-                examDuring = ExamAir.objects.get(Exam_related = exam)
+                examDuring = ExamAir.objects.get(Exam_related = exam, student_related = request.user)
                 key = examDuring.key.split(',')
                 counter = 0
                 for item in key:
                     if item != '0':
                         counter += 1
                 progress_percent = int(counter / exam.get_q_l * 100)
-                print(progress_percent)
                 DuringExams.append({
                     'name':exam.name,
                     'progress':str(progress_percent),
@@ -51,6 +50,11 @@ def exam(request):
               'status':'برگزار نشده'
           })
         else:
+            try:
+                result = Result.objects.get(participant = request.user, Exam_related= exam)
+                ResultExams.append(result)
+            except:
+                pass
             allExams.append({
                 'exam':exam,
                 'status':'برگزار شده'
