@@ -878,7 +878,7 @@
                 <div class="exam-header-lower">
                     <div class="questions-cont">
                         {%for question in Questions%}
-                            <div class="question-obj" id="question-p-{{question.pk}}">
+                            <div class="question-obj" id="question-p-{{question.question_number}}">
                                 <h5>{{question.question_number}}</h5>
                                 <div class="choices">
                                     <div class="choice">
@@ -973,16 +973,16 @@
                     <img src="{{question.Question.url}}">
                     <div class="question-settings">
                         <div class="question-choices">
-                            <div class="q-c" id="{{question.pk}}-1">
+                            <div class="q-c" id="{{question.question_number}}-1">
                                 1
                             </div>
-                            <div class="q-c" id="{{question.pk}}-2">
+                            <div class="q-c" id="{{question.question_number}}-2">
                                 2
                             </div>
-                            <div class="q-c" id="{{question.pk}}-3">
+                            <div class="q-c" id="{{question.question_number}}-3">
                                 3
                             </div>
-                            <div class="q-c" id="{{question.pk}}-4">
+                            <div class="q-c" id="{{question.question_number}}-4">
                                 4
                             </div>
                         </div>
@@ -992,19 +992,19 @@
                 </div>
                 <script>
                     document.getElementById('{{question.pk}}-1').addEventListener('click', function(){
-                        updateKey('{{question.pk}}', '1')
+                        updateKey('{{question.question_number}}', '1')
                     })
 
                     document.getElementById('{{question.pk}}-2').addEventListener('click', function(){
-                        updateKey('{{question.pk}}', '2')
+                        updateKey('{{question.question_number}}', '2')
                     })
 
                     document.getElementById('{{question.pk}}-3').addEventListener('click', function(){
-                        updateKey('{{question.pk}}', '3')
+                        updateKey('{{question.question_number}}', '3')
                     })
 
                     document.getElementById('{{question.pk}}-4').addEventListener('click', function(){
-                        updateKey('{{question.pk}}', '4')
+                        updateKey('{{question.question_number}}', '4')
                     })
                 </script>
                 {%endfor%}
