@@ -130,7 +130,13 @@ def Azmoon(request, name):
         context['studens_progress'] = results
         context['students_count']=students_count
     else:
-        context['Questions'] = azmoon.get_all_questions
+        numed_questions = []
+        c = 1
+        for i in  azmoon.get_all_questions:
+            i.question_number = c
+            c += 1
+            numed_questions.append(i)
+        context['Questions'] =numed_questions
     if admi_perm or EXAM_STATUS == 'Started':
         if not admi_perm:
             air, created = ExamAir.objects.get_or_create(student_related=request.user, Exam_related = azmoon)

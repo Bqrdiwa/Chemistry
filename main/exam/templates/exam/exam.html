@@ -86,7 +86,7 @@
 
     {%for during in DuringExams%}
         <div class="during-cont">
-            <a href="/exam/{{during.name}}">
+            <a href="/exam/{{during.name}}/">
                 <button>
                     ادامه آزمون
                 </button>
@@ -172,7 +172,7 @@
                 {%for result in ResultExams%}
                 <div class="result-item">
                     <div class="result-detail-btn">
-                        <a href="/exam/result/{{result.pk}}">
+                        <a href="/exam/result/{{result.pk}}/">
                         <button>
                             جزئیات <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-report-analytics" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>

@@ -811,10 +811,6 @@
                 cursor: pointer;
             }
 
-            .q-c:hover {
-                color: white;
-                background-color: black;
-            }
 
             .question-number {
                 top: 0;
@@ -883,7 +879,7 @@
                     <div class="questions-cont">
                         {%for question in Questions%}
                             <div class="question-obj" id="question-p-{{question.pk}}">
-                                <h5>{{question.pk}}</h5>
+                                <h5>{{question.question_number}}</h5>
                                 <div class="choices">
                                     <div class="choice">
 
@@ -975,7 +971,6 @@
                 {%for question in Questions%}
                 <div class="question">
                     <img src="{{question.Question.url}}">
-                    <h3 class="question-number">{{question.pk}}</h3>
                     <div class="question-settings">
                         <div class="question-choices">
                             <div class="q-c" id="{{question.pk}}-1">
@@ -1066,12 +1061,15 @@
                     questionP.children[i].classList.remove('p-answer')
                 }
                 
-                if(alreadyAnswered != '0' | alreadyAnswered == choice){
+                if(alreadyAnswered != '0' && alreadyAnswered == choice){
                     document.getElementById(`${question}-${alreadyAnswered}`).classList.remove('answered');
                     key[questionIndex] = '0';
                     questionPan.classList.remove('o-answred')
                 };
                 if(alreadyAnswered != choice){
+                    if(alreadyAnswered != '0'){
+                        document.getElementById(`${question}-${alreadyAnswered}`).classList.remove('answered');
+                    }
                     key[questionIndex] = choice;
                     document.getElementById(`${question}-${choice}`).classList.add('answered');
                     questionPan.classList.add('o-answred')
