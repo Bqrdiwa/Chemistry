@@ -2,15 +2,16 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Solution, Answer, SolutionLike, Plan
+from .models import Solution, Answer, SolutionLike, Plan, Student
 from jdatetime import datetime
 from django.utils import timezone as Tz
 from pytz import timezone
-from .decorators import virtualExamNotEnded, BasePlanReq, SolutionistView
+from .decorators import virtualExamNotEnded, BasePlanReq, SolutionistView, AdminRights
 from django.core.paginator import Paginator
 from exam.models import Question, virtualExam
 from django.db.models import Q
 import random
+from ippanel import Client
 
 
 
@@ -518,6 +519,38 @@ def virtualExamResultQuestions(request,pk):
 def informationBank(request):
     context ={'title':'Information-bank','HT':'بانک اطلاعات'}
     return render(request, 'home/informationbank.html',context)
+
+@login_required
+@AdminRights
+def usersList(request):
+    api_key = "inj29QmiusdNG2Meu0kbD2LHG9n18Fi1i5nUGkEYkWo="
+    context= {'title':'Students-List', 'HT':'لیست دانش آموزان'}
+    if request.method =='POST':
+        if request.POST['toAll'] =='true':
+            ss = Student.objects.filter(plans__name='پایه')
+            summer = 'a message to plans paye students'
+        else:
+            ss = Student.objects.all()
+            summer = 'a message to all students'
+        phone_numbers = []
+        for i in ss:
+            phone_numbers.append('98'+ i.phone_number)
+        sms = Client(api_key)
+        credit = sms.get_credit()
+        message_id = sms.send(
+            "+983000505",
+            phone_numbers,
+            request.POST['message'],
+            summer
+            )
+        return JsonResponse(context)
+    else:
+        ss = Student.objects.all()
+        sms = Client(api_key)
+        credit = sms.get_credit()
+        context['credit'] = int(credit)
+        context['students'] = ss
+        return render(request, 'home/users-list.html',context)
 def error_404(request, exception):
     return render(request, 'home/404.html', context={'err':'404','detail':'صفحه مورد نظر پیدا نشد'})
 def error_400(request, exception):

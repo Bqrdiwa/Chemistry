@@ -322,6 +322,42 @@
             text-decoration: underline;
             color: #444;
         }
+
+        .results-list {
+            display: flex;
+            width: 100%;
+            border: 1px solid #dadada;
+            border-radius: 5px;
+            padding: 1em;
+            flex-direction: column;
+            margin-top: 20px;
+            gap: 1em;
+
+        }
+        .user-result > p {
+            font-size: .85rem;
+            width: fit-content;
+            flex-grow: 1;
+            flex-basis: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-result {
+            display: flex;
+            justify-content: space-between;
+            padding: .5em;
+            border: 1px solid #dadada;
+            border-radius: 5px;
+        }
+        .main-res {
+            display: flex;
+            flex-direction: column;
+            gap: .6em;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
     @media screen and (max-width: 768px) {
         .admin-view {
             flex-direction: column;
@@ -478,6 +514,41 @@
                 </div>
             </div>
 
+            <div  class="results-list">
+                <div class="user-result" style="border-bottom: 2px solid black;">
+                    <p style="font-family: IRSansB;">جزئیات</p>
+                    <p style="font-family: IRSansB;">درصد</p>
+                    <p style="font-family: IRSansB;">پایه - رشته</p>
+                    <p style="font-family: IRSansB;">نام و نام خانوادگی</p>
+                </div>
+
+                <div class="main-res">
+
+
+                {%for student in studens_progress%}
+                {%if student.progress == 'ended'%}
+                    <div class="user-result">
+                        <a href="/exam/result/{{student.resultPk}}/" target="_blank" style="flex-grow: 1;flex-basis: 0;">
+                        <button style="width: 100%; display: flex;justify-content: center;align-items: center;gap: 5px;color: black;background-color: white; ">جزئیات
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width:19px;" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                                <path d="M9 17h6"></path>
+                                <path d="M9 13h6"></path>
+                             </svg></button>
+                            </a>
+                        <p style="font-family: monospace;font-size: .975rem;">{{student.percent}}%</p>
+                        <p>{{student.grade}} ~ {{student.subject}}</p>
+                        <p style="font-family: IRSansB;">{{student.name}}</p>
+                    </div>
+                    
+
+                    
+                {%endif%}
+            {%endfor%}
+            </div>
+            </div>
         </main>
         <script>
             var startEndBtn = document.getElementById('startEndBtn')

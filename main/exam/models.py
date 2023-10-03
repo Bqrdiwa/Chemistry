@@ -17,6 +17,7 @@ class Exam(models.Model):
     unit = models.CharField(max_length=16,choices=subjec, null=True)
     time = models.IntegerField(default=40)
     date = models.CharField(max_length=48, default='')
+    exampdf = models.FileField(upload_to='examPDFS',default='')
     startTime = models.TimeField(default=timezone.now)
     endTime = models.TimeField(default=timezone.now)
     plans = models.ManyToManyField(Plan)

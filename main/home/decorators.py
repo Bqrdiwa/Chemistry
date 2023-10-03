@@ -33,3 +33,12 @@ def SolutionistView(view_func):
             messages.success(request, f'شما برای دیدن این صفحه اجازه لازم را ندارید')
             return redirect('home')
     return wrapper
+
+def AdminRights(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.groups.filter(name='Admin').count()> 0:
+            return view_func(request, *args, **kwargs)
+        else:
+            messages.success(request, f'شما برای دیدن این صفحه اجازه لازم را ندارید')
+            return redirect('home')
+    return wrapper

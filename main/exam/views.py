@@ -115,6 +115,9 @@ def Azmoon(request, name):
             results.append({
                 'progress':'ended',
                 'name':result.participant.get_name,
+                'grade': result.participant.grade,
+                'subject': result.participant.subject,
+                'percent': result.percent,
                 'pk':result.participant.pk,
                 'resultPk':result.pk
             })

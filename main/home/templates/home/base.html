@@ -530,6 +530,18 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </a>
+                    
+                    {%if user.is_staff%}
+                        <a style="width: 30px; height: 30px; border: 1px solid #e2e2e2; position: relative;
+                            border-radius: 100%; margin: auto 0;" href="/users-list/">
+                            <span style="display: flex; margin: auto 0; font-size: 0.875rem; color: #666;font-size: 10px;
+                            color: #666;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);">ADMI</span>
+                        </a>
+                    {%endif%}
                     {%if user.is_authenticated%}
                     <a style="width: 30px; height: 30px; border: 1px solid #e2e2e2; position: relative;
                         border-radius: 100%; margin: auto 0;" href="{%url 'profile'%}">
@@ -539,6 +551,7 @@
                     <span style="display: flex; margin: auto 0; font-size: 0.875rem; color: #666;">[ کاربر مهمان
                         ]</span>
                     {%endif%}
+
                 </div>
             </div>
             <div style="display: flex; justify-content: space-between; height: 54px;">
