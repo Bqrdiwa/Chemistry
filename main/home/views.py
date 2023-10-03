@@ -526,7 +526,7 @@ def usersList(request):
     api_key = "inj29QmiusdNG2Meu0kbD2LHG9n18Fi1i5nUGkEYkWo="
     context= {'title':'Students-List', 'HT':'لیست دانش آموزان'}
     if request.method =='POST':
-        if request.POST['toAll'] =='true':
+        if request.POST['toAll'] =='false':
             ss = Student.objects.filter(plans__name='پایه')
             summer = 'a message to plans paye students'
         else:
