@@ -12,7 +12,7 @@ class Exam(models.Model):
     grad = [('دهم','دهم'),('یازدهم','یازدهم'),('دوازدهم','دوازدهم'),('فارغ التحصیل','فارغ التحصیل')]
     subjec = [('اول','فصل اول'),('دوم','فصل دوم'),('سوم','فصل سوم'), ('چهارم', 'فصل چهارم')]
 
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=32)
     grade = models.CharField(max_length=16,choices=grad,null=True)
     unit = models.CharField(max_length=16,choices=subjec, null=True)
     time = models.IntegerField(default=40)
