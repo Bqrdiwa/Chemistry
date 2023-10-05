@@ -1,0 +1,178 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%load jalali_tags%}
+
+{%block content%}
+<link rel="stylesheet" href="{% static 'css/exampage.css'%}">
+<main>
+    <div class="examDetail">
+        <div class="examDetailP">
+            <h2>{{exam.name}}</h2>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family:IRSans;">{{ exam.grade}} ~ {{exam.unit}}</p>
+                <p>: فصل ~ پایه</p>
+            </div>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family: monospace;">{{exam.time}} min</p>
+                <p>: زمان آزمون</p>
+            </div>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family: monospace;">{{ exam.get_q_l}}</p>
+                <p>: تعداد تست ها</p>
+            </div>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family: monospace;">{{ exam.stime|time:"H:i" }}</p>
+                <p>: زمان شروع</p>
+            </div>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family: monospace;">{{ exam.sdate|to_jalali:'%Y/%m/%d'}}</p>
+                <p>: تاریخ آزمون</p>
+            </div>
+            <div class="remain-time-cont">
+                <div class="time-remain" style="flex: 1;flex-direction: column;padding: 0;">
+                    <div class="time-remain-content" id="rt1" style="height: calc(100% - 3px);width: 100%; display: flex;align-items: center;justify-content: center;">
+                    </div>
+                    <div class="time-remain-bar">
+                    </div>
+                </div>
+                <div class="time-remain">
+                    زمان باقیمانده
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="questions-exam">
+        {%for q in questions%}
+            <div class="question">
+                <img src="{{q.image}}">
+                <div class="choices" id="question-{{q.number}}">
+                    <div class="choice" onclick="updateKey('{{q.number}}', 1)">1</div>
+                    <div class="choice" onclick="updateKey('{{q.number}}', 2)">2</div>
+                    <div class="choice" onclick="updateKey('{{q.number}}', 3)">3</div>
+                    <div class="choice" onclick="updateKey('{{q.number}}', 4)">4</div>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
+
+    <div class="examDetail">
+        <div class="examDetailP">
+            <div class="column-maker" style="width: calc(100% - 8px);border-top: 1px solid black;">
+                <p style="font-family: monospace;" id="rt2">12:59</p>
+                <p>:تایم باقیمانده</p>
+            </div>
+            <div class="column-maker" style="width: calc(100% - 8px);">
+                <p style="font-family: monospace;" id="QC"></p>
+                <p>: جواب داده شده</p>
+            </div>
+            <button style="width: calc(100% - 8px);padding: .3em;" id="ENDBTN"> اتمام آزمون</button>
+        </div>
+
+
+    </div>
+</main>
+
+<script>
+    var key = '{{KEY}}'
+    let QC = document.getElementById('QC')
+    key = key.split(',')
+    let jvb = 0
+    let all = 0
+    for(let i=0;i<key.length;i++){
+        all ++
+        if(key[i] != '0'){
+            jvb ++
+            document.getElementById('question-'+i).children[key[i]-1].classList.add('answered')
+        }
+    }
+
+    QC.innerHTML = jvb + '/' + all
+    console.log(key)
+    function secondsToHMS(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+
+            const formattedHours = String(hours).padStart(2, '0');
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+            return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+            }
+    let remainT = '{{remainT}}'
+    let remaintime1 = document.getElementById('rt1')
+    let remaintime2 = document.getElementById('rt2')
+    const remainHMS = secondsToHMS(remainT)
+    remaintime1.innerHTML = remainHMS
+    remaintime2.innerHTML = remainHMS
+    setInterval(function(){
+        remainT --
+        const remainHMS = secondsToHMS(remainT)
+        remaintime1.innerHTML = remainHMS
+        remaintime2.innerHTML = remainHMS
+        if(remainT <= -1) {
+            endExam()
+            remainT ++
+        }
+    },1000)
+
+    function updateKey(questionNumber, choice){
+        const choicesEl = document.getElementById('question-'+ questionNumber)
+        if(key[questionNumber] == '0'){
+            choicesEl.children[choice-1].classList.add('answered')
+            key[questionNumber] = choice
+            jvb ++
+        }else if (key[questionNumber] == choice){
+            choicesEl.children[choice-1].classList.remove('answered')
+            key[questionNumber] = '0'
+            jvb --
+        }else {
+            choicesEl.children[key[questionNumber]-1].classList.remove('answered')
+            choicesEl.children[choice-1].classList.add('answered')
+            key[questionNumber] = choice
+        }
+        QC.innerHTML = jvb +'/'+all
+        updateKeyDataBase()
+    }
+    function updateKeyDataBase(){
+        let StringKey = ''
+        for(let i=0;i<key.length;i++){
+            StringKey += (key[i]+',')
+        }
+
+        StringKey = StringKey.substring(0, StringKey.length-1)
+        console.log(StringKey)
+        toggleLoading()
+        $.ajax({
+            url:'/exam/{{exam.name}}/',
+            type: 'POST',
+            data :{
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'action':'updateKey',
+                'key': StringKey
+            },
+            success: function(response){
+                toggleLoading()
+            }
+        })
+    }
+    function endExam(){
+        toggleLoading()
+        $.ajax({
+            url:'/exam/{{exam.name}}/',
+            type: 'POST',
+            data :{
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'action':'endExam'
+            },
+            success: function(response){
+                toggleLoading()
+                window.location.href=`/exam/result/${response.resultPk}/`
+            }
+        })
+    }
+    document.getElementById('ENDBTN').addEventListener('click',endExam)
+</script>
+{%endblock%}

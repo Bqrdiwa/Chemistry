@@ -1,0 +1,54 @@
+.form-cont {
+    display: flex;
+    margin: auto;
+    margin-top: 30px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: .5em;
+}
+
+.form-cont > form {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 1em;
+    width: 85%;
+    flex-direction: column;
+    gap: .7em;
+}
+
+.form-cont > form > div {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    padding: .2em .7em;
+}
+
+input {
+    display: flex;
+    border: 1px solid #cecece;
+    border-radius: 4px;
+    outline: 0;
+    font-family: IRSansB;
+    font-size: .8rem;
+}
+
+label {
+    font-size: .85rem;
+    font-family: IRSansB;
+}
+
+h2 {
+
+    width: 85%;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: .6em;
+    font-family: IRsansB;
+    font-size: .875rem;
+    margin: 0;
+    text-align: center;
+
+}

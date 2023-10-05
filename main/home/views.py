@@ -8,7 +8,7 @@ from django.utils import timezone as Tz
 from pytz import timezone
 from .decorators import virtualExamNotEnded, BasePlanReq, SolutionistView, AdminRights
 from django.core.paginator import Paginator
-from exam.models import Question, virtualExam
+from exam.models import Question, virtualExam, Exam
 from django.db.models import Q
 import random
 from ippanel import Client
@@ -370,9 +370,9 @@ def Question_bank(request):
         if request.user.groups.filter(name='Admin').count()> 0 :
             admin = True
         context['admin'] = admin
-
+        ended_exams = [exam for exam in Exam.objects.all() if exam.status == 'Ended']
         questions = Question.objects.filter (
-            Q(exam_related__isnull = True)|Q(exam_related__status = 'Ended')
+            Q(exam_related__isnull = True)|Q(exam_related__in = ended_exams)
         )
         page_num = request.GET.get('page')
         paginator = Paginator(questions, 10)

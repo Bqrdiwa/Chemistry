@@ -1,15 +1,20 @@
 from django.shortcuts import render,redirect
-from .models import Exam, Result, Question, ExamAir
+from .models import Exam, Result, Question, CreateExamForm
 from json import dumps
 from django.http import JsonResponse
 from .decorators import result_permission, exam_permission
+from home.decorators import AdminRights
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.contrib.auth.decorators import login_required 
 from home.decorators import BasePlanReq
-from pytz import timezone
-from jdatetime import datetime
+import pytz
+import jdatetime
+from home.models import Plan
+from datetime import datetime, timedelta
+from django.utils import timezone
 # Create your views here.
 @login_required
+@BasePlanReq
 def exam(request):
     context = {'title':'Exams','HT':'آزمون ها'}
 
@@ -20,49 +25,86 @@ def exam(request):
     ResultExams = []
 
     for exam in Exams:
-        if exam.status == 'Started':
-            allExams.append({
-                'exam':exam,
-                'status':'در حال اجرا ...',
-            })
+        tehran_time_zone = pytz.timezone('Asia/Tehran')
+        examEndTime = (datetime.combine(exam.sdate, exam.stime) + timedelta(minutes=exam.time)).astimezone(tehran_time_zone)
+        nowTime = timezone.now().astimezone(tehran_time_zone)
+        td = (examEndTime - nowTime).total_seconds()
+        if td < 0:
+            allExams.append(
+                {
+                    'exam': exam,
+                    'status': 'برگذار شده'
+                }
+            )
             try:
-                examDuring = ExamAir.objects.get(Exam_related = exam, student_related = request.user)
-                key = examDuring.key.split(',')
-                counter = 0
-                for item in key:
-                    if item != '0':
-                        counter += 1
-                progress_percent = int(counter / exam.get_q_l * 100)
-                DuringExams.append({
-                    'name':exam.name,
-                    'progress':str(progress_percent),
-                    'pk':exam.pk
-                })
-            except:
-                try:
-                    result = Result.objects.get(participant = request.user, Exam_related= exam)
-                    ResultExams.append(result)
-                except:
-                    AvailableExams.append(exam)
-        elif exam.status == 'None':
-          allExams.append({
-              'exam':exam,
-              'status':'برگزار نشده'
-          })
-        else:
-            try:
-                result = Result.objects.get(participant = request.user, Exam_related= exam)
+                result = Result.objects.get(Exam_related= exam, participant = request.user)
                 ResultExams.append(result)
+            except:pass
+        elif td-300 > exam.time*60:
+            allExams.append(
+                {
+                    'exam': exam,
+                    'status': 'برگزار نشده'
+                }
+            )
+        else:
+            allExams.append(
+                {
+                    'exam': exam,
+                    'status': 'در حال اجرا'
+                }
+            )
+            try:
+                result = Result.objects.get(Exam_related= exam, participant = request.user)
+                if result.timeSpend != None:
+                    ResultExams.append(result)
+                else:
+                    DuringExams.append(exam)
             except:
-                pass
-            allExams.append({
-                'exam':exam,
-                'status':'برگزار شده'
-            })
+                AvailableExams.append(exam)
+        # if exam.status == 'Started':
+        #     allExams.append({
+        #         'exam':exam,
+        #         'status':'در حال اجرا ...',
+        #     })
+        #     try:
+        #         examDuring = ExamAir.objects.get(Exam_related = exam, student_related = request.user)
+        #         key = examDuring.key.split(',')
+        #         counter = 0
+        #         for item in key:
+        #             if item != '0':
+        #                 counter += 1
+        #         progress_percent = int(counter / exam.get_q_l * 100)
+        #         DuringExams.append({
+        #             'name':exam.name,
+        #             'progress':str(progress_percent),
+        #             'pk':exam.pk
+        #         })
+        #     except:
+        #         try:
+        #             result = Result.objects.get(participant = request.user, Exam_related= exam)
+        #             ResultExams.append(result)
+        #         except:
+        #             AvailableExams.append(exam)
+        # elif exam.status == 'None':
+        #   allExams.append({
+        #       'exam':exam,
+        #       'status':'برگزار نشده'
+        #   })
+        # else:
+        #     try:
+        #         result = Result.objects.get(participant = request.user, Exam_related= exam)
+        #         ResultExams.append(result)
+        #     except:
+        #         pass
+        #     allExams.append({
+        #         'exam':exam,
+        #         'status':'برگزار شده'
+        #     })
     detail = {}
     
     detail['examsCount']= Exams.count()
-    detail['participantsCount'] = Result.objects.all().count()+ ExamAir.objects.all().count()
+    detail['participantsCount'] = Result.objects.all().count()
     detail['questionsCount']= Question.objects.all().count()
     context['availableExams'] = AvailableExams
     context['DuringExams'] = DuringExams
@@ -77,81 +119,86 @@ def exam(request):
     context['admi'] = admi
     return render(request,'exam/exam.html',context=context)
 
-@exam_permission
+
 @login_required
+@exam_permission
 @BasePlanReq
-def Azmoon(request, name):
-    azmoon = Exam.objects.get(name=name)
-    EXAM_STATUS = azmoon.status
+def exampage(request, name):
+    context = {'title': name, 'HT':name}
+    exam = Exam.objects.get(name=name)
+    if request.method == 'POST':
+        action = request.POST['action']
+        rs = Result.objects.get(Exam_related = exam, participant= request.user)
+        if action == 'updateKey':
+            rs.Answers = request.POST['key']
+            rs.save()
+        elif action == 'endExam':
+            tehran_time_zone = pytz.timezone('Asia/Tehran')
+            startofexam = datetime.combine(exam.sdate, exam.stime).astimezone(tehran_time_zone)
+            nowT = timezone.now().astimezone(tehran_time_zone)
+            rs.timeSpend = nowT - startofexam
+            rs.save()
+            context['resultPk'] = rs.pk
+        return JsonResponse(context)
+    questions_of_exam = []
+    c = 0
+    for q in exam.get_all_questions:
+        questions_of_exam.append(
+            {
+                'ID': q.pk,
+                'image': q.Question.url,
+                'number': c
+            }
+        )
+        c += 1
+    default_answer = ('0,'*exam.get_q_l)[:-1]
+    result, _ = Result.objects.get_or_create(participant= request.user,
+                                              Exam_related = exam)
+    if _:
+        result.Answers = default_answer
+        result.save()
+    print(result.timeSpend)
+    startofexam = datetime.combine(exam.sdate, exam.stime)
+    endofexam =  startofexam + timedelta(minutes=exam.time)
+    tehran_time_zone = pytz.timezone('Asia/Tehran')
+    endT =endofexam.astimezone(tehran_time_zone)
+    nowT = timezone.now().astimezone(tehran_time_zone)
+    context['KEY'] = result.Answers
+    context['remainT'] = int((endT - nowT).total_seconds())
+    context['questions'] = questions_of_exam
+    context['exam'] = exam
+    return render(request, 'exam/exampage.html', context)
+@login_required
+@AdminRights
+def AdminPanelAzmoon(request, name):
+    context = {}
+    exam = Exam.objects.get(name = name)
 
-    context = {'title':'Exam','HT':'آزمون'}
-    
-
-    admi_perm = False
-    context['admin'] = False
-    if request.user.groups.filter(name ='Admin').count() > 0:
-        admi_perm= True
-        context['admin'] = True
-    
-    context['Exam'] = azmoon
-    
-    if admi_perm:
-        questions_list = []
-        qC = 1
-        for question in azmoon.get_all_questions:
-            current_answer = [False,False,False,False]
-            current_answer[int(question.Answer)-1]=True
-            questions_list.append({
-                'pk':qC,
-                'choices':current_answer
-            })
-            qC += 1
-        context['Questions'] = questions_list
-
-        results = []
-        students_count = 0
-        for result in azmoon.get_all_results:
-            students_count += 1
-            results.append({
-                'progress':'ended',
-                'name':result.participant.get_name,
-                'grade': result.participant.grade,
-                'subject': result.participant.subject,
-                'percent': result.percent,
-                'pk':result.participant.pk,
-                'resultPk':result.pk
-            })
-        for air in azmoon.get_all_airs:
-            key = air.key.split(',')
-            students_count += 1
-            answered = 0
-            for item in key:
-                if item != '0':
-                    answered += 1
-            progressPercent = answered / len(key) * 100
-            results.append({
-                'progress':progressPercent,
-                'name':air.student_related.get_name,
-                'pk':air.student_related.pk
-            })
-        context['studens_progress'] = results
-        context['students_count']=students_count
-    else:
-        numed_questions = []
-        c = 1
-        for i in  azmoon.get_all_questions:
-            i.question_number = c
-            c += 1
-            numed_questions.append(i)
-        context['Questions'] =numed_questions
-    if admi_perm or EXAM_STATUS == 'Started':
-        if not admi_perm:
-            air, created = ExamAir.objects.get_or_create(student_related=request.user, Exam_related = azmoon)
-            context['AIR'] = {'key':air.key,'start':air.startTime}
-        return render(request,'exam/azmoon.html',context)
-    else:
-        return redirect('exam')
-
+    qls = []
+    inde =0
+    for q in exam.get_all_questions:
+        inde += 1
+        qls.append({
+            'number': inde,
+            'a': q.Answer
+        })
+    cleaned_results =[]
+    results = Result.objects.filter(Exam_related = exam)
+    for r in results:
+        rdetail = r.get_detail
+        cleaned_results.append({
+            'pk':r.pk,
+            'examname': r.Exam_related.name,
+            'percent': rdetail.get('percent'),
+            'ended': rdetail.get('ended'),
+            'participant':r.participant.username
+        })
+    sorted_data = sorted(cleaned_results, key=lambda x: x['percent'], reverse=True)
+    context['results'] = sorted_data
+    context['rc'] = len(sorted_data)
+    context['exam'] = exam
+    context['qls'] = qls
+    return render(request, 'exam/examadminpanel.html', context)
 
 @result_permission
 @login_required
@@ -160,69 +207,42 @@ def Javab(request, pk):
     my_result = Result.objects.get(pk = pk)
     examRelated = my_result.Exam_related
     all_of_my_results = Result.objects.filter(participant = my_result.participant)
+    timeSpend = my_result.timeSpend.total_seconds()
+    timespend_on_every_q = timeSpend / examRelated.get_q_l
+    details = my_result.get_detail
 
-    avg_percent = 0
-    student_counter = 0
-    avg_time = 0
+    all_of_results = []
+    mins = int(timeSpend // 60)
+    secs = int(timeSpend % 60)
+    if mins< 10:
+        mins = '0' + str(int(mins))
+    if secs < 10 :
+        secs = '0'+ str(secs)
+    timeSpendForExam = str(mins)+':'+str(secs)
+    for r in all_of_my_results:
+        ttz = pytz.timezone('Asia/Tehran')
+        examTime = r.Exam_related.sdate
+        persianTime = jdatetime.datetime.fromgregorian(datetime = examTime)
+        all_of_results.append(
+            {
+                'ExamName':r.Exam_related.name,
+                'date': persianTime.strftime('%Y/%m/%d'),
+                'timespend': round((r.timeSpend.total_seconds() / r.Exam_related.get_q_l),2),
+                'percent': r.get_detail['percent'],
 
-    for result in examRelated.get_all_results:
-        avg_percent += float(result.percent)
-        avg_time += float(result.timeSpended)
-        student_counter += 1
-    
-    avg_percent /= student_counter
-    avg_time /= (student_counter * examRelated.get_q_l)
-
-    avg_percent = round(avg_percent, 2)
-    avg_time = round(avg_time, 2)
-
-    your_percent = my_result.percent
-    your_time = float(my_result.timeSpended) / examRelated.get_q_l
-
-    your_time = round(your_time, 2)
-
-    spending_time = float(my_result.timeSpended)
-    smins = int(spending_time // 60)
-    ssecs = int(spending_time - (60 * smins))
-    if (smins < 10):
-        smins = '0' + str(smins)
-    if(ssecs < 10):
-        ssecs = '0'+ str(ssecs)
-    spending_time = f'{str(smins)}:{str(ssecs)}'
-
-    all_results_list = []
-    tehran_time_zone = timezone('Asia/Tehran')
-    for result in all_of_my_results:
-        date = result.dateSubmited
-        date = date.astimezone(tehran_time_zone)
-        pdt = datetime.fromgregorian(datetime = date)
-        time = pdt.strftime('%Y/%m/%d')
-
-        timespend = float(result.timeSpended)
-        timespend /= result.Exam_related.get_q_l
-        timespend = round(timespend,2)
-        all_results_list.append({
-            'ExamName':result.Exam_related.name,
-            'date':time,
-            'timespend':timespend,
-            'percent':result.percent
-            
-        })
-    scoreBoard = Result.objects.filter(Exam_related = examRelated).order_by('-percent')[:4]
+            }
+        )
     context = {'title':'Result',
                 'HT':'نتایج',
-                'exam':examRelated,
-                'my_result':{'percent':your_percent,
-                             'your_time':your_time,
-                             'your_spending':spending_time,
-                             'corrects':my_result.corrects,
-                             'wrongs':my_result.wrongs,
-                             'not_answered':my_result.notAnswered,
-                             'pk':my_result.pk
-                             },
-                'avg_result':{'percent':avg_percent,'time':avg_time},
-                'all_results':dumps(all_results_list),
-                'scoreboard':scoreBoard
+                'exam': examRelated,
+                'result': my_result,
+                'TSOEQ': round(timespend_on_every_q,2),
+                'percent' : details['percent'],
+                'corrects_c': len(details['links']['cl']),
+                'wrongs_c': len(details['links']['wl']),
+                'not_answered_c': len(details['links']['nl']),
+                'timeSpendForExam': timeSpendForExam,
+                'all_results': dumps(all_of_results)
                 }
     
 
@@ -235,9 +255,10 @@ def Javab(request, pk):
 @BasePlanReq
 def Javab_questions(request,pk):
     result = Result.objects.get(pk=pk)
-    wrongs_list = result.wrongs_link.split(',')
-    corrects_list = result.corrects_link.split(',')
-    notAnswered_list = result.notAnswered_link.split(',')
+    detail = result.get_detail
+    wrongs_list = detail['links']['wl']
+    corrects_list = detail['links']['cl']
+    notAnswered_list = detail['links']['nl']
 
 
     wrongs_q = []
@@ -278,5 +299,19 @@ def examQuestions(request, examName):
 @login_required
 def create(request):
     context = {'title':'CreateExam','HT':'ساخت آزمون'}
+    if request.method == 'POST':
+        form = CreateExamForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            planpaye = Plan.objects.get(name = 'پایه')
+            exam = Exam.objects.get(name = request.POST['name'])
+            exam.plans.add(planpaye)
+            exam.save()
+
+            return redirect('exam')
+        else:
+            print(form.errors)
+    form = CreateExamForm()
+    context['form'] = form
     return render(request, 'exam/create.html', context)
     

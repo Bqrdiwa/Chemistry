@@ -1,0 +1,140 @@
+.examDetail {
+    display: flex;
+    width: 100%;
+    gap: 1em;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.questionsDetail {
+    display: flex;
+    min-width: 40%;
+}
+
+.examDetailP {
+    display: flex;
+    position: relative;
+    flex: 1;
+    align-items: center;
+    gap: .3em;
+    flex-direction: column;
+}
+
+.examDetailP > h2 {
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: .3em 1em;
+    width: 100%;
+    margin: 0;
+    font-family: IRSansB;
+    font-size: .85rem;
+    margin-bottom: .5em;
+    text-align: center;
+}
+
+.column-maker {
+    display: flex;
+    justify-content: space-between;
+    padding: .3em 1em;
+    border-radius: 5px;
+    border: 1px solid #dadada;
+}
+
+.column-maker >p {
+    font-family: IRSansB;
+    font-size: .825rem;
+}
+
+.questions-exam {
+    display: flex;
+    margin-top: 30px;
+    width: 100%;
+    flex-direction: column;
+    gap: .6em;
+}
+
+.question {
+    width: 100%;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: .6em;
+    align-items: center;
+    padding: .7em;
+}
+
+.question > img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.choice {
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: .8rem;
+    flex-grow: 1;
+    flex-basis: 0;
+    cursor: pointer;
+    transition: all 300ms ease;
+}
+
+.choices {
+    gap: .5em;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.remain-time-cont {
+    display: flex;
+    width: 100%;
+    padding: .5em 0;
+    gap: 1em;
+}
+
+.time-remain {
+    border: 1px solid black;
+    border-radius: 5px;
+    font-family: IRSansB;
+    font-size: .875rem;
+    padding: .2em .7em;
+}
+
+.time-remain-bar {
+    background-color: black;
+    height: 3px;
+    width: 100%;
+}
+
+.time-remain-content {
+    font-size: .875rem;
+    font-family: monospace;
+
+}
+
+.answered {
+    background-color: black;
+    color: white;
+    animation: fadeIn .3s ease;
+}
+
+@media only screen and (max-width:767px) {
+    .choices {
+        width: 90%;
+    }
+
+    .choice {
+        font-size: .8rem;
+        border: .1px solid black;
+    }
+
+    .question {
+        padding: 0;
+    }
+}

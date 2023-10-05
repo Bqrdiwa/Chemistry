@@ -1,7 +1,18 @@
 {%extends 'home/base.html'%}
-
+{%load static%}
 {%block content%}
+<link rel="stylesheet" href="{% static 'css/examCreate.css'%}">
 <main>
+    <div class="form-cont">
 
+    <h2>پنل ساخت آزمون انلاین</h2>
+    <form method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_div }}
+        {{ form.media }}
+        <button style="padding: .4em 1em;" type="submit">ساخت</button>
+        {{form.errors}}
+    </form>
+    </div>
 </main>
 {%endblock content%}

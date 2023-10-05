@@ -413,4 +413,25 @@ button > svg {
         justify-content: space-between;
         width: 100%;
     }
+
+    .go-row {
+        gap: .5em;
+        flex-direction: column-reverse;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+        padding: .5em;
+    }
+
+    .go-row > div {
+        flex-direction: row;
+        width: 100%;
+
+    }
+    .go-row >a {
+        width: 100%;
+    }
+    .go-row >a>button {
+        width: 100%;
+    }
+    
 }

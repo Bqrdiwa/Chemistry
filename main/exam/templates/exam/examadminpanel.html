@@ -1,0 +1,249 @@
+{%extends 'home/base.html'%}
+{%load static%}
+{%load jalali_tags%}
+
+
+{%block content%}
+<link rel="stylesheet" href="{%static 'css/adminpanelexam.css'%}">
+<style>
+    .column-breaker{
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+        width: 100%;
+    }
+
+    h2 {
+        width: 100%;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: .4em 1em;
+        font-family: IRSansB;
+        margin: 0;
+        font-size: .85rem;
+    }
+
+    .column-maker {
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+        padding: .3em 1em;
+    }
+
+    p {
+        font-size: .825rem;
+    }
+
+    .exam-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+    }
+
+    .questions-keys {
+        width: 400px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .8em;
+        padding: 1em;
+        align-items: baseline;
+        height: 300px;
+        border: 1px solid #dadada;
+        max-width: 100%;
+        overflow-y: auto;
+        border-radius: 5px;
+    }
+
+    .question-key {
+        display: flex;
+        gap: .4em;
+        width: fit-content;
+        justify-content:    center;
+        align-items: center;
+    }
+
+    .question-key > p {
+        font-family: Poppins;
+        font-weight: bold;
+        font-size: .9rem;
+    }
+
+    .question-key >div> div {
+        width: 13px;
+        background-color: black;
+        height: 2px;
+    }
+
+    .white-button {
+        background-color: white;
+        color: black;
+        height: 100%;
+        font-family: IRSansB;
+        transition: all ease 300ms ;
+    }
+
+    .white-button:hover {
+        background-color: black;
+        color: white;
+    }
+
+    .users-in {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #dadada;
+        border-radius: 5px;
+        padding: 1em;
+        gap: .6em;
+        width: 100%;
+        margin-top: 25px;
+    }
+
+    .user-i {
+        display: flex;
+        justify-content: space-between;
+        border-radius: 2px solid red;
+        border: 1px solid #cecece;
+        border-radius: 5px;
+        padding: .5em;
+    }   
+
+
+
+    .user-i > p {
+        width: fit-content;
+        flex-grow: 1;
+        text-align: center;
+        flex-basis: 0;
+        color: black;
+        font-size: .875rem;
+    }
+    .pb {
+        padding: 0;
+    }
+
+
+    @media only screen and (max-width:767px){
+        .pb {
+            flex-direction: column;
+        }
+    }
+
+</style>
+<main>
+    <h2 style="margin-bottom: 1em;margin-top: 25px;">جزئیات آزمون</h2>
+    <div class="column-maker pb" style="border: none;gap: 1em;">
+
+        <div class="exam-detail">
+            <div class="column-maker" style="padding: .5em 1em;border: 1px solid #cecece;">
+                <p style="font-family: IRSansB;">پنل ادمینی</p>
+                <p style="font-family: monospace;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="stroke-width: 1.5;" class="icon icon-tabler icon-tabler-hexagons" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M4 18v-5l4 -2l4 2v5l-4 2z"></path>
+                    <path d="M8 11v-5l4 -2l4 2v5"></path>
+                    <path d="M12 13l4 -2l4 2v5l-4 2l-4 -2"></path>
+                 </svg></p>
+
+            </div>
+            <div style="justify-content: space-between;height: 100%;display: flex;flex-direction: column;">
+                <div style="display: flex;flex-direction: column;justify-content: space-evenly;flex: 1;">
+                    <div class="column-maker">
+                        <p>{{exam.grade}} ~ {{exam.unit}}</p>
+                        <p style="font-family: IRSansB;">:پایه ~ فصل</p>
+                    </div>
+        
+                    <div class="column-maker">
+                        <p style="font-family: monospace;">{{rc}}</p>
+                        <p style="font-family: IRSansB;">:تعداد دانش آموزان</p>
+                    </div>
+        
+                    <div class="column-maker">
+                        <p style="font-family: monospace;">{{exam.stime}}</p>
+                        <p style="font-family: IRSansB;">:زمان شروع</p>
+                    </div>
+        
+                    <div class="column-maker">
+                        <p style="font-family: monospace;">{{exam.sdate|to_jalali:'%Y:%m:%d'}}</p>
+                        <p style="font-family: IRSansB;">:تاریخ شروع</p>
+                    </div>
+                    <div class="column-maker">
+                        <p style="font-family: monospace;">{{exam.time}} min</p>
+                        <p style="font-family: IRSansB;">: زمان آزمون</p>
+                    </div>
+                </div>
+                
+                <div class="column-maker" style="gap: .6em;">
+                    <div style="text-align: center; border-radius: 5px; font-family: IRSansB;font-size: .85rem;flex: 1; background-color: black;color: white;padding: .3em 1em;">
+                        {%if exam.status == 'Started'%}
+                            در حال اجرا 
+                        {%elif exam.status == 'None'%}
+                            برگذار نشده
+                        {%else%}
+                            برگذار شده
+                        {%endif%}
+                    </div>
+                    <a href="/exam/{{exam.name}}/questions/">
+                        <button  class="white-button">سوالات آزمون</button>
+                    </a>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <div class="questions-keys">
+            {%for q in qls%}
+                <div class="question-key">
+                    <p>{{q.number}}</p>
+                    <div style="display: flex;gap: .3em;align-items: center;">
+                        {%if q.a == '1'%}
+                        <div style="background-color: green;height: 4px;"></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        {%elif q.a == '2'%}
+                        <div></div>
+                        <div style="background-color: green;height: 4px;"></div>
+                        <div></div>
+                        <div></div>
+                        {%elif q.a == '3'%}
+                        <div></div>
+                        <div></div>
+                        <div style="background-color: green;height: 4px;"></div>
+                        <div></div>
+                        {%else%}
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div style="background-color: green;height: 4px;"></div>
+                        {%endif%}
+                    </div>
+                </div>
+            {%endfor%}
+        </div>
+
+
+
+    </div>
+    <div class="users-in">
+        <div class="user-i" style="border-bottom: 2px solid black;">
+            <p style="font-family: IRSansB;color: black;">کارنامه</p>
+            <p style="font-family: IRSansB;color: black;">درصد</p>
+            <p style="font-family: IRSansB;color: black;">نام,نام خانوادگی</p>
+        </div>
+        {%for result in results%}
+        <div class="user-i" {%if result.ended%}style="border-right:2px solid green;"{%else%}style='border-right:red 2px solid;' {%endif%}>
+            <a href="/exam/result/{{result.pk}}/" style="flex-grow: 1;flex-basis: 0;">
+                <button style="width: 100%;" class="white-button">جزئیات</button>
+            </a>
+            <p style="font-family: monospace;">{{result.percent}}</p>
+            <p style="font-family: IRSansB;color: black;">{{result.participant}}</p>
+        </div>
+        {%endfor%}
+    </div>
+</main>
+{%endblock%}

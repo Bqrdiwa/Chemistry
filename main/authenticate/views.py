@@ -6,7 +6,7 @@ from .models import LoginForm,RegisterForm,ProfileForm, VertificationCode, Verti
 from django.contrib.auth.models import Group
 import re
 from django.http import JsonResponse
-from exam.models import Exam, Result, ExamAir
+from exam.models import Exam, Result
 from json import dumps
 from home.models import Student
 
@@ -263,21 +263,21 @@ def Profile(request):
     else:
         form = ProfileForm()
         
-    exams = {'ended':[],'not_ended':[],'not_started':[]}
-    all_exams = Exam.objects.all()
-    finded = False
-    for exam in all_exams:
-        try:
-            result = Result.objects.get(Exam_related = exam, participant = request.user)
-            exams['ended'].append(result)
-            finded = True
-        except:
-            try:
-                ExamAir.objects.get(Exam_related = exam, student_related = request.user)
-                exams['not_ended'].append(exam)
-                finded = True
-            except:
-                if exam.status != 'Ended':
-                    exams['not_started'].append(exam)
-                    finded = True
+    # exams = {'ended':[],'not_ended':[],'not_started':[]}
+    # all_exams = Exam.objects.all()
+    # finded = False
+    # for exam in all_exams:
+    #     try:
+    #         result = Result.objects.get(Exam_related = exam, participant = request.user)
+    #         exams['ended'].append(result)
+    #         finded = True
+    #     except:
+    #         try:
+    #             ExamAir.objects.get(Exam_related = exam, student_related = request.user)
+    #             exams['not_ended'].append(exam)
+    #             finded = True
+    #         except:
+    #             if exam.status != 'Ended':
+    #                 exams['not_started'].append(exam)
+    #                 finded = True
     return render(request,'home/profile.html',context={'finded':finded, 'title':'Profile','form':form,'error_list':error_list,'HT':'پروفایل','exams':exams})

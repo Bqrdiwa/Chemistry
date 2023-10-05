@@ -1,5 +1,6 @@
 {%extends 'home/base.html'%}
 {%load static%}
+{%load jalali_tags%}
 {%block content%}
 <link rel="stylesheet" href="{%static 'css/exam.css'%}">
 <script>
@@ -61,12 +62,9 @@
         <h2>Admin panel</h2>
 
         <div class="search">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-                <path d="M21 21l-6 -6"></path>
-             </svg>
-             <input type="text" placeholder="جستجوی آزمون">
+            <a href="/create/exam/">
+            <button>ساخت آزمون</button>
+            </a>
         </div>
         {%for exam in allExams%}
         <div class="exam-panel-cont">
@@ -74,7 +72,7 @@
             <h3 style="font-family: IRSansB;">{{exam.exam.name}}</h3>
 
             <h3>{{exam.status}}</h3>
-            <a href="/exam/{{exam.exam.name}}/"><button>Admin panel</button></a>
+            <a href="/exam/admin/{{exam.exam.name}}/"><button>Admin panel</button></a>
 
         </div>
         {%endfor%}
@@ -112,40 +110,25 @@
             {%if availableExams%}
             {%for exam in availableExams%}
             <div class="exam-wrapper">
-                <div class="column-breaker">
-                    <button id="openDetail-{{exam.pk}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                            <path d="M9 17h6"></path>
-                            <path d="M9 13h6"></path>
-                         </svg>
-                        جزئیات 
-                    </button>
+                <div class="column-breaker go-row">
+                    <a href="/exam/{{exam.name}}/">
+                        <button>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                                <path d="M9 17h6"></path>
+                                <path d="M9 13h6"></path>
+                            </svg>
+                            شرکت در آزمون 
+                        </button>
+                    </a>
                     <div class="column-maker">
                         <h3>{{exam.name}}</h3>
-                        <h3 style="color: #444;padding-right: .8em; font-size: .825rem;font-family: monospace;">{{exam.endTime|time:'H:i'}} ~ {{exam.startTime|time:'H:i'}}</h3>
+                        <h3 style="color: #444;padding-right: .8em; font-size: .825rem;font-family: monospace;"> زمان شروع آزمون:{{exam.stime|time:'H:i'}}</h3>
                     </div>
                 </div>
             </div>
-            <script>
-                availableExams['{{exam.pk}}'] = {
-                    name: '{{exam.name}}',
-                    grade: '{{exam.grade}}',
-                    unit: '{{exam.unit}}',
-                    time: '{{exam.time}}',
-                    Q_C: '{{exam.get_q_l}}',
-                    plans: []
-                }
-
-                document.getElementById('openDetail-{{exam.pk}}').addEventListener('click', function(){
-                    openExamDetail('{{exam.pk}}')
-                })
-            </script>
-            {%for plan in exam.plans.all%}
-                <script>availableExams['{{exam.pk}}']['plans'].push('{{plan.name}}')</script>
-            {%endfor%}
             {%endfor%}
             {%else%}
             <div class="dissapoint">
@@ -190,7 +173,8 @@
                         <div class="detail-cont">
                             <h3 class="result-detail">
                                 تاریخ آزمون: 
-                                {{result.Exam_related.date}}
+                                <span style="font-family: monospace;">{{result.Exam_related.sdate|to_jalali:'%Y/%m/%d'}}</span>
+
                             </h3>
                             <h3 class="result-detail">
                                 تعداد سوالات: 
@@ -221,68 +205,6 @@
 
 <script>
     var availableDetailCont = document.getElementById('available-exam-detail')
-    var first = 800
-
-    function openExamDetail(pk){
-        const examRelated = availableExams[pk]
-        availableDetailCont.style.display = 'flex'
-
-        console.log(availableDetailCont.innerHTML)
-
-        
-        let plans = ''
-        console.log(examRelated.plans)
-        examRelated.plans.forEach((plan)=>{
-
-            plans += plan+','
-        })
-
-        plans = plans.substring(0, plans.length -1)
-        if (plans == ''){
-            plans = '---'
-        }
-        const element = `            
-        <div class="detail-head">
-                ${examRelated.name}
-            </div>
-            <div class="detail-content">
-
-                <div class="detail-breaker opaci0">
-                    <h4 style="font-family: monospace;color: #222;">${examRelated.Q_C}</h4>
-                    <h4>تعداد سوالات</h4>
-                </div>
-                <div class="detail-breaker opaci0">
-                    <h4 style="font-family: monospace;color: #222;">${examRelated.time}min</h4>
-                    <h4>زمان</h4>
-                </div>
-
-                <div class="detail-breaker opaci0">
-                    <h4 style="font-family: monospace;color: #222;">${plans}</h4>
-                    <h4>پلن ها</h4>
-                </div>
-                <div class="detail-breaker opaci0">
-                    <h4 style="color: #222;">فصل ${examRelated.unit} ${examRelated.grade}</h4>
-                    <h4>پایه ~ فصل</h4>
-                </div>
-            </div>
-            <a href="/exam/${examRelated.name}/" style="width:100%;animation: .4s ease fadeIn;">
-            <button style="width: 100%;" class="black-btn">شرکت در آزمون</button>
-            </a>`
-
-
-            setTimeout(function(){
-                availableDetailCont.innerHTML = element
-                setTimeout(function(){
-                    document.querySelectorAll('.detail-breaker').forEach((detail)=>{
-                        detail.classList.remove('opaci0')
-                    })
-                },200)
-                },first)
-            first = 0
-
-
-
-    }
 </script>
 
 {%endblock content%}

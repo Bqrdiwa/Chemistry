@@ -1,5 +1,6 @@
 {%extends 'home/base.html'%}
 {%load static%}
+{%load jalali_tags%}
 {%block content%}
 <style>
 
@@ -27,7 +28,7 @@
           <h2 class="exam-name"> کارنامه آزمون {{exam.name}}</h2>
           <div class="result-detail-item">
             <div class="result-data">
-              {{my_result.your_time}}s
+              {{TSOEQ}}s
             </div>
             <div class="result-data-idenifier">
               زمان برای هر سوال
@@ -42,7 +43,7 @@
           </div>
             <div class="result-detail-item">
               <div class="result-data">
-                {{my_result.percent}}%
+                {{percent}}%
               </div>
               <div class="result-data-idenifier">
                 درصد
@@ -60,7 +61,7 @@
 
             <div class="result-detail-item">
               <div class="result-data">
-                {{my_result.your_spending}} - {{exam.time}}:00
+                {{timeSpendForExam}} - {{exam.time}} mins
               </div>
               <div class="result-data-idenifier">
                 زمان استفاده شده
@@ -75,7 +76,7 @@
     </div>
     <div class="detail-exam-lower">
       <div style="display: flex;gap: .3em;">
-        <a href="{%url 'exam-result-questions' my_result.pk %}" style="flex: 1;">
+        <a href="{%url 'exam-result-questions' result.pk %}" style="flex: 1;">
           <button class="questions-btn">سوالات آزمون</button>
             </a>
           <a href="{{exam.exampdf.url}}" target="_parent">
@@ -91,7 +92,7 @@
 
       <div class="exam-detail">
         <div class="exam-detail-item">
-          <p style="font-family: monospace;">{{exam.date}}</p>
+          <p style="font-family: monospace;">{{exam.sdate|to_jalali:'%Y/%m/%d'}}</p>
           <p style="border-right: 2px solid #444;padding-right: .4em;">تاریخ</p>
         </div>
         <div class="exam-detail-item">
@@ -115,9 +116,9 @@
 <script>
   $(function () {
     $("#doughnutChart").drawDoughnutChart([
-      { title: "غلط", value: parseInt('{{my_result.wrongs}}'), color: "#8e8e8e" },
-      { title: "صحیح", value: parseInt('{{my_result.corrects}}'), color: "#000" },
-      { title: "نزده", value: parseInt('{{my_result.not_answered}}'), color: "#fafafa" },
+      { title: "غلط", value: parseInt('{{wrongs_c}}'), color: "#8e8e8e" },
+      { title: "صحیح", value: parseInt('{{corrects_c}}'), color: "#000" },
+      { title: "نزده", value: parseInt('{{not_answered_c}}'), color: "#fafafa" },
     ]);
   });
   ; (function ($, undefined) {
@@ -315,7 +316,7 @@
       function drawDoughnutText(animationDecimal, segmentTotal) {
         $summaryNumber
           .css({ opacity: animationDecimal })
-          .text(('{{my_result.percent}}' * animationDecimal).toFixed(1) + '%');
+          .text(('{{percent}}' * animationDecimal).toFixed(1) + '%');
       }
       function animateFrame(cnt, drawData) {
         var easeAdjustedAnimationPercent = (settings.animation) ? CapValue(easingFunction(cnt), null, 0) : 1;
