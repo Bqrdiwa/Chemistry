@@ -126,7 +126,7 @@ class Result(models.Model):
     Exam_related = models.ForeignKey(Exam,on_delete=models.CASCADE)
     participant = models.ForeignKey(Student,on_delete=models.CASCADE)
     dateSubmited = models.DateTimeField(default=timezone.now)
-    timeSpend = models.DurationField(null=True,editable=False)
+
 
     @property
     def get_detail(self):
