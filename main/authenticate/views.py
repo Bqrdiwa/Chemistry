@@ -263,21 +263,29 @@ def Profile(request):
     else:
         form = ProfileForm()
         
-    # exams = {'ended':[],'not_ended':[],'not_started':[]}
-    # all_exams = Exam.objects.all()
-    # finded = False
-    # for exam in all_exams:
-    #     try:
-    #         result = Result.objects.get(Exam_related = exam, participant = request.user)
-    #         exams['ended'].append(result)
-    #         finded = True
-    #     except:
-    #         try:
-    #             ExamAir.objects.get(Exam_related = exam, student_related = request.user)
-    #             exams['not_ended'].append(exam)
-    #             finded = True
-    #         except:
-    #             if exam.status != 'Ended':
-    #                 exams['not_started'].append(exam)
-    #                 finded = True
+    exams = {'ended':[],'not_ended':[],'not_started':[]}
+    finded = False
+    for ex in Exam.objects.all():
+        if ex.status == 'None':
+            exams['not_started'].append(ex)
+            finded= True
+        elif ex.status == 'Started':
+            try:
+                rs = Result.objects.get(participant = request.user, Exam_related = ex)
+                if rs.timeSpend != None:
+                    exams['ended'].append(ex)
+                    finded= True
+                else:
+                    exams['not_ended'].append(ex)
+                    finded= True
+            except:
+                exams['not_started'].append(ex)
+                finded= True
+
+        else :
+            try:
+                rs = Result.objects.get(participant = request.user, Exam_related = ex)
+                exams['ended'].append(rs)
+                finded= True
+            except:pass
     return render(request,'home/profile.html',context={'finded':finded, 'title':'Profile','form':form,'error_list':error_list,'HT':'پروفایل','exams':exams})

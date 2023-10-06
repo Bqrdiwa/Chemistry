@@ -1,5 +1,6 @@
 {% extends 'home/base.html' %}
 {% load static %}
+{%load jalali_tags%}
 {% block content %}
 <style>
     :root {
@@ -436,7 +437,7 @@
                 <div class="exam-wrapper">
                     <div>
                         <div class="exam-title">{{exam.name}}</div>
-                        <div class="exam-time">{{exam.startTime|time:'H:i'}} ~ {{exam.endTime|time:'H:i'}}</div>
+                        <div class="exam-time">{{exam.sdate|to_jalali:'%Y/%m/%d'}}</div>
                     </div>
                     <a class="btn_fill" href="{%url 'exam-started' exam.name%}"
                         style="padding: 0.2em 0.6em; font-size: 0.8rem;">شرکت در آزمون</a>
@@ -446,7 +447,7 @@
                 <div class="exam-wrapper">
                     <div>
                         <div class="exam-title">{{exam.name}}</div>
-                        <div class="exam-time">{{exam.startTime|time:'H:i'}} ~ {{exam.endTime|time:'H:i'}}</div>
+                        <div class="exam-time">{{exam.sdate|to_jalali:'%Y/%m/%d'}}</div>
                     </div>
                     <a class="btn_fill" href="{%url 'exam-started' exam.name%}"
                         style="padding: 0.2em 0.6em; font-size: 0.8rem;">ادامه ازمون</a>
@@ -456,7 +457,7 @@
                 <div class="exam-wrapper">
                     <div>
                         <div class="exam-title">{{result.Exam_related.name}}</div>
-                        <div class="exam-time">{{exam.startTime|time:'H:i'}} ~ {{exam.endTime|time:'H:i'}}</div>
+                        <div class="exam-time">{{result.Exam_related.sdate|to_jalali:'%Y/%m/%d'}}</div>
                     </div>
                     <a href="{%url 'exam-result' result.pk %}">
                     <button class="btn_fill finished">مشاهده نتیجه</button>
