@@ -122,6 +122,7 @@ class Question_Solution(models.Model):
             return 'unknown'
 
 class Result(models.Model):
+    percent = models.CharField(max_length=10,default='')
     Answers = models.CharField(max_length=320,default='')
     Exam_related = models.ForeignKey(Exam,on_delete=models.CASCADE)
     participant = models.ForeignKey(Student,on_delete=models.CASCADE)
