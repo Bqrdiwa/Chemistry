@@ -448,7 +448,7 @@ def Question_view(request, pk):
 def VirtualExam(request):
     context = {'title':'Virtual Exam', 'HT':' آزمون آزمایشی'}
 
-    exams = virtualExam.objects.all().order_by('date_created')
+    exams = virtualExam.objects.filter(studentRelated = request.user).order_by('date_created')
     
     paginator = Paginator(exams, 10)
     page_num = request.GET.get('page')

@@ -7,6 +7,7 @@
 <main>
     <div class="exams-container">
         <h2 class="list-exams-head">لیست آزمون ها</h2>
+        {%if exams%}
         {%for exam in exams%}
             <div class="exam">
                 <div class="column-breaker" style="border: none;">
@@ -74,6 +75,11 @@
                 </div>
             </div>
         {%endfor%}
+        {%else%}
+        <div style="font-family: IRSansB;font-size: .85rem; border-radius: 5px; width: 100%;height: 200px;display: flex;align-items: center;justify-content: center;border: 1px solid #000;margin-top: 20px;">
+            آزمونی نساخته اید برای ساخت آزمون به <span><a href="/questionbank/" style="color: black;">بانک سوالات </a>بروید</span>
+        </div>
+        {%endif%}
     </div>
 </main>
 
