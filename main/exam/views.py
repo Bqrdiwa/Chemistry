@@ -40,7 +40,7 @@ def exam(request):
                 result = Result.objects.get(Exam_related= exam, participant = request.user)
                 ResultExams.append(result)
             except:pass
-        elif td-300 > exam.time*60:
+        elif td-1800 > exam.time*60:
             allExams.append(
                 {
                     'exam': exam,
