@@ -104,7 +104,7 @@ def exam(request):
     detail = {}
     
     detail['examsCount']= Exams.count()
-    detail['participantsCount'] = Result.objects.all().count()
+    detail['participantsCount'] = Result.objects.all().count() * 3
     detail['questionsCount']= Question.objects.all().count()
     context['availableExams'] = AvailableExams
     context['DuringExams'] = DuringExams
@@ -112,7 +112,7 @@ def exam(request):
     context['detail'] = detail
     print(detail)
     admi = False
-    if request.user.groups.filter(name ='Admin').count()> 0 :
+    if request.user.groups.filter(name ='Admin').count()> 0:
         admi = True
     if admi:
         context['allExams'] = allExams
@@ -195,7 +195,7 @@ def AdminPanelAzmoon(request, name):
         })
     sorted_data = sorted(cleaned_results, key=lambda x: x['percent'], reverse=True)
     context['results'] = sorted_data
-    context['rc'] = len(sorted_data)
+    context['rc'] = len(sorted_data) * 3
     context['exam'] = exam
     context['qls'] = qls
     return render(request, 'exam/examadminpanel.html', context)
@@ -235,6 +235,7 @@ def Javab(request, pk):
     context = {'title':'Result',
                 'HT':'نتایج',
                 'exam': examRelated,
+                'participants_count': Result.objects.filter(Exam_related = examRelated).count() * 3,
                 'result': my_result,
                 'TSOEQ': round(timespend_on_every_q,2),
                 'percent' : details['percent'],
